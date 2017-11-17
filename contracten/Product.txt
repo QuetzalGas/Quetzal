@@ -1,4 +1,4 @@
-class product
+class Product
 \\Super class van alle klassen, chocoladeshot,chiliperer, marshmellow en honing
 
 *prijs
@@ -10,10 +10,22 @@ class product
 
 +del
 
-+getvervaldatum
++getVervaldatum(out vervaldatum: Datum) {query}
+\\Geeft de vervaldatum van een product terug.
+\\PRE geen
+\\POST 'vervaldatum' is de vervaldatum van het product.
 
-+getprijs
++getPrijs(out prijs: Integer)   {query}
+\\Geeft de prijs van een product terug.
+\\PRE geen
+\\POST 'prijs' is de prijs van het product.
 
-+getnaam
++getNaam(out naam: String)  {query}
+\\Geeft de naam van een product terug.
+\\PRE geen
+\\POST 'naam' is de naam van het product.
 
-+getworkload
++getWorkload(out workload: Integer)   {query}
+\\Geeft de workload van een product terug.
+\\PRE geen
+\\POST 'workload' is de workload van het product.
