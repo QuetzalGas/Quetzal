@@ -1,0 +1,47 @@
+class Stock
+\\Bevat een collectie van tabellen met telkens stock-entiteiten.
+	
+	*chocolademelk:List
+	*chocoladeshots:List
+	*honing:List
+	*chilipeper:List
+	*marshmellows:List
+	
+	
++_init_()
+\\Alle verschillende tabellen worden geïnitialiseerd. Een tabel voor alle chocoladeshots, honingporties, marshmellows
+\\en chilipeperporties. 
+\\PRE Geen
+\\POST De stock bevat nu 4 lege tabellen voor alle ingrediënten.
+
++addItem(in item:Object, out success:boolean)
+\\Kijkt eerst naar het Object zelf en van welke klasse het is. Vervolgens wordt het item bijgevoegd aan de bijhorende
+\\tabel. 
+\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
+\\POST Item wordt in de juiste tabel gezet met zijn vervaldatum als key. Success geeft weer of alles gelukt is.
+
++popItem(in item:Object)
+\\Verwijderd het oudste, niet vervallen item uit een van de tabellen
+\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
+\\POST Dat item staat nu niet meer in de bijhorende lijst.
+
++containsItem(in item:Object, out contains:Boolean)
+\\Checks if the tables contain that item or not.
+\\PRE Item is een object van een bepaalde klasse.
+\\POST Contains geeft weer of dat item in de stock zit.
+
++findType(in item:Object, out type:Type)
+\\Vindt de klasse van een bepaald object.
+\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
+\\POST Type wordt teruggegeven en is de klasse van het ingegeven item
+
++isEmpty(in type:Object, out empty:Boolean)
+\\Checkt of de tabel van een bepaald type leeg is.
+\\PRE Type is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
+\\POST Empty is True als de tabel van de klasse leeg is.
+
++cleanstock(out vervallen:List)
+\\Gaat alle tabellen na of er een item vervallen is.
+\\PRE Geen
+\\POST Vervallen geeft een lijst van vervallen items terug.
+

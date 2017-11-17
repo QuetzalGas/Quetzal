@@ -1,0 +1,9 @@
+class Chilipeper
+\\Een portie chilipeper
+
++_init_(in datum:Integer, in stock:stock)
+\\Initialiseert een nieuwe portie chilipeper samen met zijn vervaldatum en de stock waar de chilipeper in is opgeslagen.
+\\De prijs van een chilipeper wordt hier ook bijgehouden zodat dat gemakkelijk aanpasbaar is.
+\\PRE Datum is een vervaldatum en stock is de stock waar de chilipeper in zit.
+\\POST De chilipeper heeft een vervaldatum, bijhorende stock en vaste prijs van 0.25 euro.
+

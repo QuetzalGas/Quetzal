@@ -1,0 +1,42 @@
+class Chocolademelk
+\\De werkelijke order, de chocolademelk, dat de klant plaatst.
+
+	*id:Integer
+	\\ID voor het maken van de chocolademelk
+	*prijs:Integer
+	\\Huidige prijs van de chocolademelk
+	*contains:List
+	\\Bevat de lijst van alle producten in de chocolademelk
+	*workload:Integer
+	\\De workload da de chocolademelk creërt
+	
+
++_init_(in id:Integer, in prijs=2:Integer)
+\\Initialiseert een nieuw item met een id en een standaardprijs van 2 euro.
+\\PRE Prijs moet van een normale orde zijn.
+\\POST De chocolademelk heeft nu een id en bepaalde prijs.
+
++addProduct(in product:Product)
+\\Voegt een product toe aan de chocolademelk
+\\PRE Product moet een product van de super-klasse Product zijn
+\\POST Het product staat nu in de lijst en de prijs wordt samen met de workload verhoorgd
+
++contains(out contains:List)
+\\Geeft een lijst terug van alles wat bij de chocolademelk is toegevoegd.
+\\PRE Geen
+\\POST Geeft alle elementen van de chocolademelk.
+
++getTotalePrijs(out prijs:Integer)
+\\Geeft de totale prijs van de chocolademelk terug.
+\\PRE Geen
+\\POST Prijs is de totale prijs van de chocolademelk.
+
++getWorkload(out workload: Integer)
+\\Geeft de totale workload van de chocolademelk terug.
+\\PRE Geen
+\\POST Workload is de totale workload van de chocolademelk.
+
++getID(out id:Integer)
+\\Geeft de ID van de chocolademelk terug.
+\\PRE Geen
+\\POST Id is het id van de chocolademelk.

@@ -1,0 +1,20 @@
+class Counter
+\\Een counter voor het afhandelen van bestellingen
+
+	*klaar:Boolean
+	\\Geeft aan of de counter klaar is of niet.
+
++init()
+\\Initialiseert een nieuwe counter.
+\\PRE Geen
+\\POST Er bestaat een counter.
+
++start(in lengte:Integer)
+\\Start een nieuwe count.
+\\PRE Lengte moet een normale orde hebben en klaar moet op True staan.
+\\POST De counter zal gestopt zijn en klaar zal op True komen te staan. De count wordt ook gereset.
+
++isKlaar(out klaar:Boolean)
+\\Geeft aan of de counter klaar is of niet.
+\\PRE Geen
+\\POST Klaar is True als de counter klaar is en anders False.
