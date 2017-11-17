@@ -16,22 +16,22 @@ class Tijd
 
 +gettijdsstappen
 
-+getuur(out uur: Integer)	{query}
++getUur(out uur: Integer)	{query}
 \\Geeft het uur van een datum terug.
 \\PRE geen
 \\POST 'uur' is het bepaalde uur van een datum.
 
-+getdag(out dag: Integer)	{query}
++getDag(out dag: Integer)	{query}
 \\Geeft de dag van een datum terug.
 \\PRE geen
 \\POST 'dag' is de bepaalde dag van een datum.
 
-+getmaand(out maand: Integer) 	{query}
++getMaand(out maand: Integer) 	{query}
 \\Geeft de maand van een datum terug.
 \\PRE geen
 \\POST 'maand' is de bepaalde maand van een datum.
 
-+getjaar(out jaar: Integer)	{query}
++getJaar(out jaar: Integer)	{query}
 \\Geeft het jaar van een datum terug.
 \\PRE geen
 \\Post 'jaar' is het bepaalde jaar van een datum.
