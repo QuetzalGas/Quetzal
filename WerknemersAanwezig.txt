@@ -1,0 +1,28 @@
+class WerknemersAanwezig
+\\Bevat alle operaties met werknemers en bestellingen
+
+	*werknemersAanwezig:List
+	\\Lijst met alle werknemers die die dag aanwezig zijn en kunnen werken
+
+
++voegWerknemerToe(in werknemer: Werknemer, out success:Boolean)
+\\Voegt werknemers toe aan lijst van aanwezige werknemers.
+\\PRE Werknemer moet een geldige werknemer zijn die op actief staat.
+\\POST De werknemer zal op de stack staan en dus beschikbaar zijn voor bestellingen. Success zal True terug geven als 
+\\dit gelukt is. 
+
++geefBestelling(in bestelling: Bestelling, out success:Boolean)
+\\Geeft een werknemer een bestelling om te maken
+\\PRE Bestelling moet een geldige bestelling zijn die nog niet is afgehandeld
+\\POST Een werknemer zal de bestelling krijgen en afhandelen. Success zal vervolgens True teruggeven.
+
++isBezet(in werknemer: Werknemer, out bezet:Boolean)
+\\Checkt of een werknemer bezig is met een opdracht
+\\PRE Moet een werknemer zijn uit de werknemers-lijst
+\\POST Geeft True terug als de werkemer niet op de stack staat en dus bezig is. Geeft False terug als deze wel op de stack
+\\staat en dus niets aan het doen is. 
+
++checkAfgehandeld()
+\\Overloopt constant of een werknemer bezig is of niet.
+\\PRE Geen
+\\POST Elke werknemer die in de lijst staat maar niet op de stack wordt nagekeken en eventueel terug op de stack gezet.

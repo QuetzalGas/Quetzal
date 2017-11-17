@@ -1,0 +1,22 @@
+class Tijd
+\\Bevat zowel tijd als datum
+
+	*tijdstappen:Integer
+	*dag:Integer
+	*uur:Integer
+	*jaar:Integer
+
++vergelijk(
+
++print()
+\\Geeft volledige string van data
+
++gettijdsstappen
+
++getdag
+
++getuur
+
++getuur
+
++getjaar
