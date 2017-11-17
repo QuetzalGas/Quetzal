@@ -1,0 +1,9 @@
+class Honing
+\\Een portie honing
+
++_init_(in datum:Integer, in stock:Stock)
+\\Initialiseert een nieuwe portie honing samen met zijn vervaldatum en de stock waar de honing in is opgeslagen.
+\\De prijs van de honing wordt hier ook bijgehouden zodat dat gemakkelijk aanpasbaar is.
+\\PRE Datum is de vervaldatum van de honing en stock is de bijhorende stock.
+\\POST De honing heeft nu een vervaldatum, bijhorende stock en een vaste prijs van 0.5 euro.
+

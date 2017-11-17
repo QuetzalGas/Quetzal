@@ -1,0 +1,19 @@
+class product
+\\Super class van alle klassen, chocoladeshot,chiliperer, marshmellow en honing
+
+*prijs
+*naam
+*workload
+*vervaldatum
+
++init
+
++del
+
++getvervaldatum
+
++getprijs
+
++getnaam
+
++getworkload
