@@ -16,7 +16,7 @@ class Werknemer
 +_del_(out success:Boolean)
 \\Verwijdert een werknemer.
 \\PRE Geen
-\\POST De variabele actief zal op False komen te staan en success zal True teruggeven als alles is gelukt.
+\\POST 'succes' zal True teruggeven als alles is gelukt.
 
 +getLoad(out workload:Integer)	{query}
 \\Haalt de workload van de werknemer op.
