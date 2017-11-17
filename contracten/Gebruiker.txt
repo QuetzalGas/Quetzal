@@ -13,32 +13,32 @@ class Gebruiker
 \\POST De gebruiker heeft nu een uniek id, bijhorende data en een lijst van ooit gemaakte bestellingen.
 
 +addBestelling(in bestelling:Bestelling, out success:Boolean)
-\\Voegt een bestelling toe aan de gebruiker
+\\Voegt een bestelling toe aan de gebruiker.
 \\PRE Bestelling is een bestelling geplaatst door deze gebruiker.
 \\POST De list bestellingen bevat nu de bestelling. Success geeft weer of de toevoeging gelukt is.
 
-+getBestellingen(out bestellingen:List)
-\\Geeft een lijst terug van alle bestellingen
++getBestellingen(out bestellingen:List)	{query}
+\\Geeft een lijst terug van alle bestellingen.
 \\PRE Geen
 \\POST Geeft alle bestellingen van de gebruiker terug.
 
-+getID(out id:Integer)
++getID(out id:Integer)	{query}
 \\Geeft het ID van de gebruiker weer.
 \\PRE Geen
-\\POST Id is het id van de gebruiker
+\\POST 'id' is het id van de gebruiker.
 
-+getVoornaam(out voornaam:String)
++getVoornaam(out voornaam:String)	{query}
 \\Geeft de voornaam van de gebruiker weer.
 \\PRE Geen
-\\POST Voornaam is de voornaam van de gebruiker.
+\\POST 'voornaam' is de voornaam van de gebruiker.
 
-+getAchternaam(out achternaam:String)
++getAchternaam(out achternaam:String)	{query}
 \\Geeft de achternaam van de gebruiker weer.
 \\PRE Geen
-\\POST Achternaam is de achternaam van de gebruiker.
+\\POST 'achternaam' is de achternaam van de gebruiker.
 
-+getEmail(out email:String)
++getEmail(out email:String)	{query}
 \\Geeft de email van de gebruiker weer.
 \\PRE Geen
-\\POST Email is de email van de gebruiker.
+\\POST 'email" is de email van de gebruiker.
 

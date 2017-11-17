@@ -8,7 +8,7 @@ class Chocolademelk
 	*contains:List
 	\\Bevat de lijst van alle producten in de chocolademelk
 	*workload:Integer
-	\\De workload da de chocolademelk creërt
+	\\De workload dat de chocolademelk creërt
 	
 
 +_init_(in id:Integer, in prijs=2:Integer)
@@ -17,26 +17,26 @@ class Chocolademelk
 \\POST De chocolademelk heeft nu een id en bepaalde prijs.
 
 +addProduct(in product:Product)
-\\Voegt een product toe aan de chocolademelk
-\\PRE Product moet een product van de super-klasse Product zijn
-\\POST Het product staat nu in de lijst en de prijs wordt samen met de workload verhoorgd
+\\Voegt een product toe aan de chocolademelk.
+\\PRE Product moet een product van de super-klasse Product zijn.
+\\POST Het product staat nu in de lijst en de prijs wordt samen met de workload verhoogd.
 
-+contains(out contains:List)
++contains(out contains:List)	{query}
 \\Geeft een lijst terug van alles wat bij de chocolademelk is toegevoegd.
 \\PRE Geen
 \\POST Geeft alle elementen van de chocolademelk.
 
-+getTotalePrijs(out prijs:Integer)
++getTotalePrijs(out prijs:Integer)	{query}
 \\Geeft de totale prijs van de chocolademelk terug.
 \\PRE Geen
 \\POST Prijs is de totale prijs van de chocolademelk.
 
-+getWorkload(out workload: Integer)
++getWorkload(out workload: Integer)	{query}
 \\Geeft de totale workload van de chocolademelk terug.
 \\PRE Geen
 \\POST Workload is de totale workload van de chocolademelk.
 
-+getID(out id:Integer)
++getID(out id:Integer)		{query}
 \\Geeft de ID van de chocolademelk terug.
 \\PRE Geen
-\\POST Id is het id van de chocolademelk.
+\\POST 'id' is het id van de chocolademelk.

@@ -1,22 +1,36 @@
-class Tijd
+class DateTime
 \\Bevat zowel tijd als datum
 
-	*tijdstappen:Integer
-	*dag:Integer
-	*uur:Integer
-	*jaar:Integer
+	*datum: Datum
+	*uur: Integer
 
-+vergelijk(
++vergelijk(in andereDateTime: DateTime, out result:Boolean)	{query}
+\\Vergelijkt de dateTime met 'andereDateTime'. Als dateTime vroeger is dan 'andereDateTime' geeft result true terug.
+\\PRE 'andereDateTime' is van de klasse DateTime.
+\\POST result is true als de dateTime vroeger is dan 'andereDateTime'. 
+\\Result is false als 'andereDateTime' vroeger is dan dateTime.
 
-+print()
-\\Geeft volledige string van data
++print()	{query}
+\\Geeft volledige string van een datum.
+\\PRE geen
+\\POST De volledige datum wordt geprint.
 
-+gettijdsstappen
++getUur(out uur: Integer)	{query}
+\\Geeft het uur van een datum terug.
+\\PRE geen
+\\POST 'uur' is het bepaalde uur van een datum.
 
-+getdag
++getDag(out dag: Integer)	{query}
+\\Geeft de dag van een datum terug.
+\\PRE geen
+\\POST 'dag' is de bepaalde dag van een datum.
 
-+getuur
++getMaand(out maand: Integer) 	{query}
+\\Geeft de maand van een datum terug.
+\\PRE geen
+\\POST 'maand' is de bepaalde maand van een datum.
 
-+getuur
-
-+getjaar
++getJaar(out jaar: Integer)	{query}
+\\Geeft het jaar van een datum terug.
+\\PRE geen
+\\Post 'jaar' is het bepaalde jaar van een datum.
