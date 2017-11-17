@@ -1,0 +1,9 @@
+class Marshmellow
+\\Een marshmellow of portie marshmellows
+
++_init_(in datum:Integer, in stock:Stock)
+\\Initialiseert een nieuwe marshmellow samen met zijn vervaldatum en de stock waar de marshmellow in is opgeslagen.
+\\De prijs van een marshmellow wordt hier ook bijgehouden zodat dat gemakkelijk aanpasbaar is.
+\\PRE Datum is de vervaldatum van de marshmellow en stock is de stock waar het in zit.
+\\POST De marshmellow heeft een vervaldatum, bijhorende stock en een vaste prijs van 0.75 euro.
+
