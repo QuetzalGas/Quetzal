@@ -1,0 +1,27 @@
+Verdeling van de taken. Wegens afwezigheid van twee leden is het mogelijk 
+dat deze verdeling lichtjes gaat wijzigen.
+
+Louise Wauter:
+- klasse product
+- klasse Chilipeper
+- klasse Chocoladeshot
+- klasse Honing
+- klasse Marshmallow
+--> Test implementatie van Joke Duwaerts
+
+Ivo Wingelaar:
+- Quetzal
+- Date
+- DateTime
+--> Test implementatie van Louise Wauters 
+
+Joke Duwaerts:
+- klasse stock
+- klasse gebruiker
+--> Test Implementatie van Thomas Van Onsem
+
+Thomas Van Onsem:
+- Werknemer
+- chocoladeshots
+--> Test implementatie van Ivo Wingelaar
+
