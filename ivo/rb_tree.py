@@ -1,5 +1,6 @@
 class Node:
-    def __init__(self, content):
+    def __init__(self, key, content):
+        self.key = key
         self.content = content
         self.black = False
         self.left = None
@@ -19,7 +20,7 @@ class Node:
     def flip_color(self):
         self.black = not self.black
         self.left.black = not self.left.black
-        self.right.black = not self.left.black
+        self.right.black = not self.right.black
 
     def is_two_node(self):
         if not self.black:
@@ -62,13 +63,21 @@ class Node:
                b     c            a        b
         """
         parent = self.parent
+
+        if self.right is None:
+            raise RuntimeError("Can't rotate right.")
+
         x = self.right
 
         self.right = x.left
-        self.right.parent = self
+
+        if self.right is not None:
+            self.right.parent = self
 
         x.left = self
-        x.left.parent = x
+
+        if x.left is not None:
+            x.left.parent = x
 
         x.parent = parent
         if parent is not None:
@@ -90,13 +99,21 @@ class Node:
          a     b              b        c
         """
         parent = self.parent
+
+        if self.left is None:
+            raise RuntimeError("Can't rotate right")
+
         x = self.left
 
         self.left = x.right
-        self.left.parent = self
+
+        if self.left is not None:
+            self.left.parent = self
 
         x.right = self
-        x.right.parent = x
+
+        if x.right is not None:
+            x.right.parent = x
 
         x.parent = parent
         if parent is not None:
@@ -124,105 +141,121 @@ class Node:
 
         return previous
 
-
     def split(self):
         if not self.is_four_node():
             return
 
         if self.parent is None:
             # Root
-            self.left.black = True
-            self.right.black = True
+            self.flip_color()
+            self.black = True
         else:
-
             if self.parent.is_two_node():
-                self.black = False
-                self.left.black = True
-                self.right.black = True
+                self.flip_color()
             else:
                 # 3-node parent
                 if self.is_left_child():
-                    if not self.parent.right.black:
-                        self.black = False
-                        self.left.black = True
-                        self.right.black = True
+                    if self.parent.black:
+                        self.flip_color()
                     elif self.parent.is_left_child():
-                        P = self.parent
-                        Q = P.parent
-
-                        f = Q.set_right_child(P)
-                        Q.set_left_child(self)
-                        
-                        self.black = False
-                        self.left.black = True
-                        self.right.black = True
-
-                        q = Q.content
-                        Q.content = P.content
-                        P.content = q
-
-                        e = P.set_right_child(f)
-                        P.set_left_child(e)
+                        self.parent.parent.rotate_right()
+                        self.flip_color()
                     else:
-                        # The parent is a right child.
-                        Q = self.parent
-                        P = Q.parent
-
-                        a = P.set_left_child(self)
-                        self.black = False
-
-                        p = P.content
-                        P.content = self.content
-                        self.content = p
-
-                        S = self.set_left_child(a)
-                        L = self.set_right_child(S)
-                        S.black = True
-
-                        Q.set_left_child(L)
-                        L.black = True
+                        self.flip_color()
+                        self.parent.rotate_right()
+                        self.parent.rotate_left()
                 else:
                     # We are a right child.
-                    if not self.parent.left.black:
-                        self.black = False
-                        self.left.black = True
-                        self.right.black = True
+                    if self.parent.black:
+                        self.flip_color()
                     elif self.parent.is_right_child():
-                        Q = self.parent
-                        P = Q.parent
-
-                        a = P.set_left_child(Q)
-                        P.set_right_child(self)
-
-                        self.black = False
-                        self.left.black = False
-                        self.right.black = False
-
-                        p = P.content
-                        P.content = Q.content
-                        Q.content = p
-
-                        b = Q.set_left_child(a)
-                        Q.set_right_child(b)
+                        self.parent.parent.rotate_left()
+                        self.flip_color()
                     else:
-                        # The parent is a left child
-                        pass
+                        self.flip_color()
+                        self.parent.rotate_left()
+                        self.parent.rotate_right()
 
-    def insert(self, content):
+    def walk_and_split(self):
         self.split()
 
-        if content > self.content:
+        if self.left is not None:
+            self.left.walk_and_split()
+        
+        if self.right is not None:
+            self.right.walk_and_split()
+
+        root = self
+
+        while root.parent is not None:
+            root = root.parent
+
+        return root
+
+
+    def fix_4_node(self):
+        # When called, we know that the recently added node must be red.
+
+        # Root
+        if self.parent is None:
+            # Can't happen actually....
+            return
+
+        # Not a four node.
+        if self.parent.black:
+            return
+
+        t_left = self.is_left_child()
+        p_left = self.parent.is_left_child()
+
+        if t_left and p_left:
+            self.parent.parent.rotate_right()
+        elif not t_left and not p_left:
+            self.parent.parent.rotate_left()
+        elif t_left and not p_left:
+            self.parent.rotate_right()
+            self.parent.rotate_left()
+        elif not t_left and p_left:
+            self.parent.rotate_left()
+            self.parent.rotate_right()
+
+
+    def insert(self, key, content):
+        self.split()
+
+        if key > self.key:
             if self.right is None:
-                self.set_right_child(Node(content))
-                self.right.black = False
+                self.set_right_child(Node(key, content))
+                self.right.fix_4_node()
             else:
-                self.right.insert(content)
-        else:
+                self.right.insert(key, content)
+        elif key < self.key:
             if self.left is None:
-                self.set_left_child(Node(content))
-                self.left.black = False
+                self.set_left_child(Node(key, content))
+                self.left.fix_4_node()
             else:
-                self.left.insert(content)
+                self.left.insert(key, content)
+
+        root = self
+
+        while root.parent is not None:
+            root = root.parent
+
+        root.black = True
+        return root
+
+
+    def delete(self, key):
+        pass
+
+
+    def print(self, filename):
+        with open(filename, 'w') as of:
+            of.write('digraph rb {\n')
+            of.write('  node[shape = record];\n')
+            out = self.dot()
+            of.write(out[0])
+            of.write('}')
 
     def dot(self, c=0):
         if self.content is None:
@@ -265,23 +298,26 @@ class Node:
 
         return (output, c+1)
 
-def standard():
-    a = Node("a")
-    b = Node("b")
-    c = Node("c")
-    d = Node("d")
+def standard(offset = 0):
+    a = Node(offset + 0, "a")
+    a.black = True
+    b = Node(offset + 2, "b")
+    b.black = True
+    c = Node(offset + 4, "c")
+    c.black = True
+    d = Node(offset + 6, "d")
+    d.black = True
 
-    S = Node("S")
-    S.black = False
+    S = Node(offset + 1, "S")
     S.set_left_child(a)
     S.set_right_child(b)
 
-    L = Node("L")
-    L.black = False
+    L = Node(offset + 5, "L")
     L.set_left_child(c)
     L.set_right_child(d)
 
-    M = Node("M")
+    M = Node(offset + 3, "M")
+    M.black = True
     M.set_left_child(S)
     M.set_right_child(L)
 
@@ -313,30 +349,22 @@ def b4():
     return Q
 
 def b6():
-    M = standard()
+    M = standard(3)
 
-    P = Node("P")
-    P.set_left_child(Node("x"))
+    P = Node(2, "P")
+    P.black = True
+    x = Node(1, 'x')
+    x.black = True
+    P.set_left_child(x)
 
-    Q = Node("Q")
-    Q.black = False
-    Q.set_right_child(Node("f"))
+    Q = Node(10, "Q")
+    f = Node(11, 'f')
+    f.black = True
+    Q.set_right_child(f)
     Q.set_left_child(M)
     P.set_right_child(Q)
 
     return P
-
-def insert():
-    R = Node(4)
-    R.insert(3)
-    R.insert(2)
-
-    while R.parent is not None:
-        R = R.parent
-
-    return R
-
-rb = b6()
 
 def print_rb(rb, filename):
     with open(filename, 'w') as of:
@@ -346,7 +374,27 @@ def print_rb(rb, filename):
         of.write(out[0])
         of.write('}')
 
+def print_example():
+    rb = b6()
+    print_rb(rb, "pre.dot")
+    rb = rb.walk_and_split()
+    print_rb(rb, "post.dot")
 
-print_rb(rb, "pre.dot")
-rb.right.left.split()
-print_rb(rb, "post.dot")
+def insert():
+    R = Node(60, 60)
+    R.black = True
+    R = R.insert(30, 30)
+    R = R.insert(10, 10)
+    R = R.insert(20, 20)
+    R = R.insert(50, 50)
+    R = R.insert(40, 40)
+    R = R.insert(70, 70)
+    R = R.insert(80, 80)
+    R = R.insert(15, 15)
+    R = R.insert(90, 90)
+    R = R.insert(100, 100)
+
+    print_rb(R, "R.dot")
+
+
+insert()
