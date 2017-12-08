@@ -205,6 +205,11 @@ class Node:
 
 
     def insert(self, key, content):
+        if self.key is None:
+            self.key = key
+            self.content = content
+            return self
+
         self.split()
 
         if key > self.key:
@@ -281,6 +286,17 @@ class Node:
             c = c+1
 
         return (output, c+1)
+
+
+class RbTree:
+    def __init__(self):
+        self.root = Node(None, None)
+        self.root.black = True
+
+    def insert(self, key, content):
+        self.root = self.root.insert(key, content)
+        self.root.black = True
+        
 
 def standard(offset = 0):
     a = Node(offset + 0, "a")
