@@ -176,22 +176,6 @@ class Node:
                         self.parent.rotate_left()
                         self.parent.rotate_right()
 
-    def walk_and_split(self):
-        self.split()
-
-        if self.left is not None:
-            self.left.walk_and_split()
-        
-        if self.right is not None:
-            self.right.walk_and_split()
-
-        root = self
-
-        while root.parent is not None:
-            root = root.parent
-
-        return root
-
 
     def fix_4_node(self):
         # When called, we know that the recently added node must be red.
@@ -373,12 +357,6 @@ def print_rb(rb, filename):
         out = rb.dot()
         of.write(out[0])
         of.write('}')
-
-def print_example():
-    rb = b6()
-    print_rb(rb, "pre.dot")
-    rb = rb.walk_and_split()
-    print_rb(rb, "post.dot")
 
 def insert():
     R = Node(60, 60)
