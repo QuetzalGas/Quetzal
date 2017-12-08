@@ -246,6 +246,32 @@ class Node:
             of.write(out[0])
             of.write('}')
 
+
+    def height_234(self, h):
+        left_height = h
+        right_height = h
+
+        if self.left is not None:
+            if self.left.black:
+                k = 1
+            else:
+                k = 0
+
+            left_height = self.left.height_234(h + k)
+
+        if self.right is not None:
+            if self.right.black:
+                k = 1
+            else:
+                k = 0
+
+            right_height = self.right.height_234(h + k)
+
+        return max(left_height, right_height)
+
+    def balanced_234(self, h):
+        pass
+
     def dot(self, c=0):
         if self.content is None:
             return None
@@ -293,9 +319,23 @@ class RbTree:
         self.root = Node(None, None)
         self.root.black = True
 
-    def insert(self, key, content):
-        self.root = self.root.insert(key, content)
+    def insert(self, key, content = None):
+        if content is None:
+            self.root = self.root.insert(key, key)
+        else:
+            self.root = self.root.insert(key, content)
+
         self.root.black = True
+
+    def dot(self, filename, label):
+        with open(filename, 'w') as of:
+            of.write('digraph rb {\n')
+            of.write('  node[shape = record];\n')
+            out = self.root.dot()
+            of.write(out[0])
+            of.write('  labelloc="t";\n')
+            of.write('  label="{}";\n'.format(label))
+            of.write('}')
         
 
 def standard(offset = 0):
@@ -391,4 +431,4 @@ def insert():
     print_rb(R, "R.dot")
 
 
-insert()
+#insert()
