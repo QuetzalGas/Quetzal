@@ -1,0 +1,1 @@
+Voer ReadFile.py uit en geef bestandsnaam test.txt als input.
