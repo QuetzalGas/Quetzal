@@ -1,0 +1,67 @@
+type=234
+insert 60
+insert 30
+insert 10
+insert 20
+insert 50
+insert 40
+insert 70
+insert 80
+insert 15
+insert 90
+insert 100
+print
+
+type=234
+insert 60
+insert 30
+insert 100
+insert 20
+insert 70
+insert 80
+insert 15
+insert 90
+insert 10
+print
+
+type=234
+insert 60
+insert 30
+insert 100
+insert 20
+insert 70
+insert 80
+insert 15
+insert 90
+insert 10
+delete 15
+print
+
+type=234
+insert 60
+insert 30
+insert 100
+insert 20
+insert 70
+insert 80
+insert 15
+insert 90
+insert 10
+delete 15
+delete 70
+print
+
+type=234
+insert 60
+insert 30
+insert 100
+insert 20
+insert 70
+insert 80
+insert 15
+insert 90
+insert 10
+delete 15
+delete 70
+delete 80
+print
