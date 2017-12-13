@@ -1,7 +1,7 @@
 class Chocoladeshot
 \\Een chocoladeshot van een bepaald type.
 
-+_init_(in type:String, in datum:Integer, in stock:Stock)
++_init_(in type:String, in datum:Integer)
 \\Initialiseert een nieuwe chocoladeshot van een bepaald type (wit, melk, bruin, zwart) samen met zijn vervaldatum en
 \\de stock waar de shot in is opgeslagen. De prijs van een shot wordt hier ook bijgehouden zodat dat gemakkelijk aanpasbaar is.
 \\PRE Type is het type chocolade, datum de vervaldatum van die shot en stock is de stock waar de shot in zit.
