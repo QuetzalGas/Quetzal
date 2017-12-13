@@ -1,4 +1,8 @@
 from Stack import Stack
+import time
+
+#Interval for checking orders (seconds)
+CHECKTIMES = 30
 
 class employee_present:
     def __init__(self):
@@ -17,6 +21,7 @@ class employee_present:
         """
         #TODO add employee to employeesPresent
         self.stack.push(employee)
+        employee.setWorkday(self)
         return True
 
     def assignOrder(self, order):
@@ -25,6 +30,8 @@ class employee_present:
         :param order:
         :return:
         """
+        while self.stack.isEmpty():
+            time.sleep(CHECKTIMES)
         employee = self.stack.pop()[1]
         employee.process(order)
         return True
@@ -39,5 +46,3 @@ class employee_present:
         :return:
         """
         pass
-
-    def checkCompleted(self):
