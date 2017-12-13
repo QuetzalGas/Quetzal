@@ -26,6 +26,11 @@ class Node:
         if not self.black:
             return False
 
+        # Change this to be more inclusive
+
+        if (self.left is None) and (self.right is None):
+            return True
+
         return (self.left is not None and self.left.black) and\
                (self.right is not None and self.right.black)
 
@@ -88,8 +93,8 @@ class Node:
             else:
                 raise RuntimeError("Invariant broken")
 
-        x.black = self.black
-        self.black = False
+        (x.black, self.black) = (self.black, x.black)
+
         return x
 
     def rotate_right(self):
@@ -101,7 +106,7 @@ class Node:
         parent = self.parent
 
         if self.left is None:
-            raise RuntimeError("Can't rotate right")
+            raise RuntimeError("Can't rotate right: no left child")
 
         x = self.left
 
@@ -124,8 +129,8 @@ class Node:
             else:
                 raise RuntimeError("Invariant broken")
 
-        x.black = self.black
-        self.black = False
+        (x.black, self.black) = (self.black, x.black)
+
         return x
 
 
@@ -234,8 +239,61 @@ class Node:
         return root
 
 
+    def combine(self):
+        # Root nodes can not be combined.
+        if self.parent is None:
+            return
+
+        # Skip all non two nodes.
+        if not self.is_two_node():
+            return
+
+        if self.parent.is_two_node():
+            is_left = self.is_left_child()
+            # Get sibling
+            if is_left:
+                sibling = self.parent.right
+            else:
+                sibling = self.parent.left
+
+            # Sanity check...
+            if sibling is None:
+                raise RuntimeError('Two node with only one child.')
+
+            # Two node
+            if sibling.is_two_node():
+                # Create a four node.
+                self.parent.flip_color()
+                self.parent.black = True
+                return
+
+            # Four node
+            if sibling.is_four_node():
+                if is_left:
+                    sibling.rotate_right()
+                    #self.parent.rotate_left()
+                else:
+                    top = sibling.rotate_left()
+                    top.left.black = True
+                    self.parent.rotate_right()
+
+                return
+
+            # Three node
+
+
     def delete(self, key):
-        pass
+        self.combine()
+
+        if self.key == key:
+            return True
+
+        if (self.left is not None) and (key < self.key):
+            return self.left.delete(key)
+        elif (self.right is not None) and (key > self.key):
+            return self.right.delete(key)
+
+        return False
 
 
     def print(self, filename):
@@ -245,6 +303,24 @@ class Node:
             out = self.dot()
             of.write(out[0])
             of.write('}')
+
+
+    def add_dummy_leaves(self, tag):
+        if self.left is None:
+            self.left = Node(tag, tag)
+            self.left.black = True
+            tag = chr(ord(tag) + 1)
+        else:
+            tag = self.left.add_dummy_leaves(tag)
+
+        if self.right is None:
+            self.right = Node(tag, tag)
+            self.right.black = True
+            tag = chr(ord(tag) + 1)
+        else:
+            tag = self.right.add_dummy_leaves(tag)
+
+        return tag
 
 
     def height_234(self, h):
@@ -268,9 +344,6 @@ class Node:
             right_height = self.right.height_234(h + k)
 
         return max(left_height, right_height)
-
-    def balanced_234(self, h):
-        pass
 
     def dot(self, c=0):
         if self.content is None:
@@ -326,6 +399,12 @@ class RbTree:
             self.root = self.root.insert(key, content)
 
         self.root.black = True
+
+    def delete(self, key):
+        self.root.delete(key)
+
+        while self.root.parent is not None:
+            self.root = self.root.parent
 
     def dot(self, filename, label):
         with open(filename, 'w') as of:
