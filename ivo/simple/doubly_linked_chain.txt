@@ -1,0 +1,5 @@
+type=ll
+push_front 1
+push_front 2
+push_back 4
+print

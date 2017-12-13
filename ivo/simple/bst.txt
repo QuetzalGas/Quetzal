@@ -1,0 +1,9 @@
+type=bst
+insert 7
+insert 3
+insert 9
+insert 1
+insert 5
+insert 8
+insert 10
+print

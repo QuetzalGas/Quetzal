@@ -1,0 +1,29 @@
+type=queue
+enqueue 1
+enqueue 2
+enqueue 3
+dequeue
+print
+enqueue 4
+enqueue 5
+print
+dequeue
+dequeue
+print
+
+type=ll
+push_front 1
+push_back 3
+push_front 2
+print
+
+type=bst
+insert 5
+insert 3
+insert 4
+insert 6
+print
+insert 5
+insert 5
+insert 1
+print
