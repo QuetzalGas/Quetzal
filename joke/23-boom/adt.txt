@@ -1,0 +1,83 @@
+type=bst
+insert 10
+insert 5
+insert 9
+# dit maakt een bestand bst-1.dot
+print
+insert 12
+delete 10
+# dit maakt een bestand bst-2.dot
+print
+
+# in 1 script kan je meerdere adts zetten
+type=23
+insert 5
+insert 6
+delete 5
+# dit maakt een bestand 23-1.dot
+print
+
+type=stack
+insert 5
+insert 6
+delete 5
+# dit maakt een bestand stack-1.dot
+print
+
+type=23
+insert 14
+insert 12
+insert 1
+insert 44
+insert 22
+delete 12
+insert 1
+insert 0
+insert 122
+insert 12
+insert 12
+insert 12
+delete 12
+insert 42
+delete 33
+delete 12
+print
+delete 12
+print
+
+type=234
+insert 5
+insert 8
+insert 42
+insert 44
+delete 8
+print
+
+type=23
+insert 5
+insert 55
+insert 42
+insert 66
+insert 24
+insert 124
+insert 0
+insert 84
+insert 66
+insert 4
+insert 12
+insert 77
+insert 65
+insert 7
+insert 65
+insert 45
+insert 33
+insert 22
+insert 33
+insert 84
+insert 84
+delete 84
+delete 84
+print
+delete 84
+print
+

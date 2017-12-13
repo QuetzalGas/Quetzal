@@ -1,7 +1,7 @@
 class Marshmallow
 \\Een marshmallow of portie marshmallows
 
-+_init_(in datum:Integer, in stock:Stock)
++_init_(in datum:Integer)
 \\Initialiseert een nieuwe marshmallow samen met zijn vervaldatum en de stock waar de marshmallow in is opgeslagen.
 \\De prijs van een marshmallow wordt hier ook bijgehouden zodat dat gemakkelijk aanpasbaar is.
 \\PRE Datum is de vervaldatum van de marshmallow en stock is de stock waar het in zit.
