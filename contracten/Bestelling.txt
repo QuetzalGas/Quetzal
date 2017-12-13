@@ -1,0 +1,27 @@
+class Bestelling
+\\De bestelling van de klant. M.a.w. een object van de klasse chocolademelk samen met data van de klant en de bestelling
+\\zelf.
+
++_init_(in userID:Gebruiker, in time:Integer, in itemID:Chocalademelk)
+\\Initialiseert een nieuwe bestelling. Dit bevat een id van de gebruiker die die bestelling heeft geplaatst samen met
+\\de tijd wanneer het geplaatst was. Dit bevat ook het id van de chocolademelk die de user bestelt heeft en een status
+\\van de bestelling (afgehaald of niet).
+\\PRE UserID is de user die de bestelling heeft geplaatst waarbij time de tijd is van de plaatsing. ItemID is de order van
+\\die user.
+\\POST De bestelling zal een user, time en itemID bevatten
+
++checkAfgehaald(out afgehaald:Boolean)
+\\Checkt of een bestelling is afgehaald.
+\\PRE Geen
+\\POST Afgehaald is True als de bestelling al is afgehaald.
+
++setAfgehaald()
+\\Zet de status naar afgehaald
+\\PRE Geen
+\\POST De status staan nu op afgehaald.
+
++getuserID()
+
++getTime()
+
++getitemId()
