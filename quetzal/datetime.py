@@ -1,12 +1,21 @@
 class DateTime:
-    def __init__(self, date, time):
-        pass
+    def __init__(self, date, hour, minute):
+        self.date = date
+        self.hour = hour
+        self.minute = minute
 
     def get_date(self):
-        pass
+        return self.date
 
-    def get_time(self):
-        pass
+    def get_hour(self):
+        return self.hour
+
+    def get_minute(self):
+        return self.minute
 
     def __lt__(self, other):
-        return False
+        return (self.date < other.date) and (self.hour < other.hour) and \
+               (self.minute < other.minute)
+
+    def __str__(self):
+        return "{} {} {}".format(self.date, self.hour, self.minute)
