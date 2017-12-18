@@ -1,4 +1,5 @@
 from Stack import Stack
+from adt_queue import Queue
 import time
 
 #Interval for checking orders (seconds)
@@ -32,13 +33,17 @@ class employee_present:
         """
         while self.stack.isEmpty():
             time.sleep(CHECKTIMES)
-        employee = self.stack.pop()[1]
+        employee = self.stack.popAndReturn()[0]
         employee.process(order)
         return True
 
     def putBackOnStack(self, employee):
-        self.stack.push(employee)
+        """
 
+        :param employee:
+        :return:
+        """
+        self.stack.push(employee)
 
     def isOccupied(self):
         """
