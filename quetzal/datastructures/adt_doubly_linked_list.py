@@ -1,7 +1,10 @@
-from Double_Node import Double_Node
+class Double_Node:
+    def __init__(self, item, prev, next):
+        self.item = item
+        self.prev = prev
+        self.next = next
 
-
-class Double_Linked_List:
+class AdtDoublyLinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
@@ -34,19 +37,19 @@ class Double_Linked_List:
         return self.length
 
 
-    def insertLocation(self, index, newItem):
+    def insert(self, index, newItem):
         """
         Inserts a node into a given location.
         :param index: The index to insert into
         :param newItem: The item to insert
         :return: Boolean: If the insertion succeeded
         """
-        if self.head is None or index == 0:
+        if self.head is None or index <= 1:
             return self.insertBeginning(newItem)
-        elif index >= self.length:
+        elif index > self.length:
             return self.insertEnd(newItem)
         else:
-            current_node = self.searchNode(index)
+            current_node = self.searchNode(index-1)
             new_node = Double_Node(newItem, current_node, current_node.next)
             #Correct the prev from the node after the new node
             current_node.next.prev = new_node
@@ -91,9 +94,15 @@ class Double_Linked_List:
         :param index: The index of the node that needs to be removed
         :return: Boolean: If the insertion succeeded
         """
+        if index < 1:
+            index = 1
+        if index > self.getLength():
+            index = self.getLength()
         deleted_node = self.searchNode(index)
         before_node = deleted_node.prev
         after_node = deleted_node.next
+        if index == 1:
+            self.head = after_node
         if before_node is not None:
             before_node.next = after_node
         if after_node is not None:
@@ -108,9 +117,15 @@ class Double_Linked_List:
         :return: The retrieved item
         :return: Boolean: If the insertion succeeded
         """
+        if index < 1:
+            index = 1
+        if index > self.getLength():
+            index = self.getLength()
         deleted_node = self.searchNode(index)
         before_node = deleted_node.prev
         after_node = deleted_node.next
+        if index == 1:
+            self.head = after_node
         if before_node is not None:
             before_node.next = after_node
         if after_node is not None:
@@ -126,7 +141,14 @@ class Double_Linked_List:
         """
         i = 0
         current_node = self.head
-        while i < index:
+        while i < index - 1:
             current_node = current_node.next
             i += 1
         return current_node
+
+    def searchItem(self, index):
+        result = self.searchNode(index)
+        if result is None:
+            return None, False
+        else:
+            return result.item, True

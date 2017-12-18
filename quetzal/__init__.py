@@ -2,6 +2,7 @@ from .date import Date
 from .datetime import DateTime
 from .honey import Honey
 from .marshmallow import Marshmallow
+from .chocolateshot import ChocolateShot
 
 import inspect
 
@@ -16,6 +17,7 @@ class Quetzal:
     """
     def __init__(self):
         self.now = 1
+        self.started = False
 
     """
     +add_to_stock(in item: Ingredient, in count = 1: integer)
@@ -60,7 +62,10 @@ class Quetzal:
     Postconditie: de simulatie is gestart. De huidige tijdstap zal nul zijn.
     """
     def start_system(self):
-        pass
+        if self.started:
+            raise RuntimeError("Quetzal precondition broken: the simulation mustn't be running.")
+
+        self.started = True
 
     """
     +is_started(): bool {query}
@@ -70,7 +75,7 @@ class Quetzal:
     Postconditie: geeft True als de simulatie gestart is, of anders False.
     """
     def is_started(self):
-        pass
+        return self.started
 
     """
     +place_order(in order: Bestelling, in datetime: DateTime)
@@ -128,4 +133,39 @@ class Quetzal:
     met x de tijdstap van de simulatie op het huidig moment.
     """
     def log(self):
-        pass
+        html = "<html>\n\
+	<head>\n\
+	<style>\n\
+		table {border-collapse: collapse;}\n\
+		table, td, th {border: 1px solid black;}\n\
+	</style>\n\
+</head>\n\
+	<body>\n\
+		<h1>Log</h1>\n\
+		<table>\n\
+			<thead>\n\
+				<td>tijdstip</td>\n\
+				<td>Stack</td>\n"
+        employees = ["Wim Hofkens", "Jane Doe"]
+
+        for i in employees:
+            html += "				<td>{}</td>\n".format(i)
+
+        html += "				<td>Nieuwe bestellingen</td>\n\
+				<td>Wachtende bestellingen</td>\n"
+
+        stock = ["wit", "melk", "bruin", "zwart", "honing", "marshmallow", "chili"]
+
+        for i in stock:
+            html += "				<td>{}</td>\n".format(i)
+
+        html += "			</thead>\n\
+			<tbody>\n"
+
+        html += "			</tbody>\n\
+		</table>\n\
+	</body>\n\
+</html>"
+
+        with open('test-html.html', 'w') as f:
+            f.write(html)
