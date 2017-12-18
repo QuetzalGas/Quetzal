@@ -48,14 +48,6 @@ class TreeNode:
         self.amount += 1
         return True
 
-
-        # if self.amount < 3:
-        #     if self.items[0] is not None:
-        #         if newItem.searchKey < self.items[0].searchKey:
-        #             self
-        # else:
-        #     return False
-
     def insertChild(self, newChild):
         if newChild is None:
             return False
@@ -244,7 +236,7 @@ class TwoThreeFourTree:
         node.amount -= 2
         return True
 
-    def tableInsert(self, newItem):
+    def tableInsert(self, key, item):
         """
         Inserts 'newItem' in the 2-3-4 tree
         with items with different searchKeys than the searchKey of 'newItem'.
@@ -253,6 +245,7 @@ class TwoThreeFourTree:
         :param newItem: item to be added in the tree.
         :return: True if insert worked, False if not.
         """
+        newItem = TreeItem(key, item)
         if self.root is None:
             self.root = TreeNode()
             self.root.insertItem(newItem)
