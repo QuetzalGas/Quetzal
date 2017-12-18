@@ -1,5 +1,6 @@
 from datastructures import *
 from product import *
+from unittest import TestCase
 
 class Stock:
     def __init__(self, type):
@@ -14,22 +15,22 @@ class Stock:
 
         if "dll" == type or type == "DLL":
             self.type = "dll"
-            self.honeyList = Double_Linked_List()
-            self.marshmallowList = Double_Linked_List()
-            self.chilipepperList = Double_Linked_List()
-            self.whiteChocolateList = Double_Linked_List()
-            self.brownChocolateList = Double_Linked_List()
-            self.milkChocolateList = Double_Linked_List()
-            self.blackChocolateList = CircularLinkedList()
+            self.honeyList = AdtDoublyLinkedList()
+            self.marshmallowList = AdtDoublyLinkedList()
+            self.chilipepperList = AdtDoublyLinkedList()
+            self.whiteChocolateList = AdtDoublyLinkedList()
+            self.brownChocolateList = AdtDoublyLinkedList()
+            self.milkChocolateList = AdtDoublyLinkedList()
+            self.blackChocolateList = AdtDoublyLinkedList()
         elif "cll" == type or type == "CLL":
             self.type = "cll"
-            self.honeyList = CircularLinkedList()
-            self.marshmallowList = CircularLinkedList()
-            self.chilipepperList = CircularLinkedList()
-            self.whiteChocolateList = CircularLinkedList()
-            self.brownChocolateList = CircularLinkedList()
-            self.milkChocolateList = CircularLinkedList()
-            self.blackChocolateList = CircularLinkedList()
+            self.honeyList = AdtCircularLinkedList()
+            self.marshmallowList = AdtCircularLinkedList()
+            self.chilipepperList = AdtCircularLinkedList()
+            self.whiteChocolateList = AdtCircularLinkedList()
+            self.brownChocolateList = AdtCircularLinkedList()
+            self.milkChocolateList = AdtCircularLinkedList()
+            self.blackChocolateList = AdtCircularLinkedList()
 
     def add_item(self, item):
         """
@@ -41,13 +42,13 @@ class Stock:
         """
         index = 1
 
-        if isinstance(item, Honing):
+        if isinstance(item, Honey):
             self.honeyList.insert(index, item)
-        elif isinstance(item, Chilipeper):
+        elif isinstance(item, Chilipepper):
             self.chilipepperList.insert(index, item)
         elif isinstance(item, Marshmallow):
             self.marshmallowList.insert(index, item)
-        elif isinstance(item, Chocoladeshot):
+        elif isinstance(item, Chocolateshot):
             if item.getName() == "wit":
                 self.whiteChocolateList.insert(index, item)
             elif item.getName() == "bruin":
@@ -60,27 +61,27 @@ class Stock:
             return False
         return True
 
-    def is_empty(self, product):
+    def is_empty(self, product_type):
         """
-        Checks whether the table of the given product is empty or not.
+        Checks whether the table of the given product_type is empty or not.
 
-        PRE  :  'product' is a string corresponding to the item-type of a list in the stock. (Marshmallow, Honey, Chilipepper,
+        PRE  :  'product_type' is a string corresponding to the item-type of a list in the stock. (Marshmallow, Honey, Chilipepper,
                 WhiteChocolate, MilkChocolate or BrownChocolate).
         POST :  If the corresponding list is empty, True will be returned.
         """
-        if product == "Honing" or product == "honing":
+        if product_type == "honing" or product_type == "honey":
             return self.honeyList.isEmpty()
-        elif product == "chilipeper" or product == "chili peper" or product == "Chilipeper" or product == "Chili peper":
+        elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.chilipepperList.isEmpty()
-        elif product == "Witte chocolade" or product == "wit" or product == "Wit" or product == "witte chocolate":
+        elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.isEmpty()
-        elif product == "Bruine chocolade" or product == "Bruine" or product == "bruine" or product == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
             return self.brownChocolateList.isEmpty()
-        elif product == "Melk chocolade" or product == "Melk" or product =="melk" or product == "melk chocolade":
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
             return self.milkChocolateList.isEmpty()
-        elif product == "Zwarte chocolade" or product == "Zwart" or product =="zwart" or product == "zwarte chocolade":
+        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
             return self.blackChocolateList.isEmpty()
-        elif product == "marshmallow" or product == "Marshmallow":
+        elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.marshmallowList.isEmpty()
         else:
             print("\tUnvalid product type.")
@@ -94,7 +95,7 @@ class Stock:
         POST :  True is returned, if there is a list that contains items of type('item')
         """
         soort = type(item)
-        if soort == Honey or soort == Marshmallow or soort == WhiteChocolate or soort == BrownChocolate or soort == MilkChocolate or soort == Chilipepper:
+        if soort == Honey or soort == Marshmallow or soort == Chocolateshot or soort == Chilipepper:
             return True
         return False
 
@@ -106,7 +107,7 @@ class Stock:
         """
         return type(item)
 
-    def get_size(self, item):
+    def get_size(self, product_type):
         """
         Finds the size of the list that contains 'item' types.
         :param item: Determines the type of product. (Marshmallow, chili peper, honing...)
@@ -114,19 +115,19 @@ class Stock:
         PRE :   'item' is a string that corresponds to one of the products.
         POST:   The size of the table that contains 'item' products is returned.
         """
-        if item == "Honing" or item == "honing":
+        if product_type == "honing" or product_type == "honey":
             return self.honeyList.getLength()
-        if item == "marshmallow" or item == "Marshmallow":
+        elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.marshmallowList.getLength()
-        if item == "wit" or item == "Wit" or item == "Witte chocolade" or item == "witte chocolade":
+        elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.getLength()
-        if item == "bruin" or item == "Bruin" or item == "bruine chocolade" or item == "Bruine Chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
             return self.brownChocolateList.getLength()
-        if item == "zwart" or item == "Zwart" or item == "Zwarte chocolade" or item == "zwart chocolade":
+        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
             return self.blackChocolateList.getLength()
-        if item == "melk" or item == "Melk" or item == "Melk chocolade" or item == "melk chocolade":
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
             return self.milkChocolateList.getLength()
-        if item == "chili peper" or item == "chilipeper" or item == "Chilipeper" or item == "Chili peper":
+        elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.chilipepperList.getLength()
         else:
             print("Unvalid type.")
@@ -166,8 +167,8 @@ class Stock:
             first = stockList.searchItem(index)[0]
         if first is None:
             return deletedItems
-        while first.vervaldatum < date and stockList.getLength() >= 1:
-            deletedItems.append(first.vervaldatum)
+        while first.getExpirationdate() < date and stockList.getLength() >= 1:
+            deletedItems.append(first.getExpirationdate())
             stockList.delete(index)
             if self.type == "cll":
                 first = stockList.retrieve(index)[0]
@@ -177,31 +178,31 @@ class Stock:
                 break
         return deletedItems
 
-    def pop_item(self, product, date):
+    def pop_item(self, product_type, date):
         """
-        Removes the product (of type 'itemType') with the most urgent expiry date from te corresponding stock-list.
-        Product with expiry dates that have already passed will be ignored, the method 'cleanStock' takes
+        Removes the product (of type 'product_type') with the most urgent expiry date from te corresponding stock-list.
+        Product with expiry dates that have already passed will be ignored, the method 'clean_stock' takes
         care of removing those.
 
-        PRE  :  'itemType' is a string corresponding to the item-type of a list in the stock. (Marshmallow, Honey, Chilipepper,
+        PRE  :  'product_type' is a string corresponding to the item-type of a list in the stock. (Marshmallow, Honey, Chilipepper,
                 WhiteChocolate, MilkChocolate or BrownChocolate).
-        POST :  If 'itemType' corresponds to a type of the lists in the stock and this particular list containes items
+        POST :  If 'product_type corresponds to a type of the lists in the stock and this particular list containes items
                 with expiry dates "higher or equal to" the given expiry date, then the item with the most urgent expiry
                 date is removed from that list. In this case, True is returned.
         """
-        if product == "Honing" or product == "honing":
+        if product_type == "honing" or product_type == "honey":
             return self.remove_by_date(self.honeyList, date)
-        elif product == "chilipeper" or product == "chili peper" or product == "Chilipeper" or product == "Chili peper":
+        elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.remove_by_date(self.chilipepperList, date)
-        elif product == "Witte chocolade" or product == "wit" or product == "Wit" or product == "witte chocolate":
+        elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.remove_by_date(self.whiteChocolateList, date)
-        elif product == "Bruine chocolade" or product == "Bruine" or product == "bruine" or product == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruin" or product_type == "bruine chocolade":
             return self.remove_by_date(self.brownChocolateList, date)
-        elif product == "Melk chocolade" or product == "Melk" or product == "melk" or product == "melk chocolade":
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type == "melk" or product_type == "melk chocolade":
             return self.remove_by_date(self.milkChocolateList, date)
-        elif product == "Zwarte chocolade" or product == "Zwart" or product == "zwart" or product == "zwarte chocolade":
+        elif product_type == "black chocolade" or product_type == "black" or product_type == "zwart" or product_type == "zwarte chocolade":
             return self.remove_by_date(self.blackChocolateList, date)
-        elif product == "marshmallow" or product == "Marshmallow":
+        elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.remove_by_date(self.marshmallowList, date)
         else:
             print("\tUnvalid product type.")
@@ -217,7 +218,7 @@ class Stock:
                         (place_i, bool) = stockList.retrieve(i)
                         (place_after, bool) = stockList.retrieve(i + 1)
 
-                        if place_after.get_expiration_date < place_i.get_expiration_date:
+                        if place_after.getExpirationdate() < place_i.getExpirationdate():
                             sorted = False
 
                             stockList.insert(i, place_after)
@@ -234,7 +235,7 @@ class Stock:
                             cur = stockList.head
                             for j in range(0, stockList.getLength()):
                                 cur = cur.next
-                        if place_after.get_expiration_date < place_i.get_expiration_date:
+                        if place_after.getExpirationdate() < place_i.getExpirationdate():
                             sorted = False
                             stockList.delete(i+1)
                             stockList.insert(i, place_after)
@@ -261,7 +262,7 @@ class Stock:
                 item_at_index = stockList.retrieve(index)[0]
             else:
                 item_at_index = stockList.searchItem(index)[0]
-            if item_at_index.get_expiration_date >= date:
+            if item_at_index.getExpirationdate() >= date:
                 stockList.delete(index)
                 return True
             index += 1
