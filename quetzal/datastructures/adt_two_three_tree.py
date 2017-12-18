@@ -96,13 +96,13 @@ class AdtTwoThreeTree:
         wortelScenario = False              # Nodig om te bepalen of er een split bij de wortel wordt uitgevoerd of niet
 
         if self.parent is None:             # Als de node geen parent heeft,
-            pNode = TwoThreeTree()          # maak dan een nieuwe knoop (twoThreeTree) genaamd pNode aan.
+            pNode = AdtTwoThreeTree()          # maak dan een nieuwe knoop (twoThreeTree) genaamd pNode aan.
             wortelScenario = True
         else:                               # Anders,
             pNode = self.parent             # als de node wel nog een parent heeft, dan is deze parent de pNode.
 
-        n1 = TwoThreeTree()             # Maak twee nieuwe 2-3 bomen aan, n1 en n2
-        n2 = TwoThreeTree()
+        n1 = AdtTwoThreeTree()             # Maak twee nieuwe 2-3 bomen aan, n1 en n2
+        n2 = AdtTwoThreeTree()
         n1.insert(self.rootLeft)        # Plaats in n1 het linkerItem van de node en in n2 het rechterItem
         n2.insert(self.rootRight)
         n1.parent = pNode               # Maak pNode de ouder van n1 en n2
@@ -155,6 +155,16 @@ class AdtTwoThreeTree:
 
         if not wortelScenario and pNode.nodeType == 4:          # Als de pNode drie items blijkt te bevatten (alleen dan is rootMid niet None)
             pNode.split()                                       # Voer hier dan ook de split op uit.
+
+    def insertItem(self, key, item):
+        """
+        Voegt een nieuw item toe aan de boom, als de searchkey van dit item nog niet voorkomt.
+        :param key:  De zoeksleutel van het item.
+        :param item: Het item dat ingevoegd moet worden
+        : return: bool die  true is als het item toegevoegd is.
+                            false is als het item niet toegevoegd is (de searchkey kwam dus al voor).
+        """
+        self.insert(TreeItem(item, key))
 
     def insert(self, newItem):
         """
