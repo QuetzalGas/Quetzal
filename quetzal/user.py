@@ -11,21 +11,22 @@ class UserContainer:
     POST:   Depending op 'type', the UserContainer now contains a table which is a 23, 234, rb or BS tree or a hashmap.
     """
     def __init__(self, type):
+        self.idcounter = 0
         if type == 'bs' or type == 'BS':
             self.type = 'bs'
-            self.table = BinarySearchTree()
+            self.table = AdtBinarySearchTree()
         elif type == '23':
             self.type = '23'
-            self.table = TwoThreeTree()
+            self.table = AdtTwoThreeTree()
         elif type == '234':
             self.type = '234'
-            self.table = TwoThreeFourTree()
+            self.table = AdtTwoThreeFourTree()
         elif type == 'rb' or type == 'RB':
             self.type = 'rb'
-            self.table = RbTree()
+            self.table = AdtRedBlackTree()
         elif type == 'h' or type == 'H':
             self.type = 'h'
-            self.table = HashMap(254, 2)  # 254 is the max length of a valid email-address
+            self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
             print("Unvalid type.")
 
@@ -60,26 +61,26 @@ class UserContainer:
         if(resultRetrieve is not False):
             if self.type == 'h':
                 retrievedItem = retrievedItem.data
-            retrievedItem.addOrder(order)
+            retrievedItem.add_order(order)
         else:
-            user = User(firstname, lastname, email)
-            user.addOrder(order)
-            self.addNewUser(user)
+            user = User(self.calculate_id(), firstname, lastname, email)
+            user.add_order(order)
+            self.add_new_user(user)
 
     def add_new_user(self, user):
         """
         Adds a new user to the container. This method is not supposed to be used by an outsider, it's used inside the
-        checkUser method.
+        check_user method.
         PRE :   'user' is of type User.
         POST:   'user' is added to the table.
         """
         if self.type == 'bs':
-            self.table.searchTreeInsert(TreeItem(user.email, user))
+            self.table.insert(user.email, user)
         elif self.type == '23':
-            self.table.insert(TreeItem(user.email, user))
+            self.table.insertItem(user.email, user)
         elif self.type == '234':
-            self.table.tableInsert(TreeItem(user.email, user))
-        elif self.type == 'rb' or type == 'RB':
+            self.table.tableInsert(user.email, user)
+        elif self.type == 'rb':
             self.table.insert(user.email, user)
         elif self.type == 'h':
             self.table.tableInsert(user.email, user)
@@ -123,11 +124,16 @@ class UserContainer:
         if self.type == 'h':
             return self.table.isEmpty()
 
+    def calculate_id(self):
+        id = self.idcounter
+        self.idcounter += 1
+        return id
+
 class User:
     """
     A customer of the chocolade bar.
     """
-    def __init__(self, firstname, lastname, email):
+    def __init__(self, id,  firstname, lastname, email):
         """
         Initializes a new customer with their name, email and unique id.
         PRE :   'id' is the unique id of the user. 'firstname', 'lastname' and 'email' are data of the user.
@@ -136,7 +142,7 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.id = 0
+        self.id = id
         self.orders = list()
 
     def add_order(self, order):

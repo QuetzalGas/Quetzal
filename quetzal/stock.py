@@ -167,8 +167,8 @@ class Stock:
             first = stockList.searchItem(index)[0]
         if first is None:
             return deletedItems
-        while first.getExpirationdate() < date and stockList.getLength() >= 1:
-            deletedItems.append(first.getExpirationdate())
+        while first.get_expiration_date() < date and stockList.getLength() >= 1:
+            deletedItems.append(first.get_expiration_date())
             stockList.delete(index)
             if self.type == "cll":
                 first = stockList.retrieve(index)[0]
@@ -218,7 +218,7 @@ class Stock:
                         (place_i, bool) = stockList.retrieve(i)
                         (place_after, bool) = stockList.retrieve(i + 1)
 
-                        if place_after.getExpirationdate() < place_i.getExpirationdate():
+                        if place_after.get_expiration_date() < place_i.get_expiration_date():
                             sorted = False
 
                             stockList.insert(i, place_after)
@@ -235,7 +235,7 @@ class Stock:
                             cur = stockList.head
                             for j in range(0, stockList.getLength()):
                                 cur = cur.next
-                        if place_after.getExpirationdate() < place_i.getExpirationdate():
+                        if place_after.get_expiration_date() < place_i.get_expiration_date():
                             sorted = False
                             stockList.delete(i+1)
                             stockList.insert(i, place_after)
@@ -262,7 +262,7 @@ class Stock:
                 item_at_index = stockList.retrieve(index)[0]
             else:
                 item_at_index = stockList.searchItem(index)[0]
-            if item_at_index.getExpirationdate() >= date:
+            if item_at_index.get_expiration_date() >= date:
                 stockList.delete(index)
                 return True
             index += 1
