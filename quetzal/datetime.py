@@ -14,7 +14,8 @@ class DateTime:
         return self.minute
 
     def __lt__(self, other):
-        return (self.date < other.date) and (self.hour < other.hour) and \
+        return (self.date < other.date) and \
+               (self.hour < other.hour) and \
                (self.minute < other.minute)
 
     def __str__(self):
