@@ -30,7 +30,7 @@ class Order:
         """
         self.collected = True
 
-    def getUserID(self):
+    def get_user_id(self):
         """
         Returns user-id.
         PRE: None.
@@ -39,7 +39,7 @@ class Order:
         """
         return self.userID
 
-    def getTime(self):
+    def get_time(self):
         """
         Returns timestamp
         PRE: None.
@@ -48,7 +48,7 @@ class Order:
         """
         return self.time
 
-    def getChocolatemilk(self):
+    def get_chocolatemilk(self):
         """
         Returns the chocolate milk.
         PRE: None.
@@ -57,7 +57,7 @@ class Order:
         """
         return self.chocolatemilk
 
-    def getSearchKey(self):
+    def get_searchkey(self):
         """
         Returns the search key of the order, which is the timestamp.
         PRE: None.
