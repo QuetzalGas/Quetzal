@@ -7,36 +7,36 @@ class ChocolateMilk:
 
     def getId(self):
         """
-
-        :return:
+        Returns the id of the chocolatemilk.
+        :return: The id.
         """
         return self.id
 
     def getIngredients(self):
         """
-
-        :return:
+        Returns the ingredients in the chocolatemilk.
+        :return: A list with all the
         """
         return self.contains
 
     def getWorkLoad(self):
         """
-
+        Returns the workload the chocolatemilk creates.
         :return:
         """
         return self.workload
 
     def getTotalPrice(self):
         """
-
+        Returns the total price of the chocolatemilk.
         :return:
         """
         return self.price
 
     def addProduct(self, product):
         """
-
-        :param product:
+        Add a product to the chocolatemilk.
+        :param product: The product to be added 
         :return:
         """
         self.contains.append(product)

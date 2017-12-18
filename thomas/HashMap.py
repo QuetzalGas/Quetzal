@@ -6,12 +6,13 @@ QUADRATIC_PROBING = 1
 SEPERATE_CHAINING = 2
 
 class HashMap:
-    def __init__(self, length, collisiontype):
+    def __init__(self, length, collisiontype, hashfuntion):
         self.lijst = None
         #If the params are valid, create the main variables
         if self.createHashMap(length, collisiontype):
             self.length = length
             self.collisionType = collisiontype
+            self.hashfunction = hashfuntion
 
     def createHashMap(self, length, collisiontype):
         """
@@ -119,7 +120,7 @@ class HashMap:
                 return True
         else:
             position = self.solveCollision(adres, searchKey, True)
-            if position == False:
+            if not position:
                 return position
             else:
                 self.lijst[position] = ""
@@ -238,5 +239,3 @@ class HashMap:
         else:
             self.lijst[adres].insertBeginning(data)
             return True
-
-

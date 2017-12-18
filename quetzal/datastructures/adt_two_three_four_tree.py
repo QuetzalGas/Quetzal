@@ -48,14 +48,6 @@ class TreeNode:
         self.amount += 1
         return True
 
-
-        # if self.amount < 3:
-        #     if self.items[0] is not None:
-        #         if newItem.searchKey < self.items[0].searchKey:
-        #             self
-        # else:
-        #     return False
-
     def insertChild(self, newChild):
         if newChild is None:
             return False
@@ -244,7 +236,7 @@ class AdtTwoThreeFourTree:
         node.amount -= 2
         return True
 
-    def tableInsert(self, newItem):
+    def tableInsert(self, key, item):
         """
         Inserts 'newItem' in the 2-3-4 tree
         with items with different searchKeys than the searchKey of 'newItem'.
@@ -253,6 +245,7 @@ class AdtTwoThreeFourTree:
         :param newItem: item to be added in the tree.
         :return: True if insert worked, False if not.
         """
+        newItem = TreeItem(key, item)
         if self.root is None:
             self.root = TreeNode()
             self.root.insertItem(newItem)
@@ -536,183 +529,5 @@ class AdtTwoThreeFourTree:
                             current = current.children[k]
                             break
                         k += 1
-
-
-
-
-# t1 = TreeItem(1,1)
-# t2 = TreeItem(2,2)
-# t3 = TreeItem(3,3)
-# t4 = TreeItem(4,4)
-# t5 = TreeItem(5,5)
-# t6 = TreeItem(6,6)
-# t7 = TreeItem(7,7)
-# t8 = TreeItem(8,8)
-# t9 = TreeItem(9,9)
-# t10 = TreeItem(10,10)
-# L = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10]
-#
-# n = Node()
-# i = 0
-# for x in L:
-#     i += 1
-#     print("Loop",i)
-#     print("node, voor:")
-#     n.print()
-#     n.insertItem(x)
-#     print("node, na: (", x.item, ")")
-#     n.print()
-#     print()
-
-# K = [60, 30, 10, 20, 55, 40, 70, 80, 15, 90, 100, 50, 33, 22, 11, 44, 66, 77, 88, 99, 303, 202, 404, 505, 606, 707]
-# t = TwoThreeFourTree()
-# for i in L:
-#     t.tableInsert(i)
-# M = {None}
-# if None in M:
-#     M.remove(None)
-# t.traverse(M.add)
-# for i in M:
-#     print(i)
-
-# filetext = "test:\n"
-# filetext = t.dot(t.root, 1, filetext)
-# print(filetext)
-# n0 = TreeNode()
-# n1 = TreeNode()
-# n2 = TreeNode()
-# n3 = TreeNode()
-# n4 = TreeNode()
-# n1.insertItem(t1)
-# n1.insertItem(t2)
-# n2.insertItem(t7)
-# n3.insertItem(t9)
-# n3.insertItem(t10)
-# n4.insertItem(t4)
-# n0.insertItem(t3)
-# n0.insertItem(t8)
-# n0.insertChild(n1)
-# n0.insertChild(n2)
-# n0.insertChild(n3)
-# n0.insertChild(n4)
-
-# n0.print()
-#
-# n0.deleteChild(n0.children[3])
-# n0.print()
-
-# P = [10,100,30,80,50]
-# t = TwoThreeFourTree()
-# for i in P:
-#     t.tableInsert(i)
-
-# t.tableDelete(505)
-#
-# Q = [60,70,40]
-# for i in Q:
-#     t.tableInsert(i)
-#
-# t.tableDelete(88)
-#
-# R = [90,20]
-# for i in R:
-#     t.tableInsert(i)
-#
-# t.tableDelete(10)
-# t.tableDelete(6)
-# t.tableDelete(100)
-# t.tableDelete(70)
-# t.tableDelete(15)
-# t.tableDelete(80)
-#
-# t.tableDelete(40)
-# t.tableDelete(90)
-# t.tableDelete(20)
-# t.tableDelete(55)
-# t.tableDelete(30)
-# t.tableDelete(50)
-
-# t.tableDelete(707)
-# t.tableDelete(404)
-# t.tableDelete(202)
-# t.tableDelete(303)
-# t.tableDelete(505)
-# t.tableDelete(606)
-
-# print(t.tableIsEmpty())
-#
-# filetext = "test:\n"
-# filetext = t.dot(t.root, 1, filetext)
-# print(filetext)
-
-# TOEPASSINGSOPDRACHT
-# Opdracht 6
-# Door Joke Duwaerts
-# Van groepje met Ivo Wingelaar, Louise Wauters en Thomas Van Onsem
-
-# Deze testen zijn gebasseerd op het contract van Louise Wauters en dienen dus ook als test voor haar 2-3-4 boom.
-
-
-# Aanmaken van nodes (met item en key) om de 2-3-4-boom mee te testen
-# item1 = TreeItem(1,'1')
-# item2 = TreeItem(2,'2')
-# item3 = TreeItem(3,'3')
-# item4 = TreeItem(4,'4')
-# item5 = TreeItem(5,'5')
-# item6 = TreeItem(6,'6')
-# item7 = TreeItem(7,'7')
-# item8 = TreeItem(8,'8')
-# item9 = TreeItem(9,'9')
-# item10 = TreeItem(10,'10')
-# item11 = TreeItem(11,'11')
-#
-# # Aanmaken van de 2-3-4-boom
-# mytree = TwoThreeFourTree()
-# # mytree.createTable()
-#
-# # Tussen haakjes staat steeds het verwachte (en correcte) antwoord:
-# print("\nChecken of boom leeg is (True): ", mytree.tableIsEmpty())
-#
-# print("\nInsert item5: ")
-# mytree.tableInsert(item5)
-# print("\nChecken of boom leeg is (False): ", mytree.tableIsEmpty())
-#
-# print("\nInsert item6: ")
-# mytree.tableInsert(item6)
-# print("\nChecken of boom leeg is (False): ", mytree.tableIsEmpty())
-#
-# print("\nInsert item2: ")
-# mytree.tableInsert(item2)
-# print("\nChecken of boom leeg is (False): ", mytree.tableIsEmpty())
-#
-# print("\nDelete zoeksleutel '8': ")
-# print("Delete moet False geven, '8' niet aanwezig: ", mytree.tableDelete(8))
-#
-# print("\nDelete zoeksleutel '5': ")
-# print("Delete moet True geven, '5' aanwezig: ", mytree.tableDelete(5))
-#
-# print("\nInsert item9: ")
-# mytree.tableInsert(item9)
-# print("\nChecken of boom leeg is (False): ", mytree.tableIsEmpty())
-#
-# print("\nInsert item10: ")
-# mytree.tableInsert(item10)
-# print("\nChecken of boom leeg is (False): ", mytree.tableIsEmpty())
-#
-# print("\nRetrieve zoeksleutel '2': ")
-# print("Retrieve moet True en item2 geven, '2' aanwezig: ", mytree.tableRetrieve(2))
-#
-# print("\nRetrieve zoeksleutel '7': ")
-# print("Retrieve moet False geven, '7' niet aanwezig: ", mytree.tableRetrieve(7))
-#
-# print("\nInsert item1:")
-# mytree.tableInsert(item1)
-#
-# print("Inorder traverse (1 2 6 9 10)")
-# mytree.inorderTraverseTable(print)
-#
-# # Afhankelijk van welke namen er werden gebruikt voor de parameters in de TwoThreeFourTree,
-# # zou men kunnen checken of de parent, root en kinderen van de 2-3-4 bom op None staan. bv met print(mytree.root)
-# print("Destroy the table: ")
 
 

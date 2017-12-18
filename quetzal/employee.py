@@ -34,34 +34,33 @@ class Employee:
         self.workload = None
         self.occupied = None
         self.workDay = None
-        #TODO remove from stack if working
-        #TODO remove from general datastructure
+        #TODO remove from datastructure for employees
         return True
 
     def get_id(self):
         """
-        Get's the employee's id.
+        Returns the employee's id.
         :return: The id of the employee.
         """
         return self.id
 
     def get_name(self):
         """
-        Get's the employee's name.
+        Returns the employee's name.
         :return: The name of the employee.
         """
         return self.firstName + " " + self.lastName
 
     def get_workload(self):
         """
-        Get's the workload of the employee.
+        Returns the workload of the employee.
         :return: The workload of this employee.
         """
         return self.workload
 
     def set_load(self, load):
         """
-        Set's the workload of the employee to a new value.
+        Sets the workload of the employee to a new value.
         :param load: The new workload.
         """
         self.workload(load)
@@ -80,7 +79,7 @@ class Employee:
         :param order: The order that needs to be processed.
         """
         self.occupied = True
-        length = math.ceil(self.workload / order.getLoad()) #TODO implement TIMEUNITS
+        length = math.ceil(self.workload / order.getLoad())
         time.sleep(length)
         self.workDay.putBackOnStack(self)
         self.occupied = False
