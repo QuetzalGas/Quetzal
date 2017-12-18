@@ -1,6 +1,7 @@
 from.datastructures import *
+from.employee import Employee
 
-class employee_present:
+class EmployeePresent:
     def __init__(self):
         self.employeesPresent = adt_doubly_linked_list.AdtDoublyLinkedList()
         self.stack = adt_stack.AdtStack()

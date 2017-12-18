@@ -4,7 +4,7 @@ class Node:
         self.next = next
 
 class AdtStack:
-    def createStack(self):
+    def __init__(self):
         """
         Creates a new stack.
         """
