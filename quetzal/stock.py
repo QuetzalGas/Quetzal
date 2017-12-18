@@ -1,5 +1,5 @@
-from Double_Linked_Lists import Double_Linked_List
-from CircularLinkedList import CircularLinkedList
+from datastructures import *
+from product import *
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Title:      Stock
@@ -21,39 +21,6 @@ date:       December 2017
 - cleanStock( list vervallen )
 """
 
-class Product:
-    def __init__(self, vervaldatum):
-        self.prijs = 0
-        self.vervaldatum = vervaldatum
-
-class Chilipepper(Product):
-    def __init__(self, vervaldatum):
-        Product.__init__(self, vervaldatum)
-
-class Chocolateshots(Product):
-    def __init__(self, vervaldatum):
-        Product.__init__(self, vervaldatum)
-
-class MilkChocolate(Chocolateshots):
-    def __init__(self, vervaldatum):
-        Chocolateshots.__init__(self, vervaldatum)
-
-class BrownChocolate(Chocolateshots):
-    def __init__(self, vervaldatum):
-        Chocolateshots.__init__(self, vervaldatum)
-
-class WhiteChocolate(Chocolateshots):
-    def __init__(self, vervaldatum):
-        Chocolateshots.__init__(self, vervaldatum)
-
-class Honey(Product):
-    def __init__(self, vervaldatum):
-        Product.__init__(self, vervaldatum)
-
-class Marshmallow(Product):
-    def __init__(self, vervaldatum):
-        Product.__init__(self, vervaldatum)
-
 class Stock:
     def __init__(self, type):
         """
@@ -73,6 +40,7 @@ class Stock:
             self.whiteChocolateList = Double_Linked_List()
             self.brownChocolateList = Double_Linked_List()
             self.milkChocolateList = Double_Linked_List()
+            self.blackChocolateList = CircularLinkedList()
         elif "cll" == type or type == "CLL":
             self.type = "cll"
             self.honeyList = CircularLinkedList()
@@ -81,8 +49,9 @@ class Stock:
             self.whiteChocolateList = CircularLinkedList()
             self.brownChocolateList = CircularLinkedList()
             self.milkChocolateList = CircularLinkedList()
+            self.blackChocolateList = CircularLinkedList()
 
-    def addItem(self, item):
+    def add_item(self, item):
         """
         Adds an item, which is a certain product, to the corresponding table.
 
@@ -92,51 +61,26 @@ class Stock:
         """
         index = 1
 
-        if isinstance(item, Honey):
+        if isinstance(item, Honing):
             self.honeyList.insert(index, item)
-        elif isinstance(item, Chilipepper):
+        elif isinstance(item, Chilipeper):
             self.chilipepperList.insert(index, item)
         elif isinstance(item, Marshmallow):
             self.marshmallowList.insert(index, item)
-        elif isinstance(item, WhiteChocolate):
-            self.whiteChocolateList.insert(index, item)
-        elif isinstance(item, BrownChocolate):
-            self.brownChocolateList.insert(index, item)
-        elif isinstance(item, MilkChocolate):
-            self.milkChocolateList.insert(index, item)
+        elif isinstance(item, Chocoladeshot):
+            if item.getName() == "wit":
+                self.whiteChocolateList.insert(index, item)
+            elif item.getName() == "bruin":
+                self.brownChocolateList.insert(index, item)
+            elif item.getName() == "melk":
+                self.milkChocolateList.insert(index, item)
+            else:
+                self.blackChocolateList.insert(index, item)
         else:
             return False
         return True
 
-    def popItem(self, itemType, date):
-        """
-        Removes the product (of type 'itemType') with the most urgent expiry date from te corresponding stock-list.
-        Product with expiry dates that have already passed will be ignored, the method 'cleanStock' takes
-        care of removing those.
-
-        PRE  :  'itemType' is a string corresponding to the item-type of a list in the stock. (Marshmallow, Honey, Chilipepper,
-                WhiteChocolate, MilkChocolate or BrownChocolate).
-        POST :  If 'itemType' corresponds to a type of the lists in the stock and this particular list containes items
-                with expiry dates "higher or equal to" the given expiry date, then the item with the most urgent expiry
-                date is removed from that list. In this case, True is returned.
-        """
-        if itemType == "Honey" or itemType == "honey":
-            return self.removeByDate(self.honeyList, date)
-        elif "marshmallow" == itemType or itemType == "Marshmallow":
-            return self.removeByDate(self.marshmallowList, date)
-        elif itemType == "chilipepper" or itemType == "chili pepper" or itemType == "Chilipepper" or itemType == "Chili pepper":
-            return self.removeByDate(self.chilipepperList, date)
-        elif itemType == "White chocolate" or itemType == "WhiteChocolate" or itemType == "white chocolate" or itemType == "whitechocolate":
-            return self.removeByDate(self.whiteChocolateList, date)
-        elif itemType == "Brown chocolate" or itemType == "BrownChocolate" or itemType == "brown chocolate" or itemType == "bhitechocolate":
-            return self.removeByDate(self.brownChocolateList, date)
-        elif itemType == "Milk chocolate" or itemType == "MilkChocolate" or itemType == "milk chocolate" or itemType == "milkchocolate":
-            return self.removeByDate(self.milkChocolateList, date)
-        else:
-            print("\tUnvalid product type.")
-            return False
-
-    def isEmpty(self, product):
+    def is_empty(self, product):
         """
         Checks whether the table of the given product is empty or not.
 
@@ -144,23 +88,25 @@ class Stock:
                 WhiteChocolate, MilkChocolate or BrownChocolate).
         POST :  If the corresponding list is empty, True will be returned.
         """
-        if product == "Honey" or product == "honey":
+        if product == "Honing" or product == "honing":
             return self.honeyList.isEmpty()
-        elif product == "chilipepper" or product == "chili pepper" or product == "Chilipepper" or product == "Chili pepper":
+        elif product == "chilipeper" or product == "chili peper" or product == "Chilipeper" or product == "Chili peper":
             return self.chilipepperList.isEmpty()
-        elif product == "White chocolate" or product == "WhiteChocolate" or product == "white chocolate" or product == "whitechocolate":
+        elif product == "Witte chocolade" or product == "wit" or product == "Wit" or product == "witte chocolate":
             return self.whiteChocolateList.isEmpty()
-        elif product == "Brown chocolate" or product == "BrownChocolate" or product == "brown chocolate" or product == "bhitechocolate":
+        elif product == "Bruine chocolade" or product == "Bruine" or product == "bruine" or product == "bruine chocolade":
             return self.brownChocolateList.isEmpty()
-        elif product == "Milk chocolate" or product == "MilkChocolate" or product =="milk chocolate" or product == "milkchocolate":
+        elif product == "Melk chocolade" or product == "Melk" or product =="melk" or product == "melk chocolade":
             return self.milkChocolateList.isEmpty()
+        elif product == "Zwarte chocolade" or product == "Zwart" or product =="zwart" or product == "zwarte chocolade":
+            return self.blackChocolateList.isEmpty()
         elif product == "marshmallow" or product == "Marshmallow":
             return self.marshmallowList.isEmpty()
         else:
             print("\tUnvalid product type.")
             return False
 
-    def containsItem(self, item):
+    def contains_item(self, item):
         """
         Checks whether a list of type('item') is present.
 
@@ -172,7 +118,7 @@ class Stock:
             return True
         return False
 
-    def findType(self, item):
+    def find_type(self, item):
         """
         Finds the type of 'item'.
         PRE  :  'item' is an object of type Marshmellow, Chilipepper, Honey, WhiteChocolate, MilkChocolate or BrownChocolate)
@@ -180,7 +126,33 @@ class Stock:
         """
         return type(item)
 
-    def cleanStock(self, date):
+    def get_size(self, item):
+        """
+        Finds the size of the list that contains 'item' types.
+        :param item: Determines the type of product. (Marshmallow, chili peper, honing...)
+        :return: an integer that represents the size of the table that contains 'item' products
+        PRE :   'item' is a string that corresponds to one of the products.
+        POST:   The size of the table that contains 'item' products is returned.
+        """
+        if item == "Honing" or item == "honing":
+            return self.honeyList.getLength()
+        if item == "marshmallow" or item == "Marshmallow":
+            return self.marshmallowList.getLength()
+        if item == "wit" or item == "Wit" or item == "Witte chocolade" or item == "witte chocolade":
+            return self.whiteChocolateList.getLength()
+        if item == "bruin" or item == "Bruin" or item == "bruine chocolade" or item == "Bruine Chocolade":
+            return self.brownChocolateList.getLength()
+        if item == "zwart" or item == "Zwart" or item == "Zwarte chocolade" or item == "zwart chocolade":
+            return self.blackChocolateList.getLength()
+        if item == "melk" or item == "Melk" or item == "Melk chocolade" or item == "melk chocolade":
+            return self.milkChocolateList.getLength()
+        if item == "chili peper" or item == "chilipeper" or item == "Chilipeper" or item == "Chili peper":
+            return self.chilipepperList.getLength()
+        else:
+            print("Unvalid type.")
+            return None
+
+    def clean_stock(self, date):
         """
         Checks all stock-lists and returns a list which contains products that are expired.
 
@@ -194,87 +166,10 @@ class Stock:
         allDeletedItems += self.cleanOneStock(self.milkChocolateList, date)
         allDeletedItems += self.cleanOneStock(self.chilipepperList, date)
         allDeletedItems += self.cleanOneStock(self.marshmallowList, date)
+        allDeletedItems += self.cleanOneStock(self.blackChocolateList, date)
         return allDeletedItems
 
-    def sort(self, stockList):
-        """
-        Sorts the items in a 'stockList' by means of their searchkey (expiry date).
-        The bubble sort is used.
-        """
-        sorted = False
-        if self.type == "cll":
-            for area in range(1, stockList.getLength()):
-                if not sorted:
-                    sorted = True
-                    for i in range(1, stockList.getLength() - area + 1):
-                        (place_i, bool) = stockList.retrieve(i)
-                        (place_after, bool) = stockList.retrieve(i + 1)
-
-                        if place_i.vervaldatum > place_after.vervaldatum:
-                            sorted = False
-
-                            stockList.insert(i, place_after)
-                            stockList.delete(i + 2)
-
-        else:
-            for area in range(1, stockList.getLength()):
-                if not sorted:
-                    sorted = True
-                    for i in range(1, stockList.getLength() - area + 1):
-                        place_i = stockList.searchNode(i)
-                        place_after = place_i.next
-
-                        if place_i.item.vervaldatum > place_after.item.vervaldatum:
-                            sorted = False
-                            if place_i.prev is not None:
-                                place_i.prev.next = place_after
-                            place_after.prev = place_i.prev
-                            place_i.prev = place_after
-                            place_i.next = place_after.next
-                            place_after.next = place_i
-                            if place_i.next is not None:
-                                place_i.next.prev = place_i
-                            if (i == 1):
-                                stockList.head = place_after
-
-    def removeByDate(self, stockList, date):
-        """
-        Removes the item with most urgent expiry date from the given 'stockList' (one of the six lists that the stock
-        contains).
-
-        PRE  :  'date' is the date that is used as reference to check which expiry dates have already passed and must
-                therefore be ignored. (One does not simply put an expired product into a chocolate milk.)
-                'stockList' is one of the six stock-lists that the whole stock contains.
-        POST :  The item with most urgent expiry date is removed from 'stockList' and True is returned. If there wasn't
-                an item with a expiry date "higher or equal" to 'date', then False is returned.
-        """
-        if stockList.isEmpty():
-            return False
-        self.sort(stockList)
-        if self.type == "cll":
-            prev = stockList.head
-            cur = prev.next
-            while cur is not stockList.dummyhead:
-                if cur.item.vervaldatum >= date:
-                    prev.next = cur.next
-                    return True
-                cur = cur.next
-                prev = prev.next
-        else:
-            cur = stockList.head
-            while cur.next is not None:
-                if cur.item.vervaldatum >= date:
-                    if cur.prev is not None:
-                        cur.prev.next = cur.next
-                    else:
-                        stockList.head = cur.next
-                    cur.next.prev = cur.prev
-                    stockList.length -= 1
-                    return True
-                cur = cur.next
-        return False
-
-    def cleanOneStock(self, stockList, date):
+    def clean_one_stock(self, stockList, date):
         """
         Cleans 'stockList' by removing all items (if present) with an expiry date that has already passed 'date'.
         PRE  :  'stockList' is one of the stocks of the whole stock.
@@ -302,7 +197,7 @@ class Stock:
                 break
         return deletedItems
 
-    def popItem2(self, itemType, date):
+    def pop_item(self, product, date):
         """
         Removes the product (of type 'itemType') with the most urgent expiry date from te corresponding stock-list.
         Product with expiry dates that have already passed will be ignored, the method 'cleanStock' takes
@@ -314,23 +209,25 @@ class Stock:
                 with expiry dates "higher or equal to" the given expiry date, then the item with the most urgent expiry
                 date is removed from that list. In this case, True is returned.
         """
-        if itemType == "Honey" or itemType == "honey":
-            return self.removeByDate2(self.honeyList, date)
-        elif "marshmallow" == itemType or itemType == "Marshmallow":
-            return self.removeByDate2(self.marshmallowList, date)
-        elif itemType == "chilipepper" or itemType == "chili pepper" or itemType == "Chilipepper" or itemType == "Chili pepper":
-            return self.removeByDate2(self.chilipepperList, date)
-        elif itemType == "White chocolate" or itemType == "WhiteChocolate" or itemType == "white chocolate" or itemType == "whitechocolate":
-            return self.removeByDate2(self.whiteChocolateList, date)
-        elif itemType == "Brown chocolate" or itemType == "BrownChocolate" or itemType == "brown chocolate" or itemType == "bhitechocolate":
-            return self.removeByDate2(self.brownChocolateList, date)
-        elif itemType == "Milk chocolate" or itemType == "MilkChocolate" or itemType == "milk chocolate" or itemType == "milkchocolate":
-            return self.removeByDate2(self.milkChocolateList, date)
+        if product == "Honing" or product == "honing":
+            return self.removeByDate(self.honeyList, date)
+        elif product == "chilipeper" or product == "chili peper" or product == "Chilipeper" or product == "Chili peper":
+            return self.removeByDate(self.chilipepperList, date)
+        elif product == "Witte chocolade" or product == "wit" or product == "Wit" or product == "witte chocolate":
+            return self.removeByDate(self.whiteChocolateList, date)
+        elif product == "Bruine chocolade" or product == "Bruine" or product == "bruine" or product == "bruine chocolade":
+            return self.removeByDate(self.brownChocolateList, date)
+        elif product == "Melk chocolade" or product == "Melk" or product == "melk" or product == "melk chocolade":
+            return self.removeByDate(self.milkChocolateList, date)
+        elif product == "Zwarte chocolade" or product == "Zwart" or product == "zwart" or product == "zwarte chocolade":
+            return self.removeByDate(self.blackChocolateList, date)
+        elif product == "marshmallow" or product == "Marshmallow":
+            return self.removeByDate(self.marshmallowList, date)
         else:
             print("\tUnvalid product type.")
             return False
 
-    def sort2(self, stockList):
+    def sort(self, stockList):
         sorted = False
         if self.type == "cll":
             for area in range(1, stockList.getLength()):
@@ -362,7 +259,7 @@ class Stock:
                             stockList.delete(i+1)
                             stockList.insert(i, place_after)
 
-    def removeByDate2(self, stockList, date):
+    def remove_by_date(self, stockList, date):
         """
         Removes the item with most urgent expiry date from the given 'stockList' (one of the six lists that the stock
         contains).
@@ -375,12 +272,11 @@ class Stock:
         """
         if stockList.isEmpty():
             return False
-        self.sort2(stockList)
+        self.sort(stockList)
         index = 0
         if self.type == 'cll':
             index = 1
         for i in range(0, stockList.getLength()):
-            item_at_index = None
             if self.type == 'cll':
                 item_at_index = stockList.retrieve(index)[0]
             else:
@@ -391,49 +287,6 @@ class Stock:
             index += 1
         return False
 
-    def cleanStock2(self, date):
-        """
-        Checks all stock-lists and returns a list which contains products that are expired.
-
-        PRE  :  Date is the current Date, used to check which expiry dates have already passed.
-        POST :  A list of expired products will be returned.
-        """
-        allDeletedItems = list()
-        allDeletedItems += self.cleanOneStock2(self.honeyList, date)
-        allDeletedItems += self.cleanOneStock2(self.whiteChocolateList, date)
-        allDeletedItems += self.cleanOneStock2(self.brownChocolateList, date)
-        allDeletedItems += self.cleanOneStock2(self.milkChocolateList, date)
-        allDeletedItems += self.cleanOneStock2(self.chilipepperList, date)
-        allDeletedItems += self.cleanOneStock2(self.marshmallowList, date)
-        return allDeletedItems
-
-    def cleanOneStock2(self, stockList, date):
-        """
-        Cleans 'stockList' by removing all items (if present) with an expiry date that has already passed 'date'.
-        PRE  :  'stockList' is one of the stocks of the whole stock.
-        POST :  All expired items (expiry date < 'date') are removed from the 'stockList'. A list containing the
-                removed items is returned. (the list is empty when no items were returned)
-        """
-        deletedItems = list()
-        self.sort(stockList)
-
-        index = 1
-        if self.type == 'cll':
-            first = stockList.retrieve(index)[0]
-        else:
-            first = stockList.searchItem(index)[0]
-        if first is None:
-            return deletedItems
-        while first.vervaldatum < date and stockList.getLength() >= 1:
-            deletedItems.append(first.vervaldatum)
-            stockList.delete(index)
-            if self.type == "cll":
-                first = stockList.retrieve(index)[0]
-            else:
-                first = stockList.searchItem(index)[0]
-            if first is None:
-                break
-        return deletedItems
 
 def printStocks(stock, type):
     print("\n===========================================================")
