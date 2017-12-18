@@ -16,6 +16,8 @@ class employee_present:
         Adds an employee to the worklist.
         :param employee: The employee that starts to work
         :return: True if it succeeded. False otherwise.
+        PRE: Employee has to be of the employee class.
+        POST: Employee will be on the stack and available to handle orders.
         """
         self.stack.push(employee)
         return True
@@ -25,12 +27,16 @@ class employee_present:
         Begin processing the queue with orders.
         :param queue: The queue with the active orders.
         :return: None if no employee is available or a list with orders that were handeled.
+        PRE: Queue has to contain valid orders (from order class) that are not yet processed.
+        POST: The first order will get processed if there are employees available.
         """
         #Reset handeledOrders
         self.handeledOrders = []
         self.queue = queue
         order = self.queue.dequeue()
         if self.stack.isEmpty():
+            #Resume the rest of the orders
+            self.processAndDone()
             return None
         else:
             self.assignOrder(order)

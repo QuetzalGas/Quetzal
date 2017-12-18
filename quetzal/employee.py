@@ -6,7 +6,8 @@ class Employee:
         :param first_name: The first name of the empoyee.
         :param last_name: The last name of the employee.
         :param workload: The workload that the employee can handle.
-        :param occupied: If the employee is processing an order
+        PRE: Workload has to be a valid number.
+        POST: A new employee with name, id and workload exists.
         """
         self.id = id
         self.firstName = first_name
@@ -21,6 +22,7 @@ class Employee:
         """
         Deletes an employee.
         :return: True if the employee was deleted. False if not.
+        POST: The employee will not exist anymore.
         """
         self.id = None
         self.firstName = None
@@ -58,14 +60,17 @@ class Employee:
         """
         Sets the workload of the employee to a new value.
         :param load: The new workload.
+        PRE: Workload has to be a valid number.
+        POST: The emloyee has a new workload.
         """
         self.workload(load)
 
     def set_orderLoad(self, order):
         """
-
-        :param order:
-        :return:
+        Sets the order that the employee has to process.
+        :param order: The order to process
+        PRE: Order has to be from the Order class and it has to have valid data. Orderhandeling has to be empty.
+        POST: The employee now has the data to process an order.
         """
         self.orderHandeling = order
         self.creditsToHandle = order.getItemID.getWorkLoad()
@@ -74,7 +79,7 @@ class Employee:
     def process(self):
         """
         Handles an order with a certain workload.
-        :param order: The order that needs to be processed.
+        POST: The order will partially or fully be processed.
         """
         self.creditsStillToDo = self.workload - self.creditsStillToDo
         if self.creditsStillToDo < 0:
