@@ -1,16 +1,16 @@
-class Bestelling:
-    def __init__(self, userID, time, itemID):
+class Order:
+    def __init__(self, userID, time, chocolatemilk):
         """
-        Initializes an order, which contains a user-id, a timestamp and an id of the chocolate milk.
+        Initializes an order, which contains a user-id, a timestamp and a chocolate milk.
         PRE: UserID is the id of the user that placed the order, time is the timestamp of the order and itemID is the id of the chocolate milk being ordered.
-        POST: The order contains a userID, a timestamp and an itemID and has not been collected.
+        POST: The order contains a userID, a timestamp and a chocolatemilk and has not been collected.
         :param userID: id of the user that placed the order
         :param time: timestamp of the order
-        :param itemID: id of the chocolate milk being ordered
+        :param chocolatemilk: chocolate milk being ordered
         """
         self.userID = userID
         self.time = time
-        self.itemID = itemID
+        self.chocolatemilk = chocolatemilk
         self.collected = False
 
     def is_collected(self):
@@ -48,14 +48,14 @@ class Bestelling:
         """
         return self.time
 
-    def getItemID(self):
+    def getChocolatemilk(self):
         """
-        Returns id of the chocolate milk.
+        Returns the chocolate milk.
         PRE: None.
-        POST: Chocolatemilk-id is returned.
-        :return: itemID
+        POST: Chocolatemilk is returned.
+        :return: chocolatemilk
         """
-        return self.itemID
+        return self.chocolatemilk
 
     def getSearchKey(self):
         """
