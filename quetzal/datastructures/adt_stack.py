@@ -1,7 +1,9 @@
-from Node import Node
+class Node:
+    def __init__(self, item, next):
+        self.item = item
+        self.next = next
 
-
-class Stack:
+class AdtStack:
     def createStack(self):
         """
         Creates a new stack.

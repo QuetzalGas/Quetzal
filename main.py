@@ -3,10 +3,11 @@
 import sys
 from quetzal import *
 
-quetzal = None
+quetzal = Quetzal()
+quetzal.log()
 
 if len(sys.argv) != 2:
-    print('No system.txt')
+    print('Usage: main.py system.txt')
     exit()
 
 def to_date(year, month, day):
@@ -28,6 +29,7 @@ def parse_ingredient(stgl):
 with open(sys.argv[1]) as system:
     for line in system:
         line = line.strip()
+        # Ignore all lines that start with a hashtag.
         if line.startswith('#'):
             continue
 
@@ -36,8 +38,10 @@ with open(sys.argv[1]) as system:
         cmd = splits[0]
 
         if cmd == '':
+            # Skip empty lines.
             continue
         elif cmd == 'init':
+            # Initialize a new Quetzal object
             quetzal = Quetzal()
         elif cmd == 'shot':
             shot = ChocolateShot()

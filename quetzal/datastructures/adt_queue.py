@@ -1,8 +1,8 @@
-from adt_doubly_linked_list import DoublyLinkedList
+from . import AdtDoublyLinkedList
 
-class Queue:
+class AdtQueue:
     def __init__(self):
-        self.storage = DoublyLinkedList()
+        self.storage = AdtDoublyLinkedList()
 
     def isEmpty(self):
         return self.storage.get_length() == 0
