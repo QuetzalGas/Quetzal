@@ -1,4 +1,4 @@
-class Bestelling:
+class Order:
     def __init__(self, userID, time, itemID):
         """
         Initializes an order, which contains a user-id, a timestamp and an id of the chocolate milk.
