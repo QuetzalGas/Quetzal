@@ -6,6 +6,7 @@ class employee_present:
         self.stack = adt_stack.AdtStack()
         self.queue = None
         self.handeledOrders = []
+        self.stackList = []
 
     def __del__(self):
         self.stack.destroyStack()
@@ -21,9 +22,9 @@ class employee_present:
 
     def start(self, queue):
         """
-
-        :param queue:
-        :return:
+        Begin processing the queue with orders.
+        :param queue: The queue with the active orders.
+        :return: None if no employee is available or a list with orders that were handeled.
         """
         #Reset handeledOrders
         self.handeledOrders = []
@@ -38,8 +39,7 @@ class employee_present:
     def assignOrder(self, order):
         """
         Assigns an order to one of the employees.
-        :param order:
-        :return:
+        :param order: The order that's going to be assigned to an employee
         """
         employee = self.stack.popAndReturn()[0]
         employee.set_orderLoad(order)
@@ -48,8 +48,7 @@ class employee_present:
 
     def processAndDone(self):
         """
-
-        :return:
+        Processes the orders and checks which employees are done.
         """
         for i in self.employeesPresent:
             order = i.item.process()
@@ -58,3 +57,14 @@ class employee_present:
             if i.item.creditsStillToDo == 0:
                 self.stack.push(i.item)
 
+    def printStack(self):
+        """
+        Makes a list with all the workload of all the employees on the stack.
+        :return: A list with all the workloads.
+        """
+        while not self.stack.isEmpty():
+            employee = self.stack.popAndReturn()
+            self.stackList.append(employee.getWorkload())
+        for i in self.stackList:
+            self.stack.push(i)
+        return self.stackList.reverse()
