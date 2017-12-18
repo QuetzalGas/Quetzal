@@ -1,7 +1,9 @@
-from Node import Node
+class Node:
+    def __init__(self, item, next):
+        self.item = item
+        self.next = next
 
-
-class Stack:
+class AdtStack:
     def createStack(self):
         """
         Creates a new stack.
@@ -41,14 +43,14 @@ class Stack:
         self.top = self.top.next
         return True
 
-    def popAndReturn(self):
+    def pop(self):
         """
         Removes the last added element and returns it.
         :return: The last added element.
         :return: Wether the removal succeeded.
         """
         if self.top is None:
-            return None, False
+            return False
         old_top = self.top
         self.top = self.top.next
         return old_top, True

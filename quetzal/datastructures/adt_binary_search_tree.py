@@ -1,10 +1,12 @@
+# Joke Duwaerts, Binaire zoekboom
+
 class TreeItem:
-    def __init__(self, item, key):
+    def __init__(self, key, item):
         self.item = item
         self.key = key
 
-class BinarySearchTree:
-    def __init__(self, root, left=None, right=None, parent=None):
+class AdtBinarySearchTree:
+    def __init__(self, root=None, left=None, right=None, parent=None):
         """
         Een nieuwe binaire boom wordt geïnitialiseerd.
         :param root: de wortel van de binaire zoekboom
@@ -19,8 +21,8 @@ class BinarySearchTree:
 
     def destroy(self):
         self.root = None
-        self.left = None
         self.right = None
+        self.left = None
 
     def isEmpty(self):
         """
@@ -32,6 +34,9 @@ class BinarySearchTree:
         else:
             return False
 
+    def tableIsEmpty(self):
+        return self.root is None
+
     def searchTreeInsert(self, item):
         """
         Voegt nieuwe TreeNode toe aan binaire zoekboom, op de juiste plaats, als er nog geen item met dezelfde zoeksleutel aanwezig is.
@@ -39,6 +44,9 @@ class BinarySearchTree:
         :return: geeft True indien de zoeksleutel van de TreeNode nog niet aanwezig was,
                  geeft False indien het wel al aanwezig was.
         """
+        if self.root is None and self.parent is None:
+            self.root = item
+            return
         if item.key < self.root.key:                    # Als de key van item kleiner is dan de key van de root,
             if self.left is None:                       #   en de linkerdeelboom is leeg,
                 self.left = BinarySearchTree(item)      #   maak dan een nieuwe BinarySearchTree aan met als root 'item'.
@@ -65,6 +73,8 @@ class BinarySearchTree:
                         remove functie.
         :return: geeft de (sub) binaire boom terug als er een TreeNode met de zoeksleutel aanwezig is, anders geeft het False terug
         """
+        if self.root is None and self.parent is None:
+            return (False, None)
         if key < self.root.key and self.left is not None:           # als key kleiner is dan de key van de root, zoek dan verder in de
             return self.left.searchTreeRetrieve(key, subtree)       #   linkerdeelboom, als deze aanwezig is.
         elif key > self.root.key and self.right is not None:        # als key groter is dan de key van de root, zoek dan verder in de
