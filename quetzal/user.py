@@ -1,13 +1,5 @@
-import uuid     # for unique IDs
-from HashMap import HashMap
-from binaireZoekboom import TreeItem, BinarySearchTree
-from twoThreeTree import TwoThreeTree
-from rb_tree import Node, RbTree
-from TwoThreeFourTree import TwoThreeFourTree
-
-class Order:
-    def __init__(self):
-        self.something = 0
+from datastructures import *
+from order import Order
 
 class UserContainer:
     """
@@ -37,7 +29,7 @@ class UserContainer:
         else:
             print("Unvalid type.")
 
-    def checkUser(self, order, firstname, lastname, email):
+    def check_user(self, order, firstname, lastname, email):
         """
         Checks whether a user with the given 'email' is already present in the table, if not a new User is added to the table
         with the given 'firstname', 'lastname', 'email' and 'order'.
@@ -74,7 +66,7 @@ class UserContainer:
             user.addOrder(order)
             self.addNewUser(user)
 
-    def addNewUser(self, user):
+    def add_new_user(self, user):
         """
         Adds a new user to the container. This method is not supposed to be used by an outsider, it's used inside the
         checkUser method.
@@ -92,7 +84,7 @@ class UserContainer:
         elif self.type == 'h':
             self.table.tableInsert(user.email, user)
 
-    def retrieveUser(self, email):
+    def retrieve_user(self, email):
         """
         Searches for a user by the given 'email'.
         PRE :   'email' is the email adress of the user that should be found.
@@ -120,10 +112,10 @@ class UserContainer:
                 user = user.data
             return True, user
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Checks whether the table is empty or not.
-        PRE :   /
+        PRE :   None
         POST:   True is returned if the table is empty.
         """
         if self.type == 'bs' or self.type == '23' or self.type == '234':
@@ -147,10 +139,7 @@ class User:
         self.id = 0
         self.orders = list()
 
-        for character in email:
-            self.id += ord(character)
-
-    def addOrder(self, order):
+    def add_order(self, order):
         """
         Adds the order to the list of orders of the specific user.
         PRE:    'order' is of type Order.
@@ -161,61 +150,47 @@ class User:
         self.orders.append(order)
         return True
 
-    def calculateID(self):
+    def calculate_id(self):
         """
         Calculates the user's ID.
-        PRE :   /
+        PRE :   None
         POST:   The freshly calculates ID is returned.
         """
         for char in self.email:
             self.id += ord(char)
             self.id *= 10
 
-    def getOrders(self):
+    def get_orders(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns a list of all orders of the user.
         """
         return self.orders
 
-    def getID(self):
+    def get_id(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the ID of the user.
         """
         return self.id
 
-    def getFirstname(self):
+    def get_firstname(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the first name of the user.
         """
         return self.firstname
 
-    def getLastname(self):
+    def get_lastname(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the last name of the user.
         """
         return self.lastname
 
-    def getEmail(self):
+    def get_email(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the email adress of the user.
         """
         return self.email
-
-def printListy(listy):
-    if not listy.isEmpty():
-        cur = listy.head
-        print('\n')
-        for i in range(0, listy.getLength()):
-            print(cur.item.data.getFirstname(), ", ", end="")
-            cur = cur.next
-
-def printHashmap(hash):
-    print("=======================")
-    for i in hash.lijst:
-        printListy(i)
-    print('\n=======================')

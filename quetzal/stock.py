@@ -1,25 +1,5 @@
 from datastructures import *
 from product import *
-"""
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Title:      Stock
-creator:    Joke Duwaerts
-date:       December 2017
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- tabellen:
-    * chocoladeshots ==> 3 soorten: melk, wit, bruin
-    * honing
-    * chilipeper
-    * marshwallow
-    * chocolademelk
-- init -> 4 lege tabellen
-- addItem( item, bool )
-- popItem( item )
-- contains( item, bool )
-- findType( item, type )
-- isEmpty( type, bool )
-- cleanStock( list vervallen )
-"""
 
 class Stock:
     def __init__(self, type):
@@ -160,13 +140,13 @@ class Stock:
         POST :  A list of expired products will be returned.
         """
         allDeletedItems = list()
-        allDeletedItems += self.cleanOneStock(self.honeyList, date)
-        allDeletedItems += self.cleanOneStock(self.whiteChocolateList, date)
-        allDeletedItems += self.cleanOneStock(self.brownChocolateList, date)
-        allDeletedItems += self.cleanOneStock(self.milkChocolateList, date)
-        allDeletedItems += self.cleanOneStock(self.chilipepperList, date)
-        allDeletedItems += self.cleanOneStock(self.marshmallowList, date)
-        allDeletedItems += self.cleanOneStock(self.blackChocolateList, date)
+        allDeletedItems += self.clean_one_stock(self.honeyList, date)
+        allDeletedItems += self.clean_one_stock(self.whiteChocolateList, date)
+        allDeletedItems += self.clean_one_stock(self.brownChocolateList, date)
+        allDeletedItems += self.clean_one_stock(self.milkChocolateList, date)
+        allDeletedItems += self.clean_one_stock(self.chilipepperList, date)
+        allDeletedItems += self.clean_one_stock(self.marshmallowList, date)
+        allDeletedItems += self.clean_one_stock(self.blackChocolateList, date)
         return allDeletedItems
 
     def clean_one_stock(self, stockList, date):
@@ -210,19 +190,19 @@ class Stock:
                 date is removed from that list. In this case, True is returned.
         """
         if product == "Honing" or product == "honing":
-            return self.removeByDate(self.honeyList, date)
+            return self.remove_by_date(self.honeyList, date)
         elif product == "chilipeper" or product == "chili peper" or product == "Chilipeper" or product == "Chili peper":
-            return self.removeByDate(self.chilipepperList, date)
+            return self.remove_by_date(self.chilipepperList, date)
         elif product == "Witte chocolade" or product == "wit" or product == "Wit" or product == "witte chocolate":
-            return self.removeByDate(self.whiteChocolateList, date)
+            return self.remove_by_date(self.whiteChocolateList, date)
         elif product == "Bruine chocolade" or product == "Bruine" or product == "bruine" or product == "bruine chocolade":
-            return self.removeByDate(self.brownChocolateList, date)
+            return self.remove_by_date(self.brownChocolateList, date)
         elif product == "Melk chocolade" or product == "Melk" or product == "melk" or product == "melk chocolade":
-            return self.removeByDate(self.milkChocolateList, date)
+            return self.remove_by_date(self.milkChocolateList, date)
         elif product == "Zwarte chocolade" or product == "Zwart" or product == "zwart" or product == "zwarte chocolade":
-            return self.removeByDate(self.blackChocolateList, date)
+            return self.remove_by_date(self.blackChocolateList, date)
         elif product == "marshmallow" or product == "Marshmallow":
-            return self.removeByDate(self.marshmallowList, date)
+            return self.remove_by_date(self.marshmallowList, date)
         else:
             print("\tUnvalid product type.")
             return False
@@ -237,7 +217,7 @@ class Stock:
                         (place_i, bool) = stockList.retrieve(i)
                         (place_after, bool) = stockList.retrieve(i + 1)
 
-                        if place_i.vervaldatum > place_after.vervaldatum:
+                        if place_after.get_expiration_date < place_i.get_expiration_date:
                             sorted = False
 
                             stockList.insert(i, place_after)
@@ -254,7 +234,7 @@ class Stock:
                             cur = stockList.head
                             for j in range(0, stockList.getLength()):
                                 cur = cur.next
-                        if place_i.vervaldatum > place_after.vervaldatum:
+                        if place_after.get_expiration_date < place_i.get_expiration_date:
                             sorted = False
                             stockList.delete(i+1)
                             stockList.insert(i, place_after)
@@ -281,39 +261,8 @@ class Stock:
                 item_at_index = stockList.retrieve(index)[0]
             else:
                 item_at_index = stockList.searchItem(index)[0]
-            if item_at_index.vervaldatum >= date:
+            if item_at_index.get_expiration_date >= date:
                 stockList.delete(index)
                 return True
             index += 1
         return False
-
-
-def printStocks(stock, type):
-    print("\n===========================================================")
-    print(" Honey list :")
-    printList(stock.honeyList, type)
-    print("\n\t Marshmallow list :")
-    printList(stock.marshmallowList, type)
-    print("\n\t Chilipepper list :")
-    printList(stock.chilipepperList, type)
-    print("\n\t Milk chocolate list :")
-    printList(stock.milkChocolateList, type)
-    print("\n\t Brown chocolate list :")
-    printList(stock.brownChocolateList, type)
-    print("\n\t White chocolate list :")
-    printList(stock.whiteChocolateList, type)
-    print("\n===========================================================")
-
-def printList(listy, type):
-    if type == 'cll':
-        if not listy.isEmpty():
-            cur = listy.head
-            while cur.next is not listy.dummyhead:
-                cur = cur.next
-                print(cur.item.vervaldatum, " ",  end="")
-    else:
-        if not listy.isEmpty():
-            cur = listy.head
-            for i in range(0, listy.getLength()):
-                print(cur.item.vervaldatum, " ", end="")
-                cur = cur.next
