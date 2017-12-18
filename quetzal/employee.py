@@ -28,7 +28,6 @@ class Employee:
         self.firstName = None
         self.lastName = None
         self.workload = 0
-        self.occupied = None
         self.creditsStillToDo = 0
         self.creditsToHandle = 0
         self.orderHandeling = None
@@ -63,7 +62,7 @@ class Employee:
         PRE: Workload has to be a valid number.
         POST: The emloyee has a new workload.
         """
-        self.workload(load)
+        self.workload = load
 
     def set_orderLoad(self, order):
         """
@@ -73,7 +72,7 @@ class Employee:
         POST: The employee now has the data to process an order.
         """
         self.orderHandeling = order
-        self.creditsToHandle = order.getItemID.getWorkLoad()
+        self.creditsToHandle = order.get_chocolatemilk().getWorkLoad()
         self.creditsStillToDo = self.creditsToHandle
 
     def process(self):
