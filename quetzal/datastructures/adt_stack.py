@@ -4,7 +4,7 @@ class Node:
         self.next = next
 
 class AdtStack:
-    def createStack(self):
+    def __init__(self):
         """
         Creates a new stack.
         """
@@ -43,7 +43,7 @@ class AdtStack:
         self.top = self.top.next
         return True
 
-    def pop(self):
+    def popAndReturn(self):
         """
         Removes the last added element and returns it.
         :return: The last added element.

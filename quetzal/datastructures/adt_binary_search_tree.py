@@ -37,6 +37,9 @@ class AdtBinarySearchTree:
     def tableIsEmpty(self):
         return self.root is None
 
+    def insert(self, key, item):
+        self.searchTreeInsert(TreeItem(key, item))
+
     def searchTreeInsert(self, item):
         """
         Voegt nieuwe TreeNode toe aan binaire zoekboom, op de juiste plaats, als er nog geen item met dezelfde zoeksleutel aanwezig is.
@@ -49,7 +52,7 @@ class AdtBinarySearchTree:
             return
         if item.key < self.root.key:                    # Als de key van item kleiner is dan de key van de root,
             if self.left is None:                       #   en de linkerdeelboom is leeg,
-                self.left = BinarySearchTree(item)      #   maak dan een nieuwe BinarySearchTree aan met als root 'item'.
+                self.left = AdtBinarySearchTree(item)      #   maak dan een nieuwe BinarySearchTree aan met als root 'item'.
                 self.left.parent = self                 # Deze nieuwe BST heeft als ouder de huidige BST.
                 return True
             else:
@@ -57,7 +60,7 @@ class AdtBinarySearchTree:
 
         elif item.key > self.root.key:                  # Zelfde logica als hierboven.
             if self.right is None:
-                self.right = BinarySearchTree(item)
+                self.right = AdtBinarySearchTree(item)
                 self.right.parent = self
                 return True
             else:

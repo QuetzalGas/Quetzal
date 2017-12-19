@@ -1,13 +1,5 @@
-import uuid     # for unique IDs
-from HashMap import HashMap
-from binaireZoekboom import TreeItem, BinarySearchTree
-from twoThreeTree import TwoThreeTree
-from rb_tree import Node, RbTree
-from TwoThreeFourTree import TwoThreeFourTree
-
-class Order:
-    def __init__(self):
-        self.something = 0
+from datastructures import *
+from order import Order
 
 class UserContainer:
     """
@@ -19,25 +11,26 @@ class UserContainer:
     POST:   Depending op 'type', the UserContainer now contains a table which is a 23, 234, rb or BS tree or a hashmap.
     """
     def __init__(self, type):
+        self.idcounter = 0
         if type == 'bs' or type == 'BS':
             self.type = 'bs'
-            self.table = BinarySearchTree()
+            self.table = AdtBinarySearchTree()
         elif type == '23':
             self.type = '23'
-            self.table = TwoThreeTree()
+            self.table = AdtTwoThreeTree()
         elif type == '234':
             self.type = '234'
-            self.table = TwoThreeFourTree()
+            self.table = AdtTwoThreeFourTree()
         elif type == 'rb' or type == 'RB':
             self.type = 'rb'
-            self.table = RbTree()
+            self.table = AdtRedBlackTree()
         elif type == 'h' or type == 'H':
             self.type = 'h'
-            self.table = HashMap(254, 2)  # 254 is the max length of a valid email-address
+            self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
             print("Unvalid type.")
 
-    def checkUser(self, order, firstname, lastname, email):
+    def check_user(self, order, firstname, lastname, email):
         """
         Checks whether a user with the given 'email' is already present in the table, if not a new User is added to the table
         with the given 'firstname', 'lastname', 'email' and 'order'.
@@ -68,31 +61,31 @@ class UserContainer:
         if(resultRetrieve is not False):
             if self.type == 'h':
                 retrievedItem = retrievedItem.data
-            retrievedItem.addOrder(order)
+            retrievedItem.add_order(order)
         else:
-            user = User(firstname, lastname, email)
-            user.addOrder(order)
-            self.addNewUser(user)
+            user = User(self.calculate_id(), firstname, lastname, email)
+            user.add_order(order)
+            self.add_new_user(user)
 
-    def addNewUser(self, user):
+    def add_new_user(self, user):
         """
         Adds a new user to the container. This method is not supposed to be used by an outsider, it's used inside the
-        checkUser method.
+        check_user method.
         PRE :   'user' is of type User.
         POST:   'user' is added to the table.
         """
         if self.type == 'bs':
-            self.table.searchTreeInsert(TreeItem(user.email, user))
+            self.table.insert(user.email, user)
         elif self.type == '23':
-            self.table.insert(TreeItem(user.email, user))
+            self.table.insertItem(user.email, user)
         elif self.type == '234':
-            self.table.tableInsert(TreeItem(user.email, user))
-        elif self.type == 'rb' or type == 'RB':
+            self.table.tableInsert(user.email, user)
+        elif self.type == 'rb':
             self.table.insert(user.email, user)
         elif self.type == 'h':
             self.table.tableInsert(user.email, user)
 
-    def retrieveUser(self, email):
+    def retrieve_user(self, email):
         """
         Searches for a user by the given 'email'.
         PRE :   'email' is the email adress of the user that should be found.
@@ -120,10 +113,10 @@ class UserContainer:
                 user = user.data
             return True, user
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Checks whether the table is empty or not.
-        PRE :   /
+        PRE :   None
         POST:   True is returned if the table is empty.
         """
         if self.type == 'bs' or self.type == '23' or self.type == '234':
@@ -131,11 +124,16 @@ class UserContainer:
         if self.type == 'h':
             return self.table.isEmpty()
 
+    def calculate_id(self):
+        id = self.idcounter
+        self.idcounter += 1
+        return id
+
 class User:
     """
     A customer of the chocolade bar.
     """
-    def __init__(self, firstname, lastname, email):
+    def __init__(self, id,  firstname, lastname, email):
         """
         Initializes a new customer with their name, email and unique id.
         PRE :   'id' is the unique id of the user. 'firstname', 'lastname' and 'email' are data of the user.
@@ -144,13 +142,10 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.id = 0
+        self.id = id
         self.orders = list()
 
-        for character in email:
-            self.id += ord(character)
-
-    def addOrder(self, order):
+    def add_order(self, order):
         """
         Adds the order to the list of orders of the specific user.
         PRE:    'order' is of type Order.
@@ -161,61 +156,47 @@ class User:
         self.orders.append(order)
         return True
 
-    def calculateID(self):
+    def calculate_id(self):
         """
         Calculates the user's ID.
-        PRE :   /
+        PRE :   None
         POST:   The freshly calculates ID is returned.
         """
         for char in self.email:
             self.id += ord(char)
             self.id *= 10
 
-    def getOrders(self):
+    def get_orders(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns a list of all orders of the user.
         """
         return self.orders
 
-    def getID(self):
+    def get_id(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the ID of the user.
         """
         return self.id
 
-    def getFirstname(self):
+    def get_firstname(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the first name of the user.
         """
         return self.firstname
 
-    def getLastname(self):
+    def get_lastname(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the last name of the user.
         """
         return self.lastname
 
-    def getEmail(self):
+    def get_email(self):
         """
-        PRE :   /
+        PRE :   None
         POST:   Returns the email adress of the user.
         """
         return self.email
-
-def printListy(listy):
-    if not listy.isEmpty():
-        cur = listy.head
-        print('\n')
-        for i in range(0, listy.getLength()):
-            print(cur.item.data.getFirstname(), ", ", end="")
-            cur = cur.next
-
-def printHashmap(hash):
-    print("=======================")
-    for i in hash.lijst:
-        printListy(i)
-    print('\n=======================')
