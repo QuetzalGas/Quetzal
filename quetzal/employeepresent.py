@@ -7,6 +7,7 @@ class EmployeePresent:
         self.stack = adt_stack.AdtStack()
         self.queue = None
         self.handeledOrders = []
+        self.employeesPresent = []
 
     def __del__(self):
         self.stack.destroyStack()
@@ -20,6 +21,7 @@ class EmployeePresent:
         POST: Employee will be on the stack and available to handle orders.
         """
         self.stack.push(employee)
+        self.employeesPresent.append(employee)
         return True
 
     def start(self, queue):
@@ -89,9 +91,22 @@ class EmployeePresent:
     def get_remaining_workload(self, id_):
         """
         Searches for the remaining workload of an employee.
+        :param id_: The id of the employee to search.
         :return: None if the employee is not working, else the credits still to do.
         """
-        for i in self.employeesWorking:
+        for i in self.employeesPresent:
+            if id_ == i.get_id:
+                return i.get_credits_still_to_do()
+            else:
+                return None
+
+    def get_employee_name(self, id_):
+        """
+        Searches for the name of an employee.
+        :param id_: The id of the employee to find.
+        :return: The name of the found employee or None if he doesn't exist.
+        """
+        for i in self.employeesPresent:
             if id_ == i.get_id:
                 return i.get_name()
             else:
