@@ -98,6 +98,7 @@ class EmployeePresent:
         for i in self.employeesPresent:
             if id_ == i.get_id():
                 credits = i.get_credits_still_to_do()
+                break
         return credits
 
     def get_employee_name(self, id_):
@@ -110,4 +111,5 @@ class EmployeePresent:
         for i in self.employeesPresent:
             if id_ == i.get_id():
                 name = i.get_name()
-        return None
+                break
+        return name
