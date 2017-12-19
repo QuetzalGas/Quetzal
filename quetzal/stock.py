@@ -192,7 +192,7 @@ class Stock:
         """
         if product_type == "honing" or product_type == "honey":
             return self.remove_by_date(self.honeyList, date)
-        elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
+        elif product_type == "chilipeper" or product_type == "chili" or product_type == "chilipepper":
             return self.remove_by_date(self.chilipepperList, date)
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.remove_by_date(self.whiteChocolateList, date)

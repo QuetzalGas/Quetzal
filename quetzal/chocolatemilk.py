@@ -48,5 +48,5 @@ class ChocolateMilk:
         """
         self.contains.insertBeginning(product)
         self.workload += 1
-        self.price += product.getPrice()
+        self.price += product.get_price()
 

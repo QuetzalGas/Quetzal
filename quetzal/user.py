@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 from datastructures import *
 from order import Order
+=======
+from .datastructures import *
+>>>>>>> upstream/master
 
 class UserContainer:
     """
@@ -30,7 +34,7 @@ class UserContainer:
         else:
             print("Unvalid type.")
 
-    def check_user(self, order, firstname, lastname, email):
+    def add_if_unknown_user(self, firstname, lastname, email):
         """
         Checks whether a user with the given 'email' is already present in the table, if not a new User is added to the table
         with the given 'firstname', 'lastname', 'email' and 'order'.
@@ -59,13 +63,11 @@ class UserContainer:
             retrievedItem = resultRetrieve  # Hashmap return False or Node, zo not a tuple
 
         if(resultRetrieve is not False):
-            if self.type == 'h':
-                retrievedItem = retrievedItem.data
-            retrievedItem.add_order(order)
+            return False
         else:
             user = User(self.calculate_id(), firstname, lastname, email)
-            user.add_order(order)
             self.add_new_user(user)
+            return True
 
     def add_new_user(self, user):
         """
@@ -143,6 +145,7 @@ class User:
         self.lastname = lastname
         self.email = email
         self.id = id
+<<<<<<< HEAD
         self.orders = list()
 
     def add_order(self, order):
@@ -172,6 +175,8 @@ class User:
         POST:   Returns a list of all orders of the user.
         """
         return self.orders
+=======
+>>>>>>> upstream/master
 
     def get_id(self):
         """

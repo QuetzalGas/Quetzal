@@ -1,5 +1,15 @@
 from .date import Date
 from .datetime import DateTime
+<<<<<<< HEAD
+=======
+from .product import *
+from .stock import Stock
+from .user import User, UserContainer
+from .employeepresent import EmployeePresent
+from .employee import Employee
+from .chocolatemilk import ChocolateMilk
+from .order import Order
+>>>>>>> upstream/master
 
 import inspect
 
@@ -34,8 +44,13 @@ class Quetzal:
     Preconditie: de simulatie mag niet gestart zijn.
     Postconditie: een nieuwe gebruiker is toegevoegd.
     """
+<<<<<<< HEAD
     def add_user(self, user):
         pass
+=======
+    def add_user(self, first_name, last_name, email):
+        self.users.add_if_unknown_user(first_name, last_name, email)
+>>>>>>> upstream/master
 
     """
     +add_employee(in employee: Werknemer)
@@ -82,8 +97,24 @@ class Quetzal:
     verleden liggen.
     Postconditie: de bestelling is toegevoegd aan de simulatie logica.
     """
+<<<<<<< HEAD
     def place_order(self, order, datetime):
         pass
+=======
+    def place_order(self, email, products, datetime):
+        if not self.is_started():
+            raise RuntimeError("Must be started")
+
+        cm = ChocolateMilk(4)
+
+        for i in products:
+            k = self.stock.pop_item(i, datetime.get_date())[0]
+            cm.addProduct(k)
+
+        order = Order(email, datetime, cm)
+        
+        self.new_orders.append(order)
+>>>>>>> upstream/master
 
     """
     +run_until(in datetime: DateTime)
@@ -98,6 +129,41 @@ class Quetzal:
         while self.now < datetime.time:
             self.step()
 
+<<<<<<< HEAD
+=======
+    def get_state(self):
+        state = []
+        state.append(self.timestep)
+        state.append('') # stack
+        state.append('') # e1
+        state.append('') # e2
+
+        new_orders_string = ''
+        first = False
+
+        for i in self.new_orders:
+            i = i.get_chocolatemilk().getWorkLoad()
+            if not first:
+                first = True
+            else:
+                new_orders_string += ','
+
+            new_orders_string += format(i)
+
+        state.append(new_orders_string)
+        state.append('')
+        state.append(self.stock.get_size('wit'))
+        state.append(self.stock.get_size('melk'))
+        state.append(self.stock.get_size('bruine'))
+        state.append(self.stock.get_size('zwart'))
+        state.append(self.stock.get_size('honing'))
+        state.append(self.stock.get_size('marshmallow'))
+        state.append(self.stock.get_size('chilipeper'))
+
+        return state
+
+
+>>>>>>> upstream/master
     """ 
     +step()
     Neem een stap in de simulatie.
