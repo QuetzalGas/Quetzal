@@ -69,4 +69,3 @@ class Chocolateshot(Product):
             super().__init__(taste, 1, 1, expiration_date)
         else:
             raise ValueError("")
-

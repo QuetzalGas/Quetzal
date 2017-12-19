@@ -70,6 +70,7 @@ class TestEmployeePresent(TestCase):
         queue.enqueue(order1)
         queue.enqueue(order2)
         orders = present.start(queue)
+        list1 = [employee2]
         self.assertIsNone(employee1.orderHandeling)
         self.assertEqual(employee1.creditsStillToDo, 0)
         self.assertEqual(employee1.creditsToHandle, 0)
@@ -77,6 +78,8 @@ class TestEmployeePresent(TestCase):
         self.assertEqual(employee2.creditsStillToDo, 2)
         self.assertEqual(orders[0], order2)
         self.assertFalse(present.stack.isEmpty())
+        self.assertEqual(present.employeesWorking, list1)
+
 
     def testMakeDataLists(self):
         employee1 = Employee(1, "testvoornaam1", "testachternaam1", 10)
