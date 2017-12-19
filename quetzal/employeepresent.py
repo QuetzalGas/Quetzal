@@ -94,11 +94,11 @@ class EmployeePresent:
         :param id_: The id of the employee to search.
         :return: None if the employee is not working, else the credits still to do.
         """
+        credits = None
         for i in self.employeesPresent:
-            if id_ == i.get_id:
-                return i.get_credits_still_to_do()
-            else:
-                return None
+            if id_ == i.get_id():
+                credits = i.get_credits_still_to_do()
+        return credits
 
     def get_employee_name(self, id_):
         """
@@ -106,8 +106,8 @@ class EmployeePresent:
         :param id_: The id of the employee to find.
         :return: The name of the found employee or None if he doesn't exist.
         """
+        name = None
         for i in self.employeesPresent:
-            if id_ == i.get_id:
-                return i.get_name()
-            else:
-                return None
+            if id_ == i.get_id():
+                name = i.get_name()
+        return None
