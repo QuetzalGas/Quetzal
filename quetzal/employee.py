@@ -13,7 +13,7 @@ class Employee:
         self.firstName = first_name
         self.lastName = last_name
         self.workload = workload
-        self.creditsStillToDo = 0
+        self.creditsStillToDo = ""
         self.creditsToHandle = 0
         self.orderHandeling = None
         #TODO add to datastructure for employees
@@ -93,7 +93,7 @@ class Employee:
             return None
         else:
             order = self.orderHandeling
-            self.creditsStillToDo = 0
+            self.creditsStillToDo = ""
             self.creditsToHandle = 0
             self.orderHandeling = None
             return order

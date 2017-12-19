@@ -5,9 +5,9 @@ class EmployeePresent:
     def __init__(self):
         self.employeesWorking = [] #TODO double linked list can be used
         self.stack = adt_stack.AdtStack()
-        self.queue = None
         self.handeledOrders = []
         self.employeesPresent = []
+        self.order_queue = None
 
     def __del__(self):
         self.stack.destroyStack()
@@ -34,14 +34,14 @@ class EmployeePresent:
         """
         #Reset handeledOrders
         self.handeledOrders = []
-        self.queue = queue
+        self.order_queue = queue
         if self.stack.isEmpty() or queue.isEmpty():
             #Resume the rest of the order
             self.processAndDone()
             return None
         else:
             while not self.stack.isEmpty() and not queue.isEmpty():
-                order = self.queue.dequeue()
+                order = self.order_queue.dequeue()
                 self.assignOrder(order)
             self.processAndDone()
         return self.handeledOrders
@@ -51,8 +51,8 @@ class EmployeePresent:
         Assigns an order to one of the employees.
         :param order: The order that's going to be assigned to an employee
         """
-        employee = self.stack.popAndReturn()[0]
-        employee = employee.item
+        employeenode = self.stack.popAndReturn()[0]
+        employee = employeenode.item
         employee.set_orderLoad(order)
         self.employeesWorking.append(employee)
 
@@ -61,11 +61,12 @@ class EmployeePresent:
         Processes the orders and checks which employees are done.
         """
         for i in self.employeesWorking:
-            order = i.process()
-            if order is not None:
-                self.handeledOrders.append(order)
+            if i.get_credits_still_to_do == "":
+                #self.handeledOrders.append(order)
                 self.stack.push(i)
                 self.employeesWorking.remove(i)
+            i.process()
+
 
     def makeDataLists(self):
         """
@@ -76,17 +77,14 @@ class EmployeePresent:
         self.employeesWorkingList = []
 
         while not self.stack.isEmpty():
-            employee = self.stack.popAndReturn()[0]
-            employee = employee.item
-            self.stackList.append(employee.get_workload())
+            employeeNode = self.stack.popAndReturn()[0]
+            employee = employeeNode.item
+            self.stackList.append(employee)
+        self.stackList.reverse()
         for i in self.stackList:
             self.stack.push(i)
-        self.stackList.reverse()
 
-        for i in self.employeesWorking:
-            self.employeesWorkingList.append((i, i.get_credits_still_to_do()))
-
-        return self.stackList, self.employeesWorkingList
+        return self.stackList
 
     def get_remaining_workload(self, id_):
         """
@@ -113,3 +111,15 @@ class EmployeePresent:
                 name = i.get_name()
                 break
         return name
+
+    # def get_waiting_orders(self):
+    #     if self.order_queue is None or self.order_queue.isEmpty():
+    #         return None
+    #     else:
+    #         queuelist = []
+    #         keeporders = []
+    #         while not self.order_queue.isEmpty():
+    #             order = self.order_queue.dequeue()
+    #             keeporders.append(order)
+    #             queuelist.append(order)
+    #         return queuelist
