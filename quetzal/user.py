@@ -1,4 +1,9 @@
+<<<<<<< HEAD
+from datastructures import *
+from order import Order
+=======
 from .datastructures import *
+>>>>>>> upstream/master
 
 class UserContainer:
     """
@@ -27,7 +32,7 @@ class UserContainer:
             self.type = 'h'
             self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
-            raise ValueError("Unvalid type.")
+            print("Unvalid type.")
 
     def add_if_unknown_user(self, firstname, lastname, email):
         """
@@ -140,6 +145,38 @@ class User:
         self.lastname = lastname
         self.email = email
         self.id = id
+<<<<<<< HEAD
+        self.orders = list()
+
+    def add_order(self, order):
+        """
+        Adds the order to the list of orders of the specific user.
+        PRE:    'order' is of type Order.
+        POSR:   The order-list is returned.
+        """
+        if isinstance(order, Order):
+            return False
+        self.orders.append(order)
+        return True
+
+    def calculate_id(self):
+        """
+        Calculates the user's ID.
+        PRE :   None
+        POST:   The freshly calculates ID is returned.
+        """
+        for char in self.email:
+            self.id += ord(char)
+            self.id *= 10
+
+    def get_orders(self):
+        """
+        PRE :   None
+        POST:   Returns a list of all orders of the user.
+        """
+        return self.orders
+=======
+>>>>>>> upstream/master
 
     def get_id(self):
         """

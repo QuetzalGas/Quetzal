@@ -1,13 +1,13 @@
-from .datastructures import adt_doubly_linked_list
+from.datastructures import adt_doubly_linked_list
 
 class ChocolateMilk:
-    def __init__(self, id_):
+    def __init__(self, id):
         """
         Initialises a new chocolatemilk.
         :param id: The id of the chocolatemilk.
         POST: A new chocolatemilk was created with a default price and workload.
         """
-        self.id = id_
+        self.id = id
         self.price = 2
         self.contains = adt_doubly_linked_list.AdtDoublyLinkedList()
         self.workload = 5

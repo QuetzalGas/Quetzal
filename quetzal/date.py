@@ -22,9 +22,6 @@ class Date:
         """ Return the day of month. """
         return self.day
 
-    def __ge__(self, other):
-        return not (self < other)
-
     def __lt__(self, other):
         """ Compare the date in self with another `Date` object and determine
         which comes before the other chronologically.

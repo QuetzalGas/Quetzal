@@ -1,5 +1,5 @@
-from .datastructures import *
-from .product import *
+from datastructures import *
+from product import *
 from unittest import TestCase
 
 class Stock:
@@ -31,8 +31,6 @@ class Stock:
             self.brownChocolateList = AdtCircularLinkedList()
             self.milkChocolateList = AdtCircularLinkedList()
             self.blackChocolateList = AdtCircularLinkedList()
-        else:
-            raise ValueError("Incorrect type for the list.")
 
     def add_item(self, item):
         """
@@ -51,11 +49,11 @@ class Stock:
         elif isinstance(item, Marshmallow):
             self.marshmallowList.insert(index, item)
         elif isinstance(item, Chocolateshot):
-            if item.get_name() == "wit":
+            if item.getName() == "wit":
                 self.whiteChocolateList.insert(index, item)
-            elif item.get_name() == "bruin":
+            elif item.getName() == "bruin":
                 self.brownChocolateList.insert(index, item)
-            elif item.get_name() == "melk":
+            elif item.getName() == "melk":
                 self.milkChocolateList.insert(index, item)
             else:
                 self.blackChocolateList.insert(index, item)
@@ -86,7 +84,8 @@ class Stock:
         elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.marshmallowList.isEmpty()
         else:
-            raise ValueError("Incorrect product type.")
+            print("\tUnvalid product type.")
+            return False
 
     def contains_item(self, item):
         """
@@ -131,7 +130,8 @@ class Stock:
         elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.chilipepperList.getLength()
         else:
-            raise ValueError("My, my that wasn't a correct product type, was it?")
+            print("Unvalid type.")
+            return None
 
     def clean_stock(self, date):
         """
@@ -205,7 +205,8 @@ class Stock:
         elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.remove_by_date(self.marshmallowList, date)
         else:
-            raise ValueError("Incorrect product type.")
+            print("\tUnvalid product type.")
+            return False
 
     def sort(self, stockList):
         sorted = False
@@ -263,6 +264,6 @@ class Stock:
                 item_at_index = stockList.searchItem(index)[0]
             if item_at_index.get_expiration_date() >= date:
                 stockList.delete(index)
-                return item_at_index, True
+                return True
             index += 1
-        return None, False
+        return False
