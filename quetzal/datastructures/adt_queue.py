@@ -5,17 +5,17 @@ class AdtQueue:
         self.storage = AdtDoublyLinkedList()
 
     def isEmpty(self):
-        return self.storage.get_length() == 0
+        return self.storage.getLength() == 0
 
     def enqueue(self, item):
-        self.storage.push_back(item)
+        self.storage.insertEnd(item)
 
     def dequeue(self):
-        node = self.storage.front()
+        node = self.storage.searchNode(1)
         if node is not None:
-            return node.remove()
+            return self.storage.retrieve(1)[0]
         else:
             return False
 
     def getFront(self):
-        return self.storage.front()
+        return self.storage.searchNode(0)
