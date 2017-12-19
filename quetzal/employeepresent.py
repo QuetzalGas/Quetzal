@@ -40,7 +40,7 @@ class EmployeePresent:
             self.processAndDone()
             return None
         else:
-            while not self.stack.isEmpty():
+            while not self.stack.isEmpty() or queue.isEmpty():
                 order = self.queue.dequeue()
                 self.assignOrder(order)
             self.processAndDone()
