@@ -1,6 +1,5 @@
-from datastructures import *
-from product import *
-
+from .datastructures import *
+from .product import *
 from unittest import TestCase
 
 class Stock:
@@ -52,11 +51,11 @@ class Stock:
         elif isinstance(item, Marshmallow):
             self.marshmallowList.insert(index, item)
         elif isinstance(item, Chocolateshot):
-            if item.getName() == "wit":
+            if item.get_name() == "wit":
                 self.whiteChocolateList.insert(index, item)
-            elif item.getName() == "bruin":
+            elif item.get_name() == "bruin":
                 self.brownChocolateList.insert(index, item)
-            elif item.getName() == "melk":
+            elif item.get_name() == "melk":
                 self.milkChocolateList.insert(index, item)
             else:
                 self.blackChocolateList.insert(index, item)
