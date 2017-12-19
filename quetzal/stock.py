@@ -31,6 +31,8 @@ class Stock:
             self.brownChocolateList = AdtCircularLinkedList()
             self.milkChocolateList = AdtCircularLinkedList()
             self.blackChocolateList = AdtCircularLinkedList()
+        else:
+            raise ValueError("Incorrect type for the list.")
 
     def add_item(self, item):
         """
@@ -84,8 +86,7 @@ class Stock:
         elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.marshmallowList.isEmpty()
         else:
-            print("\tUnvalid product type.")
-            return False
+            raise ValueError("Incorrect product type.")
 
     def contains_item(self, item):
         """
@@ -130,8 +131,7 @@ class Stock:
         elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.chilipepperList.getLength()
         else:
-            print("Unvalid type.")
-            return None
+            raise ValueError("My, my that wasn't a correct product type, was it?")
 
     def clean_stock(self, date):
         """
@@ -205,8 +205,7 @@ class Stock:
         elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.remove_by_date(self.marshmallowList, date)
         else:
-            print("\tUnvalid product type.")
-            return False
+            raise ValueError("Incorrect product type.")
 
     def sort(self, stockList):
         sorted = False
@@ -264,6 +263,6 @@ class Stock:
                 item_at_index = stockList.searchItem(index)[0]
             if item_at_index.get_expiration_date() >= date:
                 stockList.delete(index)
-                return True
+                return item_at_index, True
             index += 1
-        return False
+        return None, False
