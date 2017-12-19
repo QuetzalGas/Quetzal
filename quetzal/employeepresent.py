@@ -35,8 +35,8 @@ class EmployeePresent:
         #Reset handeledOrders
         self.handeledOrders = []
         self.queue = queue
-        if self.stack.isEmpty():
-            #Resume the rest of the orders
+        if self.stack.isEmpty() or queue.isEmpty():
+            #Resume the rest of the order
             self.processAndDone()
             return None
         else:
