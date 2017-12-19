@@ -1,3 +1,5 @@
+from .datastructures import *
+
 from .date import Date
 from .datetime import DateTime
 from .product import *
@@ -27,6 +29,7 @@ class Quetzal:
         self.employees = EmployeePresent()
         self.last_employee_id = 1
         self.history = []
+        self.employee_ids = []
 
     """
     +add_to_stock(in item: Ingredient, in count = 1: integer)
@@ -57,6 +60,8 @@ class Quetzal:
     """
     def add_employee(self, first_name, last_name, workload):
         employee = Employee(self.last_employee_id, first_name, last_name, workload)
+        self.employee_ids.append(self.last_employee_id)
+        self.last_employee_id += 1
         self.employees.add_employee(employee)
 
     """
@@ -76,6 +81,7 @@ class Quetzal:
         self.started = True
         self.timestep = 0
         self.new_orders = []
+        self.order_queue = AdtQueue()
 
     """
     +is_started(): bool {query}
@@ -167,6 +173,12 @@ class Quetzal:
         state = self.get_state()
         self.history.append(state)
         self.timestep += 1
+
+        for i in self.new_orders:
+            self.order_queue.enqueue(i)
+
+        self.employees.start(self.order_queue)
+
         self.new_orders = []
 
     """ 
@@ -202,9 +214,12 @@ class Quetzal:
 			<thead>\n\
 				<td>tijdstip</td>\n\
 				<td>Stack</td>\n"
-        employees = ["Wim Hofkens", "Jane Doe"]
+        employee_names = []
 
-        for i in employees:
+        for i in self.employee_ids:
+            employee_names.append(self.employees.get_employee_name(i))
+
+        for i in employee_names:
             html += "				<td>{}</td>\n".format(i)
 
         html += "				<td>Nieuwe bestellingen</td>\n\
