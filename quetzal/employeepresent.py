@@ -11,7 +11,7 @@ class EmployeePresent:
     def __del__(self):
         self.stack.destroyStack()
 
-    def addEmployee(self, employee):
+    def add_employee(self, employee):
         """
         Adds an employee to the worklist.
         :param employee: The employee that starts to work
