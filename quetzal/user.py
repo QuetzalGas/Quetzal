@@ -28,7 +28,7 @@ class UserContainer:
             self.type = 'h'
             self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
-            print("Unvalid type.")
+            raise ValueError("Unvalid type.")
 
     def check_user(self, order, firstname, lastname, email):
         """
@@ -143,7 +143,7 @@ class User:
         self.lastname = lastname
         self.email = email
         self.id = id
-        self.orders = list()
+        self.orders = AdtDoublyLinkedList()
 
     def add_order(self, order):
         """
@@ -151,9 +151,9 @@ class User:
         PRE:    'order' is of type Order.
         POSR:   The order-list is returned.
         """
-        if isinstance(order, Order):
-            return False
-        self.orders.append(order)
+        if not isinstance(order, Order):
+            raise ValueError("Input should have been an Order... it isn't.")
+        self.orders.insertBeginning(order)
         return True
 
     def calculate_id(self):
