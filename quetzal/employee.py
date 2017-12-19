@@ -55,6 +55,13 @@ class Employee:
         """
         return self.workload
 
+    def get_credits_still_to_do(self):
+        """
+        Returns the credits the employee still has to process.
+        :return: The remaining credits of an order.
+        """
+        return self.creditsStillToDo
+
     def set_load(self, load):
         """
         Sets the workload of the employee to a new value.
