@@ -1,5 +1,4 @@
 from .datastructures import *
-from .order import Order
 
 class UserContainer:
     """
@@ -28,9 +27,9 @@ class UserContainer:
             self.type = 'h'
             self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
-            print("Unvalid type.")
+            raise ValueError("Unvalid type.")
 
-    def check_user(self, order, firstname, lastname, email):
+    def add_if_unknown_user(self, firstname, lastname, email):
         """
         Checks whether a user with the given 'email' is already present in the table, if not a new User is added to the table
         with the given 'firstname', 'lastname', 'email' and 'order'.
@@ -59,13 +58,11 @@ class UserContainer:
             retrievedItem = resultRetrieve  # Hashmap return False or Node, zo not a tuple
 
         if(resultRetrieve is not False):
-            if self.type == 'h':
-                retrievedItem = retrievedItem.data
-            retrievedItem.add_order(order)
+            return False
         else:
             user = User(self.calculate_id(), firstname, lastname, email)
-            user.add_order(order)
             self.add_new_user(user)
+            return True
 
     def add_new_user(self, user):
         """
@@ -143,35 +140,6 @@ class User:
         self.lastname = lastname
         self.email = email
         self.id = id
-        self.orders = list()
-
-    def add_order(self, order):
-        """
-        Adds the order to the list of orders of the specific user.
-        PRE:    'order' is of type Order.
-        POSR:   The order-list is returned.
-        """
-        if isinstance(order, Order):
-            return False
-        self.orders.append(order)
-        return True
-
-    def calculate_id(self):
-        """
-        Calculates the user's ID.
-        PRE :   None
-        POST:   The freshly calculates ID is returned.
-        """
-        for char in self.email:
-            self.id += ord(char)
-            self.id *= 10
-
-    def get_orders(self):
-        """
-        PRE :   None
-        POST:   Returns a list of all orders of the user.
-        """
-        return self.orders
 
     def get_id(self):
         """
