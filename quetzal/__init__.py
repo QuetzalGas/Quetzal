@@ -131,9 +131,15 @@ class Quetzal:
     def get_state(self):
         state = []
         state.append(self.timestep)
-        state.append('') # stack
-        state.append('') # e1
-        state.append('') # e2
+
+        stack_string = "|"
+        for i in self.employees.makeDataLists():
+            stack_string += str(i.get_workload())
+            stack_string += " "
+        state.append(stack_string)  # stack
+
+        for i in self.employee_ids:
+            state.append(str(self.employees.get_remaining_workload(i)))
 
         new_orders_string = ''
         first = False
@@ -148,7 +154,20 @@ class Quetzal:
             new_orders_string += format(i)
 
         state.append(new_orders_string)
+
+        # waiting_orders = ''
+        # first2 = False
+        # if self.employees.get_waiting_orders() is not None:
+        #     for i in self.employees.get_waiting_orders():
+        #         i = i.get_chocolatemilk.getWorkLoad()
+        #         if not first2:
+        #             first2 = True
+        #         else:
+        #             waiting_orders += ','
+        #
+        #         new_orders_string += format(i)
         state.append('')
+
         state.append(self.stock.get_size('wit'))
         state.append(self.stock.get_size('melk'))
         state.append(self.stock.get_size('bruine'))
