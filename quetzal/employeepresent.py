@@ -85,3 +85,14 @@ class EmployeePresent:
             self.employeesWorkingList.append((i, i.get_credits_still_to_do()))
 
         return self.stackList, self.employeesWorkingList
+
+    def get_remaining_workload(self, id_):
+        """
+        Searches for the remaining workload of an employee.
+        :return: None if the employee is not working, else the credits still to do.
+        """
+        for i in self.employeesWorking:
+            if id_ == i.get_id:
+                return i.get_name()
+            else:
+                return None
