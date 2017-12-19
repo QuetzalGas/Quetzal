@@ -1,11 +1,5 @@
 from .date import Date
 from .datetime import DateTime
-from .product import *
-from .stock import Stock
-from .user import User, UserContainer
-from .employeepresent import EmployeePresent
-from .employee import Employee
-from .chocolatemilk import ChocolateMilk
 
 import inspect
 
@@ -21,20 +15,17 @@ class Quetzal:
     def __init__(self):
         self.now = 1
         self.started = False
-        self.stock = Stock('dll')
-        self.users = UserContainer('bs')
-        self.employees = EmployeePresent()
-        self.last_employee_id = 1
-        self.history = []
 
     """
     +add_to_stock(in item: Ingredient, in count = 1: integer)
     Voeg een ingredient toe aan de stock.
 
+    Preconditie: count moet strikt groter dan nul zijn.
     Postconditie: het object zal toegevoegd worden aan de stock.
     """
-    def add_to_stock(self, item):
-        self.stock.add_item(item)
+    def add_to_stock(self, item, count=1):
+        if item == Honey:
+            print('werkt')
 
     """
     +add_user(in user: Gebruiker)
@@ -43,8 +34,8 @@ class Quetzal:
     Preconditie: de simulatie mag niet gestart zijn.
     Postconditie: een nieuwe gebruiker is toegevoegd.
     """
-    def add_user(self, first_name, last_name, email):
-        self.users.check_user(None, first_name, last_name, email)
+    def add_user(self, user):
+        pass
 
     """
     +add_employee(in employee: Werknemer)
@@ -54,9 +45,8 @@ class Quetzal:
     Postconditie: een nieuwe werknemer is toegevoegd. Deze werknemer mag niet
     in een andere winkel worden toegevoegd.
     """
-    def add_employee(self, first_name, last_name, workload):
-        employee = Employee(self.last_employee_id, first_name, last_name, workload)
-        self.employees.add_employee(employee)
+    def add_employee(self, employee):
+        pass
 
     """
     +start_system()
@@ -73,8 +63,6 @@ class Quetzal:
             raise RuntimeError("Quetzal precondition broken: the simulation mustn't be running.")
 
         self.started = True
-        self.timestep = 0
-        self.new_orders = []
 
     """
     +is_started(): bool {query}
@@ -94,17 +82,8 @@ class Quetzal:
     verleden liggen.
     Postconditie: de bestelling is toegevoegd aan de simulatie logica.
     """
-    def place_order(self, email, products, datetime):
-        if not self.is_started():
-            raise RuntimeError("Must be started")
-
-        cm = ChocolateMilk(4)
-
-        for i in products:
-            k = self.stock.pop_item(i, datetime.get_date())
-            cm.addProduct(k)
-        
-        self.new_orders.append()
+    def place_order(self, order, datetime):
+        pass
 
     """
     +run_until(in datetime: DateTime)
@@ -114,40 +93,10 @@ class Quetzal:
     Postconditie: de simulatie zal stappen nemen totdat `datetime` is bereikt.
     Dit heeft dus ook alle postcondities van de `step` methode.
     """
-    def run_until(self, timestep):
+    def run_until(self, datetime):
         # What if datetime < self.now? We get an infinite loop.
-        while self.timestep < timestep:
+        while self.now < datetime.time:
             self.step()
-
-    def get_state(self):
-        state = []
-        state.append(self.timestep)
-        state.append('') # stack
-        state.append('') # e1
-        state.append('') # e2
-
-        new_orders_string = ''
-        first = True
-
-        for i in self.new_orders:
-            if not first:
-                new_orders_string += ','
-                first = True
-
-            new_orders_string += format(i)
-
-        state.append(new_orders_string)
-        state.append('')
-        state.append(self.stock.get_size('wit'))
-        state.append(self.stock.get_size('melk'))
-        state.append(self.stock.get_size('bruine'))
-        state.append(self.stock.get_size('zwart'))
-        state.append(self.stock.get_size('honing'))
-        state.append(self.stock.get_size('marshmallow'))
-        state.append(self.stock.get_size('chilipeper'))
-
-        return state
-
 
     """ 
     +step()
@@ -159,10 +108,7 @@ class Quetzal:
     te presenteren.
     """
     def step(self):
-        state = self.get_state()
-        self.history.append(state)
-        self.timestep += 1
-        self.new_orders = []
+        pass
 
     """ 
     +get_datetime(): DateTime {query}
@@ -213,27 +159,10 @@ class Quetzal:
         html += "			</thead>\n\
 			<tbody>\n"
 
-        for i in self.history:
-            html += "				<tr>\n"
-
-            for j in i:
-                html += "					<td>{}</td>\n".format(j)
-
-            html += "				</tr>\n"
-
-        html += "				<tr>\n"
-
-        k = self.get_state()
-        for i in k:
-            html += "					<td>{}</td>\n".format(i)
-
-        html += "				</tr>\n"
-
-
         html += "			</tbody>\n\
 		</table>\n\
 	</body>\n\
 </html>"
 
-        with open('log{}.html'.format(self.timestep), 'w') as f:
+        with open('test-html.html', 'w') as f:
             f.write(html)

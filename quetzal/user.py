@@ -1,5 +1,5 @@
-from .datastructures import *
-from .order import Order
+from datastructures import *
+from order import Order
 
 class UserContainer:
     """
@@ -28,7 +28,7 @@ class UserContainer:
             self.type = 'h'
             self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
         else:
-            raise ValueError("Unvalid type.")
+            print("Unvalid type.")
 
     def check_user(self, order, firstname, lastname, email):
         """
@@ -143,7 +143,7 @@ class User:
         self.lastname = lastname
         self.email = email
         self.id = id
-        self.orders = AdtDoublyLinkedList()
+        self.orders = list()
 
     def add_order(self, order):
         """
@@ -151,9 +151,9 @@ class User:
         PRE:    'order' is of type Order.
         POSR:   The order-list is returned.
         """
-        if not isinstance(order, Order):
-            raise ValueError("Input should have been an Order... it isn't.")
-        self.orders.insertBeginning(order)
+        if isinstance(order, Order):
+            return False
+        self.orders.append(order)
         return True
 
     def calculate_id(self):

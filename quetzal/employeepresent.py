@@ -1,5 +1,5 @@
-from .datastructures import *
-from .employee import Employee
+from.datastructures import *
+from.employee import Employee
 
 class EmployeePresent:
     def __init__(self):
@@ -11,7 +11,7 @@ class EmployeePresent:
     def __del__(self):
         self.stack.destroyStack()
 
-    def add_employee(self, employee):
+    def addEmployee(self, employee):
         """
         Adds an employee to the worklist.
         :param employee: The employee that starts to work
@@ -74,12 +74,8 @@ class EmployeePresent:
         self.employeesWorkingList = []
 
         while not self.stack.isEmpty():
-<<<<<<< HEAD
             employee = self.stack.popAndReturn()[0]
             employee = employee.item
-=======
-            employee = self.stack.popAndReturn()[0].item
->>>>>>> upstream/master
             self.stackList.append(employee.get_workload())
         for i in self.stackList:
             self.stack.push(i)

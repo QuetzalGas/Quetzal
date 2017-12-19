@@ -1,5 +1,5 @@
 class Employee:
-    def __init__(self, id_, first_name, last_name, workload):
+    def __init__(self, id, first_name, last_name, workload):
         """
         Initialises a new employee.
         :param id: The id of the employee.
@@ -9,7 +9,7 @@ class Employee:
         PRE: Workload has to be a valid number.
         POST: A new employee with name, id and workload exists.
         """
-        self.id = id_
+        self.id = id
         self.firstName = first_name
         self.lastName = last_name
         self.workload = workload
