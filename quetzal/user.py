@@ -1,5 +1,5 @@
-from datastructures import *
-from order import Order
+from .datastructures import *
+from .order import Order
 
 class UserContainer:
     """

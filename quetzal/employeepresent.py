@@ -1,6 +1,7 @@
-from.datastructures import *
+from .datastructures import *
+from .employee import Employee
 
-class employee_present:
+class EmployeePresent:
     def __init__(self):
         self.employeesPresent = adt_doubly_linked_list.AdtDoublyLinkedList()
         self.stack = adt_stack.AdtStack()
@@ -11,7 +12,7 @@ class employee_present:
     def __del__(self):
         self.stack.destroyStack()
 
-    def addEmployee(self, employee):
+    def add_employee(self, employee):
         """
         Adds an employee to the worklist.
         :param employee: The employee that starts to work
@@ -69,8 +70,8 @@ class employee_present:
         :return: A list with all the workloads.
         """
         while not self.stack.isEmpty():
-            employee = self.stack.popAndReturn()
-            self.stackList.append(employee.getWorkload())
+            employee = self.stack.popAndReturn()[0].item
+            self.stackList.append(employee.get_workload())
         for i in self.stackList:
             self.stack.push(i)
         return self.stackList.reverse()
