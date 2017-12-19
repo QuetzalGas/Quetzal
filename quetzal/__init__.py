@@ -6,6 +6,7 @@ from .user import User, UserContainer
 from .employeepresent import EmployeePresent
 from .employee import Employee
 from .chocolatemilk import ChocolateMilk
+from .order import Order
 
 import inspect
 
@@ -44,7 +45,7 @@ class Quetzal:
     Postconditie: een nieuwe gebruiker is toegevoegd.
     """
     def add_user(self, first_name, last_name, email):
-        self.users.check_user(None, first_name, last_name, email)
+        self.users.add_if_unknown_user(first_name, last_name, email)
 
     """
     +add_employee(in employee: Werknemer)
@@ -101,10 +102,12 @@ class Quetzal:
         cm = ChocolateMilk(4)
 
         for i in products:
-            k = self.stock.pop_item(i, datetime.get_date())
+            k = self.stock.pop_item(i, datetime.get_date())[0]
             cm.addProduct(k)
+
+        order = Order(email, datetime, cm)
         
-        self.new_orders.append()
+        self.new_orders.append(order)
 
     """
     +run_until(in datetime: DateTime)
@@ -127,12 +130,14 @@ class Quetzal:
         state.append('') # e2
 
         new_orders_string = ''
-        first = True
+        first = False
 
         for i in self.new_orders:
+            i = i.get_chocolatemilk().getWorkLoad()
             if not first:
-                new_orders_string += ','
                 first = True
+            else:
+                new_orders_string += ','
 
             new_orders_string += format(i)
 
