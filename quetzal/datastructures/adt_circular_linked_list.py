@@ -1,5 +1,5 @@
-class Node:
-    def __init__(self, item, next = None):
+class _Node:
+    def __init__(self, item, next=None):
         """
         Creëert een nieuw element node.
         :param item: Element dat de node bevat.
@@ -13,79 +13,79 @@ class AdtCircularLinkedList:
     def __init__(self):
         """
         Creëert een lege circulair gelinkte ketting met een dummy head node.
-        >>> l = CircularLinkedList()
-        >>> l.head == l.dummyhead
+        >>> l = AdtCircularLinkedList()
+        >>> l.head == l.dummy_head
         True
-        >>> l.dummyhead.next == l.dummyhead
+        >>> l.dummy_head.next == l.dummy_head
         True
         """
-        self.dummyhead = Node(None, None)
-        self.dummyhead.next = self.dummyhead
-        self.head = self.dummyhead
+        self.dummy_head = Node(None, None)
+        self.dummy_head.next = self.dummy_head
+        self.head = self.dummy_head
 
-    def destroyList(self):
+    def destroy_list(self):
         """
         Wist een ketting.
-        >>> l = CircularLinkedList()
+        >>> l = AdtCircularLinkedList()
         >>> l.insert(1,"abc")
         True
-        >>> l.destroyList()
-        >>> l.head == l.dummyhead
+        >>> l.destroy_list()
+        >>> l.head == l.dummy_head
         True
-        >>> l.dummyhead.next == l.dummyhead
+        >>> l.dummy_head.next == l.dummy_head
         True
         """
-        self.dummyhead.next = self.dummyhead
-        self.head = self.dummyhead
+        self.dummy_head.next = self.dummy_head
+        self.head = self.dummy_head
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Bepaalt of een gelinkte ketting leeg is.
         :return: True als de ketting leeg is.
-        >>> l = CircularLinkedList()
-        >>> l.isEmpty()
+        >>> l = AdtCircularLinkedList()
+        >>> l.is_empty()
         True
         >>> l.insert(1,"abc")
         True
-        >>> l.isEmpty()
+        >>> l.is_empty()
         False
         >>> l.insert(2,"def")
         True
         >>> l.insert(3,"ghi")
         True
-        >>> l.isEmpty()
+        >>> l.is_empty()
         False
-        >>> l.destroyList()
-        >>> l.isEmpty()
+        >>> l.destroy_list()
+        >>> l.is_empty()
         True
         """
-        return self.dummyhead.next == self.dummyhead
+        return self.dummy_head.next == self.dummy_head
 
-    def getLength(self):
+    def get_length(self):
         """
         Geeft het aantal elementen in de gelinkte ketting.
         :return: aantal elementen.
-        >>> l = CircularLinkedList()
-        >>> l.getLength()
+        >>> l = AdtCircularLinkedList()
+        >>> l.get_length()
         0
         >>> l.insert(1,"abc")
         True
-        >>> l.getLength()
+        >>> l.get_length()
         1
         >>> l.insert(2,"def")
         True
         >>> l.insert(3,"ghi")
         True
-        >>> l.getLength()
+        >>> l.get_length()
         3
-        >>> l.destroyList()
-        >>> l.getLength()
+        >>> l.destroy_list()
+        >>> l.get_length()
         0
         """
         length = 0
-        if not self.isEmpty():
+        if not self.is_empty():
             cur = self.head
-            while cur.next is not self.dummyhead:
+            while cur.next is not self.dummy_head:
                 cur = cur.next
                 length += 1
         return length
@@ -93,11 +93,11 @@ class AdtCircularLinkedList:
     def insert(self, index, newItem):
         """
         Voegt het element 'newItem' toe op positie 'index' in de gelinkte ketting, als
-        1 <= index <= getLength()+1.
+        1 <= index <= get_length()+1.
         :param index: positie waar het element moet toegevoegd worden.
         :param newItem: element dat toegevoegd moet worden.
         :return: True als het toevoegen gelukt is.
-        >>> l = CircularLinkedList()
+        >>> l = AdtCircularLinkedList()
         >>> l.insert(0,10)
         False
         >>> l.insert(1,0)
@@ -112,19 +112,19 @@ class AdtCircularLinkedList:
         False
         >>> l.insert(4, -56)
         True
-        >>> l.getLength()
+        >>> l.get_length()
         4
         """
 
-        if not self.isEmpty():
-            if not isinstance(newItem,type(self.head.next.item)):
+        if not self.is_empty():
+            if not isinstance(new_item, type(self.head.next.item)):
                 return False
 
-        if index >= 1 and index <= self.getLength()+1:
+        if (index >= 1) and (index <= (self.get_length() + 1)):
             cur = self.head
-            for i in range(index-1):
+            for i in range(index - 1):
                 cur = cur.next
-            newNode = Node(newItem, cur.next)
+            newNode = _Node(newItem, cur.next)
             cur.next = newNode
             return True
         return False
@@ -132,10 +132,10 @@ class AdtCircularLinkedList:
     def delete(self, index):
         """
         Verwijdert het element op positie 'index' in de gelinkte ketting, als
-        1 <= index <= getLength().
+        1 <= index <= get_length().
         :param index: positie van het element dat verwijderd moet worden.
         :return: True als het verwijderen gelukt is.
-        >>> l = CircularLinkedList()
+        >>> l = AdtCircularLinkedList()
         >>> l.insert(1,0)
         True
         >>> l.insert(2,5)
@@ -148,7 +148,7 @@ class AdtCircularLinkedList:
         True
         >>> l.delete(2)
         True
-        >>> l.getLength()
+        >>> l.get_length()
         2
         >>> l.retrieve(2)
         (-56, True)
@@ -157,7 +157,7 @@ class AdtCircularLinkedList:
         >>> l.delete(10)
         False
         """
-        if index >= 1 and index <= self.getLength():
+        if index >= 1 and index <= self.get_length():
             cur = self.head
             prev = Node(None, cur)
             prev = Node(None, cur)
@@ -171,10 +171,10 @@ class AdtCircularLinkedList:
     def retrieve(self, index):
         """
         Geeft het element op positie 'index' van de gelinkte ketting terug, als
-        1 <= index <= getLength().
+        1 <= index <= get_length().
         :param index: positie van het element.
         :return: element, True als het opvragen gelukt is.
-        >>> l = CircularLinkedList()
+        >>> l = AdtCircularLinkedList()
         >>> l.insert(1,0)
         True
         >>> l.insert(2,5)
@@ -196,7 +196,7 @@ class AdtCircularLinkedList:
         >>> l.retrieve(1)
         (5, True)
         """
-        if index >= 1 and index <= self.getLength():
+        if (index >= 1) and (index <= self.get_length()):
             cur = self.head
             for i in range(index):
                 cur = cur.next

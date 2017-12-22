@@ -3,6 +3,7 @@ class Node:
         self.item = item
         self.next = next
 
+
 class AdtStack:
     def __init__(self):
         """
@@ -10,13 +11,13 @@ class AdtStack:
         """
         self.top = None
 
-    def destroyStack(self):
+    def destroy_stack(self):
         """
         Destroys a stack.
         """
         self.top = None
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Indicates whether a stack is empty.
         :return: Boolean: If the top of the linked list has a top or not.
@@ -43,7 +44,7 @@ class AdtStack:
         self.top = self.top.next
         return True
 
-    def popAndReturn(self):
+    def pop_and_return(self):
         """
         Removes the last added element and returns it.
         :return: The last added element.
@@ -55,10 +56,9 @@ class AdtStack:
         self.top = self.top.next
         return old_top, True
 
-    def getTop(self):
+    def get_top(self):
         """
         Indicates what the last added element is.
         :return: The last added element
         """
         return self.top.item
-

@@ -95,10 +95,10 @@ class TreeNode:
         for item in self.items:
             k += 1
             if item == toDelete:
-                for i in range(self.amount-k):
-                    self.items[k-1] = self.items[k]
+                for i in range(self.amount - k):
+                    self.items[k - 1] = self.items[k]
                     k += 1
-                self.items[self.amount-1] = None
+                self.items[self.amount - 1] = None
                 self.amount -= 1
                 return toDelete, True
 
@@ -134,7 +134,7 @@ class TreeNode:
                 else:
                     return 2, self.parent.children[1], self.parent.children[3]
             else:
-                return 1,self.parent.children[2]
+                return 1, self.parent.children[2]
 
     def allSiblings1Nodes(self):
         if self.getSiblings()[0] == 0:
@@ -145,7 +145,8 @@ class TreeNode:
             else:
                 return False
         else:
-            if self.getSiblings()[1].amount == 1 and self.getSiblings()[2].amount == 1:
+            if self.getSiblings()[1].amount == 1 and self.getSiblings()[
+                    2].amount == 1:
                 return True
             else:
                 return False
@@ -169,16 +170,19 @@ class TreeNode:
                 if child is not None:
                     child.print()
 
+
 class TreeItem:
     def __init__(self, key, item):
         self.searchKey = key
         self.item = item
+
 
 class AdtTwoThreeFourTree:
     """
     TableItemType is het type van de elementen die in de 2-3-4 boom worden opgeslagen.
     Een element heeft een searchKey van het type KeyType.
     """
+
     def __init__(self):
         """
         Creates an empty 2-3-4 tree.
@@ -260,7 +264,9 @@ class AdtTwoThreeFourTree:
         """
         if node.amount == 3:
             self.splitNode(node)
-            current = node.parent   # splitNode reorganised the tree, so current has to be reset to the parent
+            # splitNode reorganised the tree, so current has to be reset to the
+            # parent
+            current = node.parent
         else:
             current = node
         if current.isLeaf():
@@ -336,13 +342,13 @@ class AdtTwoThreeFourTree:
         if node.isLeaf():
             return filetext
         k = -2
-        for i in range(node.amount+1):
+        for i in range(node.amount + 1):
             filetext += "\n\"node"
             filetext += str(rootnr)
             filetext += "\" -> \"node"
-            filetext += str(rootnr*4+k)
+            filetext += str(rootnr * 4 + k)
             filetext += "\"\n"
-            filetext = self.dot(node.children[i], rootnr*4+k, filetext)
+            filetext = self.dot(node.children[i], rootnr * 4 + k, filetext)
             k += 1
         return filetext
 
@@ -373,8 +379,8 @@ class AdtTwoThreeFourTree:
             if item is not None:
                 if item.searchKey == searchKey:
                     return item, True
-        for x in range(node.amount,0,-1):
-            if node.items[x-1].searchKey < searchKey:
+        for x in range(node.amount, 0, -1):
+            if node.items[x - 1].searchKey < searchKey:
                 return self.retrieve(node.children[x], searchKey)
         return self.retrieve(node.children[0], searchKey)
 
@@ -389,7 +395,8 @@ class AdtTwoThreeFourTree:
         if node.parent is None or node.amount > 1:
             return False
         if node.allSiblings1Nodes() and node.parent.amount == 1:
-            # parent and sibling are 1-nodes so they are merged together to form a 3-node
+            # parent and sibling are 1-nodes so they are merged together to
+            # form a 3-node
             sibling = node.getSiblings()[1]
             if not node.isLeaf():
                 sibling.children[0].parent = node
@@ -405,14 +412,24 @@ class AdtTwoThreeFourTree:
         elif node.allSiblings1Nodes():
             childNr = node.whichChild()
             if childNr == 0:          # node is uiterst linkse kind
-                sibling = node.getSiblings()[1]           # rechtse, eerste sibling is enige sibling die we kunnen gebruiken
-                parentNr = childNr      # we nemen uiterst linkse item van parent (tussen sibling en node)
-            elif (childNr == 1) or (childNr == 2 and node.parent.amount == 3):  # node is een kind in het midden
-                sibling = node.getSiblings()[2]        # we nemen rechtse sibling, dus de tweede
+                # rechtse, eerste sibling is enige sibling die we kunnen
+                # gebruiken
+                sibling = node.getSiblings()[1]
+                # we nemen uiterst linkse item van parent (tussen sibling en
+                # node)
+                parentNr = childNr
+            # node is een kind in het midden
+            elif (childNr == 1) or (childNr == 2 and node.parent.amount == 3):
+                # we nemen rechtse sibling, dus de tweede
+                sibling = node.getSiblings()[2]
                 parentNr = childNr      # we nemen parent item tussen node en sibling
             else:                     # node is uiterst rechtse kind
-                sibling = node.getSiblings()[1]  # linkse, eerste sibling is enige sibling die we kunnen gebruiken
-                parentNr = childNr - 1  # we nemen uiterst rechtse item van parent (tussen sibling en node)
+                # linkse, eerste sibling is enige sibling die we kunnen
+                # gebruiken
+                sibling = node.getSiblings()[1]
+                # we nemen uiterst rechtse item van parent (tussen sibling en
+                # node)
+                parentNr = childNr - 1
             node.insertItem(sibling.items[0])
             if not node.isLeaf():
                 sibling.children[0].parent = node
@@ -420,36 +437,52 @@ class AdtTwoThreeFourTree:
                 node.insertChild(sibling.children[0])
                 node.insertChild(sibling.children[1])
             node.parent.deleteChild(sibling)
-            node.insertItem(node.parent.deleteItem(node.parent.items[parentNr])[0])
+            node.insertItem(
+                node.parent.deleteItem(
+                    node.parent.items[parentNr])[0])
             return True
         else:
             if node.getSiblings()[0] == 1:
                 sibling = node.getSiblings()[1]
-                if node.getMaxSearchKey() < node.getSiblings()[1].getMaxSearchKey():
+                if node.getMaxSearchKey() < node.getSiblings()[
+                        1].getMaxSearchKey():
                     # sibling is rechts van node (node is uiterst links)
                     if not node.isLeaf():
                         sibling.children[0].parent = node
-                        node.insertChild(sibling.deleteChild(sibling.children[0])[0])
-                    node.insertItem(node.parent.deleteItem(node.parent.items[0])[0])
-                    node.parent.insertItem(sibling.deleteItem(sibling.items[0])[0])
+                        node.insertChild(
+                            sibling.deleteChild(
+                                sibling.children[0])[0])
+                    node.insertItem(
+                        node.parent.deleteItem(
+                            node.parent.items[0])[0])
+                    node.parent.insertItem(
+                        sibling.deleteItem(
+                            sibling.items[0])[0])
 
                     return True
                 else:
                     # sibling is links van node (node is uiterst rechts)
                     if not node.isLeaf():
                         sibling.children[sibling.amount].parent = node
-                        node.insertChild(sibling.deleteChild(sibling.children[sibling.amount])[0])
-                    node.insertItem(node.parent.deleteItem(node.parent.items[node.parent.amount - 1])[0])
-                    node.parent.insertItem(sibling.deleteItem(sibling.items[sibling.amount - 1])[0])
+                        node.insertChild(sibling.deleteChild(
+                            sibling.children[sibling.amount])[0])
+                    node.insertItem(node.parent.deleteItem(
+                        node.parent.items[node.parent.amount - 1])[0])
+                    node.parent.insertItem(sibling.deleteItem(
+                        sibling.items[sibling.amount - 1])[0])
                     return True
             elif node.getSiblings()[2].amount == 1:
-                # rechtse sibling heeft maar 1 item, dus we moeten een item nemen uit de linkse sibling
+                # rechtse sibling heeft maar 1 item, dus we moeten een item
+                # nemen uit de linkse sibling
                 sibling = node.getSiblings()[1]
-                if not node.isLeaf(): # delete child in sibling and add the child in node, change child's parent to node
+                if not node.isLeaf():  # delete child in sibling and add the child in node, change child's parent to node
                     sibling.children[sibling.amount].parent = node
-                    node.insertChild(sibling.deleteChild(sibling.children[sibling.amount])[0])
-                node.insertItem(node.parent.deleteItem(node.parent.items[sibling.whichChild()])[0]) # insert the item from parent between sibling and node in node
-                node.parent.insertItem(sibling.deleteItem(sibling.items[sibling.amount - 1])[0])
+                    node.insertChild(sibling.deleteChild(
+                        sibling.children[sibling.amount])[0])
+                node.insertItem(node.parent.deleteItem(node.parent.items[sibling.whichChild()])[
+                                0])  # insert the item from parent between sibling and node in node
+                node.parent.insertItem(sibling.deleteItem(
+                    sibling.items[sibling.amount - 1])[0])
 
                 return True
             else:
@@ -457,8 +490,11 @@ class AdtTwoThreeFourTree:
                 sibling = node.getSiblings()[2]
                 if not node.isLeaf():
                     sibling.children[0].parent = node
-                    node.insertChild(sibling.deleteChild(sibling.children[0])[0])
-                node.insertItem(node.parent.deleteItem(node.parent.items[node.whichChild()])[0])
+                    node.insertChild(
+                        sibling.deleteChild(
+                            sibling.children[0])[0])
+                node.insertItem(node.parent.deleteItem(
+                    node.parent.items[node.whichChild()])[0])
                 node.parent.insertItem(sibling.deleteItem(sibling.items[0])[0])
                 return True
 
@@ -475,7 +511,8 @@ class AdtTwoThreeFourTree:
         searching = True
         current = self.root
         while searching:
-            self.merge(current) # merge is only applied when necessary, no need to check here
+            # merge is only applied when necessary, no need to check here
+            self.merge(current)
             k = 0
             for item in current.items:
                 if item is not None:
@@ -487,7 +524,7 @@ class AdtTwoThreeFourTree:
                                 self.root = None
                             return True
                         else:
-                            next = current.children[k+1]
+                            next = current.children[k + 1]
                 k += 1
             if searching:
                 if searchKey > current.getMaxSearchKey():
@@ -529,5 +566,3 @@ class AdtTwoThreeFourTree:
                             current = current.children[k]
                             break
                         k += 1
-
-

@@ -49,7 +49,7 @@ class Node:
 
         if previous is not None:
             previous.parent = None
-        
+
         return previous
 
     def rotate_left(self):
@@ -133,7 +133,6 @@ class Node:
 
         return x
 
-
     def set_left_child(self, child):
         previous = self.left
 
@@ -181,7 +180,6 @@ class Node:
                         self.parent.rotate_left()
                         self.parent.rotate_right()
 
-
     def fix_4_node(self):
         # When called, we know that the recently added node must be red.
 
@@ -207,7 +205,6 @@ class Node:
         elif not t_left and p_left:
             self.parent.rotate_left()
             self.parent.rotate_right()
-
 
     def insert(self, key, content):
         if self.key is None:
@@ -237,7 +234,6 @@ class Node:
 
         root.black = True
         return root
-
 
     def combine(self):
         # Root nodes can not be combined.
@@ -271,7 +267,7 @@ class Node:
             if sibling.is_four_node():
                 if is_left:
                     sibling.rotate_right()
-                    #self.parent.rotate_left()
+                    # self.parent.rotate_left()
                 else:
                     top = sibling.rotate_left()
                     top.left.black = True
@@ -280,7 +276,6 @@ class Node:
                 return
 
             # Three node
-
 
     def delete(self, key):
         self.combine()
@@ -295,7 +290,6 @@ class Node:
 
         return False
 
-
     def print(self, filename):
         with open(filename, 'w') as of:
             of.write('digraph rb {\n')
@@ -303,7 +297,6 @@ class Node:
             out = self.dot()
             of.write(out[0])
             of.write('}')
-
 
     def add_dummy_leaves(self, tag):
         if self.left is None:
@@ -321,7 +314,6 @@ class Node:
             tag = self.right.add_dummy_leaves(tag)
 
         return tag
-
 
     def height_234(self, h):
         left_height = h
@@ -350,41 +342,47 @@ class Node:
             return None
 
         if self.black:
-            output = '  node{}[label = "<l>|<m> {}|<r>"];\n'.format(c, self.content)
+            output = '  node{}[label = "<l>|<m> {}|<r>"];\n'.format(
+                c, self.content)
         else:
-            output = '  node{}[label = "<l>|<m> {}|<r>", color=red];\n'.format(c, self.content)
+            output = '  node{}[label = "<l>|<m> {}|<r>", color=red];\n'.format(
+                c, self.content)
 
         root = c
 
         if (self.left is not None) and (self.left.content is not None):
-            (o2, c) = self.left.dot(c+1) 
+            (o2, c) = self.left.dot(c + 1)
             output += o2
 
             if self.left.black:
-                output += '  "node{}":l->"node{}":m;\n'.format(root, root+1)
+                output += '  "node{}":l->"node{}":m;\n'.format(root, root + 1)
             else:
-                output += '  "node{}":l->"node{}":m [color=red];\n'.format(root, root+1)
+                output += '  "node{}":l->"node{}":m [color=red];\n'.format(
+                    root, root + 1)
         else:
-            output += '  node{} [style="invisible"];\n'.format(root+1)
-            output += '  "node{}":l->node{} [style="invisible"];\n'.format(root, root+1)
-            c = c+1
+            output += '  node{} [style="invisible"];\n'.format(root + 1)
+            output += '  "node{}":l->node{} [style="invisible"];\n'.format(
+                root, root + 1)
+            c = c + 1
 
         if (self.right is not None) and (self.right.content is not None):
-            c_plus = c+1
+            c_plus = c + 1
             (o2, c) = self.right.dot(c_plus)
             output += o2
 
             if self.right.black:
                 output += '  "node{}":r->"node{}":m;\n'.format(root, c_plus)
             else:
-                output += '  "node{}":r->"node{}":m [color=red];\n'.format(root, c_plus)
+                output += '  "node{}":r->"node{}":m [color=red];\n'.format(
+                    root, c_plus)
 
         else:
-            output += '  node{} [style="invisible"];\n'.format(c+1)
-            output += '  "node{}":r->node{} [style="invisible"];\n'.format(root, c+1)
-            c = c+1
+            output += '  node{} [style="invisible"];\n'.format(c + 1)
+            output += '  "node{}":r->node{} [style="invisible"];\n'.format(
+                root, c + 1)
+            c = c + 1
 
-        return (output, c+1)
+        return (output, c + 1)
 
 
 class AdtRedBlackTree:
@@ -392,7 +390,7 @@ class AdtRedBlackTree:
         self.root = Node(None, None)
         self.root.black = True
 
-    def insert(self, key, content = None):
+    def insert(self, key, content=None):
         if content is None:
             self.root = self.root.insert(key, key)
         else:
@@ -415,9 +413,9 @@ class AdtRedBlackTree:
             of.write('  labelloc="t";\n')
             of.write('  label="{}";\n'.format(label))
             of.write('}')
-        
 
-def standard(offset = 0):
+
+def standard(offset=0):
     a = Node(offset + 0, "a")
     a.black = True
     b = Node(offset + 2, "b")
@@ -442,6 +440,7 @@ def standard(offset = 0):
 
     return M
 
+
 def b2():
     M = standard()
 
@@ -451,6 +450,7 @@ def b2():
     P.set_left_child(M)
 
     return P
+
 
 def b4():
     M = standard()
@@ -466,6 +466,7 @@ def b4():
     Q.set_right_child(f)
 
     return Q
+
 
 def b6():
     M = standard(3)
@@ -485,6 +486,7 @@ def b6():
 
     return P
 
+
 def print_rb(rb, filename):
     with open(filename, 'w') as of:
         of.write('digraph rb {\n')
@@ -492,6 +494,7 @@ def print_rb(rb, filename):
         out = rb.dot()
         of.write(out[0])
         of.write('}')
+
 
 def insert():
     R = Node(60, 60)
@@ -510,4 +513,4 @@ def insert():
     print_rb(R, "R.dot")
 
 
-#insert()
+# insert()

@@ -12,6 +12,7 @@ from .order import Order
 
 import inspect
 
+
 class Quetzal:
     """
     +init()
@@ -21,6 +22,7 @@ class Quetzal:
     Postconditie: een lege winkel (zonder stock, gebruikers, of werknemers) is
     aangemaakt.
     """
+
     def __init__(self):
         self.now = 1
         self.started = False
@@ -37,6 +39,7 @@ class Quetzal:
 
     Postconditie: het object zal toegevoegd worden aan de stock.
     """
+
     def add_to_stock(self, item):
         self.stock.add_item(item)
 
@@ -47,6 +50,7 @@ class Quetzal:
     Preconditie: de simulatie mag niet gestart zijn.
     Postconditie: een nieuwe gebruiker is toegevoegd.
     """
+
     def add_user(self, first_name, last_name, email):
         self.users.add_if_unknown_user(first_name, last_name, email)
 
@@ -58,8 +62,13 @@ class Quetzal:
     Postconditie: een nieuwe werknemer is toegevoegd. Deze werknemer mag niet
     in een andere winkel worden toegevoegd.
     """
+
     def add_employee(self, first_name, last_name, workload):
-        employee = Employee(self.last_employee_id, first_name, last_name, workload)
+        employee = Employee(
+            self.last_employee_id,
+            first_name,
+            last_name,
+            workload)
         self.employee_ids.append(self.last_employee_id)
         self.last_employee_id += 1
         self.employees.add_employee(employee)
@@ -74,9 +83,11 @@ class Quetzal:
     Preconditie: de simulatie mag niet gestart zijn.
     Postconditie: de simulatie is gestart. De huidige tijdstap zal nul zijn.
     """
+
     def start_system(self):
         if self.started:
-            raise RuntimeError("Quetzal precondition broken: the simulation mustn't be running.")
+            raise RuntimeError(
+                "Quetzal precondition broken: the simulation mustn't be running.")
 
         self.started = True
         self.timestep = 0
@@ -90,6 +101,7 @@ class Quetzal:
     Preconditie: geen.
     Postconditie: geeft True als de simulatie gestart is, of anders False.
     """
+
     def is_started(self):
         return self.started
 
@@ -101,6 +113,7 @@ class Quetzal:
     verleden liggen.
     Postconditie: de bestelling is toegevoegd aan de simulatie logica.
     """
+
     def place_order(self, email, products, datetime):
         if not self.is_started():
             raise RuntimeError("Must be started")
@@ -109,10 +122,10 @@ class Quetzal:
 
         for i in products:
             k = self.stock.pop_item(i, datetime.get_date())[0]
-            cm.addProduct(k)
+            cm.add_product(k)
 
         order = Order(email, datetime, cm)
-        
+
         self.new_orders.append(order)
 
     """
@@ -123,6 +136,7 @@ class Quetzal:
     Postconditie: de simulatie zal stappen nemen totdat `datetime` is bereikt.
     Dit heeft dus ook alle postcondities van de `step` methode.
     """
+
     def run_until(self, timestep):
         # What if datetime < self.now? We get an infinite loop.
         while self.timestep < timestep:
@@ -133,7 +147,7 @@ class Quetzal:
         state.append(self.timestep)
 
         stack_string = "|"
-        for i in self.employees.makeDataLists():
+        for i in self.employees.make_data_lists():
             stack_string += str(i.get_workload())
             stack_string += " "
         state.append(stack_string)  # stack
@@ -145,7 +159,7 @@ class Quetzal:
         first = False
 
         for i in self.new_orders:
-            i = i.get_chocolatemilk().getWorkLoad()
+            i = i.get_chocolatemilk().get_workload()
             if not first:
                 first = True
             else:
@@ -159,7 +173,7 @@ class Quetzal:
         # first2 = False
         # if self.employees.get_waiting_orders() is not None:
         #     for i in self.employees.get_waiting_orders():
-        #         i = i.get_chocolatemilk.getWorkLoad()
+        #         i = i.get_chocolatemilk.get_workload()
         #         if not first2:
         #             first2 = True
         #         else:
@@ -178,8 +192,7 @@ class Quetzal:
 
         return state
 
-
-    """ 
+    """
     +step()
     Neem een stap in de simulatie.
 
@@ -188,6 +201,7 @@ class Quetzal:
     werknemers. Alle relevante informatie zal opgeslagen zijn om een logboek
     te presenteren.
     """
+
     def step(self):
         state = self.get_state()
         self.history.append(state)
@@ -200,13 +214,14 @@ class Quetzal:
 
         self.new_orders = []
 
-    """ 
+    """
     +get_datetime(): DateTime {query}
     Geeft de huidige tijdstap van de simulatie.
 
     Preconditie: de simulatie moet gestart zijn.
     Postconditie: de huidige tijdstap van de simulatie wordt teruggegeven.
     """
+
     def get_datetime(self):
         pass
 
@@ -219,6 +234,7 @@ class Quetzal:
     Postconditie: een logboek in het formaat "logx.html" zal geschreven worden,
     met x de tijdstap van de simulatie op het huidig moment.
     """
+
     def log(self):
         html = "<html>\n\
 	<head>\n\
@@ -244,7 +260,14 @@ class Quetzal:
         html += "				<td>Nieuwe bestellingen</td>\n\
 				<td>Wachtende bestellingen</td>\n"
 
-        stock = ["wit", "melk", "bruin", "zwart", "honing", "marshmallow", "chili"]
+        stock = [
+            "wit",
+            "melk",
+            "bruin",
+            "zwart",
+            "honing",
+            "marshmallow",
+            "chili"]
 
         for i in stock:
             html += "				<td>{}</td>\n".format(i)
@@ -267,7 +290,6 @@ class Quetzal:
             html += "					<td>{}</td>\n".format(i)
 
         html += "				</tr>\n"
-
 
         html += "			</tbody>\n\
 		</table>\n\

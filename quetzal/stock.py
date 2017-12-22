@@ -2,6 +2,7 @@ from .datastructures import *
 from .product import *
 from unittest import TestCase
 
+
 class Stock:
     def __init__(self, type):
         """
@@ -72,19 +73,19 @@ class Stock:
         POST :  If the corresponding list is empty, True will be returned.
         """
         if product_type == "honing" or product_type == "honey":
-            return self.honeyList.isEmpty()
+            return self.honeyList.is_empty()
         elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
-            return self.chilipepperList.isEmpty()
+            return self.chilipepperList.is_empty()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
-            return self.whiteChocolateList.isEmpty()
+            return self.whiteChocolateList.is_empty()
         elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
-            return self.brownChocolateList.isEmpty()
-        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
-            return self.milkChocolateList.isEmpty()
-        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
-            return self.blackChocolateList.isEmpty()
+            return self.brownChocolateList.is_empty()
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type == "melk" or product_type == "melk chocolade":
+            return self.milkChocolateList.is_empty()
+        elif product_type == "black chocolade" or product_type == "black" or product_type == "zwart" or product_type == "zwarte chocolade":
+            return self.blackChocolateList.is_empty()
         elif product_type == "marshmallow" or product_type == "Marshmallow":
-            return self.marshmallowList.isEmpty()
+            return self.marshmallowList.is_empty()
         else:
             raise ValueError("Incorrect product type.")
 
@@ -117,21 +118,22 @@ class Stock:
         POST:   The size of the table that contains 'item' products is returned.
         """
         if product_type == "honing" or product_type == "honey":
-            return self.honeyList.getLength()
+            return self.honeyList.get_length()
         elif product_type == "marshmallow" or product_type == "Marshmallow":
-            return self.marshmallowList.getLength()
+            return self.marshmallowList.get_length()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
-            return self.whiteChocolateList.getLength()
+            return self.whiteChocolateList.get_length()
         elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
-            return self.brownChocolateList.getLength()
-        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
-            return self.blackChocolateList.getLength()
-        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
-            return self.milkChocolateList.getLength()
+            return self.brownChocolateList.get_length()
+        elif product_type == "black chocolade" or product_type == "black" or product_type == "zwart" or product_type == "zwarte chocolade":
+            return self.blackChocolateList.get_length()
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type == "melk" or product_type == "melk chocolade":
+            return self.milkChocolateList.get_length()
         elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
-            return self.chilipepperList.getLength()
+            return self.chilipepperList.get_length()
         else:
-            raise ValueError("My, my that wasn't a correct product type, was it?")
+            raise ValueError(
+                "My, my that wasn't a correct product type, was it?")
 
     def clean_stock(self, date):
         """
@@ -164,16 +166,16 @@ class Stock:
         if self.type == 'cll':
             first = stockList.retrieve(index)[0]
         else:
-            first = stockList.searchItem(index)[0]
+            first = stockList.search_item(index)[0]
         if first is None:
             return deletedItems
-        while first.get_expiration_date() < date and stockList.getLength() >= 1:
+        while first.get_expiration_date() < date and stockList.get_length() >= 1:
             deletedItems.append(first.get_expiration_date())
             stockList.delete(index)
             if self.type == "cll":
                 first = stockList.retrieve(index)[0]
             else:
-                first = stockList.searchItem(index)[0]
+                first = stockList.search_item(index)[0]
             if first is None:
                 break
         return deletedItems
@@ -210,10 +212,10 @@ class Stock:
     def sort(self, stockList):
         sorted = False
         if self.type == "cll":
-            for area in range(1, stockList.getLength()):
+            for area in range(1, stockList.get_length()):
                 if not sorted:
                     sorted = True
-                    for i in range(1, stockList.getLength() - area + 1):
+                    for i in range(1, stockList.get_length() - area + 1):
                         (place_i, bool) = stockList.retrieve(i)
                         (place_after, bool) = stockList.retrieve(i + 1)
 
@@ -224,19 +226,19 @@ class Stock:
                             stockList.delete(i + 2)
 
         else:
-            for area in range(1, stockList.getLength()):
+            for area in range(1, stockList.get_length()):
                 if not sorted:
                     sorted = True
-                    for i in range(0, stockList.getLength() - area + 1):
-                        place_i = stockList.searchItem(i)[0]
-                        place_after = stockList.searchItem(i+1)[0]
-                        if not stockList.isEmpty():
+                    for i in range(0, stockList.get_length() - area + 1):
+                        place_i = stockList.search_item(i)[0]
+                        place_after = stockList.search_item(i + 1)[0]
+                        if not stockList.is_empty():
                             cur = stockList.head
-                            for j in range(0, stockList.getLength()):
+                            for j in range(0, stockList.get_length()):
                                 cur = cur.next
                         if place_after.get_expiration_date() < place_i.get_expiration_date():
                             sorted = False
-                            stockList.delete(i+1)
+                            stockList.delete(i + 1)
                             stockList.insert(i, place_after)
 
     def remove_by_date(self, stockList, date):
@@ -250,17 +252,17 @@ class Stock:
         POST :  The item with most urgent expiry date is removed from 'stockList' and True is returned. If there wasn't
                 an item with a expiry date "higher or equal" to 'date', then False is returned.
         """
-        if stockList.isEmpty():
+        if stockList.is_empty():
             return False
         self.sort(stockList)
         index = 0
         if self.type == 'cll':
             index = 1
-        for i in range(0, stockList.getLength()):
+        for i in range(0, stockList.get_length()):
             if self.type == 'cll':
                 item_at_index = stockList.retrieve(index)[0]
             else:
-                item_at_index = stockList.searchItem(index)[0]
+                item_at_index = stockList.search_item(index)[0]
             if item_at_index.get_expiration_date() >= date:
                 stockList.delete(index)
                 return item_at_index, True
