@@ -261,19 +261,10 @@ class Quetzal:
 
             html += "				</tr>\n"
 
-        html += "				<tr>\n"
-
-        k = self.step()
-        for i in k:
-            html += "					<td>{}</td>\n".format(i)
-
-        html += "				</tr>\n"
-
-
         html += "			</tbody>\n\
 		</table>\n\
 	</body>\n\
 </html>"
 
-        with open('log{}.html'.format(self.timestep-1), 'w') as f:
+        with open('log{}.html'.format(self.timestep), 'w') as f:
             f.write(html)
