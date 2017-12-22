@@ -13,6 +13,7 @@ class AdtQueue:
 
     def dequeue(self):
         node = self.storage.search_node(1)
+
         if node is not None:
             return self.storage.retrieve(1)[0]
         else:

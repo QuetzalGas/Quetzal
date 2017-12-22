@@ -5,7 +5,7 @@
 import random
 
 
-class TreeItem:
+class _TreeItem:
     def __init__(self, item=None, key=None, next=None):
         self.item = item
         self.key = key
@@ -18,7 +18,7 @@ class AdtTwoThreeTree:
         Een twoNode gebruikt rootLeft, parent, left, right en nodeType = 2
         Een threeNode gerbuikt rootLeft, rootRight, parent, left, midLeft, right en nodeType = 3
         Een tijdelijke fourNode gebruikt rootLeft, rootMid, rootRight, parent, left, midLeft, midRight, Right en nodeType = 4
-        De regel is dat een TreeItem steeds in rootLeft zal zitten bij een 2Node.
+        De regel is dat een _TreeItem steeds in rootLeft zal zitten bij een 2Node.
         """
         self.rootLeft = None
         self.rootRight = None
@@ -30,7 +30,7 @@ class AdtTwoThreeTree:
         self.nodeType = 0
         self.parent = None
 
-    def isEmpty(self):
+    def is_empty(self):
         """
         Kijkt na of de 23-boom leeg is. (leeg = geen kinderen)
         :return: Geeft een boolean  true terug als deze inderdaad leeg is.
@@ -40,7 +40,7 @@ class AdtTwoThreeTree:
             return True
         return False
 
-    def tableIsEmpty(self):
+    def table_is_empty(self):
         return self.rootLeft is None
 
     def destroy(self):
@@ -55,7 +55,7 @@ class AdtTwoThreeTree:
         self.nodeType = 0
         self.right = None
 
-    def compareAndPutInPlace(self, newItem):
+    def compare_and_put_in_place(self, newItem):
         """
         Vergelijkt 'newItem' met de elementen in de knoop en plaats het op de juiste plaats in de root.
         :param newItem: het in te voegen item.
@@ -131,7 +131,7 @@ class AdtTwoThreeTree:
         n2.parent = pNode
 
         # Als de huidige node een interne knoop is, geen blad is:
-        if not self.isEmpty():
+        if not self.is_empty():
             # Plaats dan de twee linkerkinderen (left and midLeft) in n1
             n1.left = self.left
             n1.right = self.midLeft
@@ -146,7 +146,7 @@ class AdtTwoThreeTree:
             n2.right.parent = n2
 
         # Plaats in de pNode de middelste root van de node
-        result = pNode.compareAndPutInPlace(self.rootMid)
+        result = pNode.compare_and_put_in_place(self.rootMid)
         # (deze moet naar boven worden gebracht en dus bij pNode komen)
         if result == -1:            # -1 : lege knoop (kinderen en root leeg)
             pNode.left = n1             # pNode krijgt n1 en n2 als resp. linker- en rechterkind
@@ -194,7 +194,7 @@ class AdtTwoThreeTree:
             # Voer hier dan ook de split op uit.
             pNode.split()
 
-    def insertItem(self, key, item):
+    def insert_item(self, key, item):
         """
         Voegt een nieuw item toe aan de boom, als de searchkey van dit item nog niet voorkomt.
         :param key:  De zoeksleutel van het item.
@@ -202,7 +202,7 @@ class AdtTwoThreeTree:
         : return: bool die  true is als het item toegevoegd is.
                             false is als het item niet toegevoegd is (de searchkey kwam dus al voor).
         """
-        self.insert(TreeItem(item, key))
+        self.insert(_TreeItem(item, key))
 
     def insert(self, newItem):
         """
@@ -225,9 +225,9 @@ class AdtTwoThreeTree:
                 newItem.next = self.rootRight
                 self.rootRight = newItem
                 return True
-            if self.isEmpty():                              # Als de 3-knoop geen kinderen heeft,
+            if self.is_empty():                              # Als de 3-knoop geen kinderen heeft,
                 # plaats dan newItem erbij,
-                self.compareAndPutInPlace(newItem)
+                self.compare_and_put_in_place(newItem)
                 # En voer de split-functie uit, want er is nu een knoop met 4
                 # items.
                 return self.split()
@@ -243,9 +243,9 @@ class AdtTwoThreeTree:
                     return self.right.insert(newItem)
         # Als de node een 2-knoop is...
         if self.nodeType == 2:
-            if self.isEmpty():                              # ... en de knoop is leeg,
+            if self.is_empty():                              # ... en de knoop is leeg,
                 # plaats newItem in de knoop, en geef True terug.
-                self.compareAndPutInPlace(newItem)
+                self.compare_and_put_in_place(newItem)
                 return True
             elif self.rootLeft.key > newItem.key:
                 # zoek dan verder in het rechterkind.
@@ -253,17 +253,17 @@ class AdtTwoThreeTree:
             else:
                 return self.right.insert(newItem)
 
-    def inorderSuccessor(self):
+    def inorder_successor(self):
         """
         Geeft de subtree die als root de inorder successor heeft van de de gegeven subtree is. Deze subtree heeft niet als root het item waarvan men de inorder succ
         wilt vinden, maar is het juiste kind van de boom die het item wel bevat. (oftewel middel of rechter kind.)
         :param subtree: de correcte subtree van de (sub)tree waarin het item zit waarvan men de inorder successor wilt vinden.
         :return: geeft de subtree met de inorder successor terug.
         """
-        if self.isEmpty():
+        if self.is_empty():
             return self
         else:
-            return self.left.inorderSuccessor()
+            return self.left.inorder_successor()
 
     def retrieve(self, key):
         """Zoekt een item met searchkey 'key' in de boom. Indien aanwezig, geeft het dit item, de (sub)tree waarin die zich
@@ -277,7 +277,7 @@ class AdtTwoThreeTree:
             # teruggeven worden
             return (self.rootLeft, self, 1)
         elif self.nodeType == 2:
-            if self.isEmpty():
+            if self.is_empty():
                 return (None, None, 0)
             elif key < self.rootLeft.key:
                 return self.left.retrieve(key)
@@ -287,7 +287,7 @@ class AdtTwoThreeTree:
             if key == self.rootRight.key:           # en het is in de rootRight, dan kan deze worden teruggeven met waarde
                 # 2 (wilt zeggen: zit in rootRight)
                 return (self.rootRight, self, 2)
-            elif self.isEmpty():
+            elif self.is_empty():
                 return (None, None, 0)
             elif key < self.rootLeft.key:
                 return self.left.retrieve(key)
@@ -295,10 +295,10 @@ class AdtTwoThreeTree:
                 return self.midLeft.retrieve(key)
             else:
                 return self.right.retrieve(key)
-        elif self.isEmpty():
+        elif self.is_empty():
             return (None, None, 0)
 
-    def retrieveItem(self, key):
+    def retrieve_item(self, key):
         """Zoekt een item met searchkey 'key' in de boom. Indien aanwezig, geeft het dit item, de (sub)tree waarin die zich
         bevind en een bepaalde waarde terug. Deze waarde wordt gebruikt om te weten of het item zich in de linker- of rechter-
         root van de subtree bevind.
@@ -310,25 +310,25 @@ class AdtTwoThreeTree:
             # teruggeven worden
             return (self.rootLeft.item, True)
         elif self.nodeType == 2:
-            if self.isEmpty():
+            if self.is_empty():
                 return (None, False)
             elif key < self.rootLeft.key:
-                return self.left.retrieveItem(key)
+                return self.left.retrieve_item(key)
             else:
-                return self.right.retrieveItem(key)
+                return self.right.retrieve_item(key)
         elif self.nodeType == 3:                    # Als het een 3-knoop is
             if key == self.rootRight.key:           # en het is in de rootRight, dan kan deze worden teruggeven met waarde
                 # 2 (wilt zeggen: zit in rootRight)
                 return (self.rootRight.item, True)
-            elif self.isEmpty():
+            elif self.is_empty():
                 return (None, False)
             elif key < self.rootLeft.key:
-                return self.left.retrieveItem(key)
+                return self.left.retrieve_item(key)
             elif key < self.rootRight.key:
-                return self.midLeft.retrieveItem(key)
+                return self.midLeft.retrieve_item(key)
             else:
-                return self.right.retrieveItem(key)
-        elif self.isEmpty():
+                return self.right.retrieve_item(key)
+        elif self.is_empty():
             return (None, False)
 
     def fix(self):
@@ -377,7 +377,7 @@ class AdtTwoThreeTree:
                 self.right = self.right.right
 
             # Zorgt ervoor dat de kinderen weten dat ze een nieuwe ouder hebben
-            self.setChildrenParent()
+            self.set_children_parent()
             return
 
         # Als de node een interne knoop is, dan kan het niet anders dan dat het maar 1 kind heeft (logica van het algoritme)
@@ -556,15 +556,15 @@ class AdtTwoThreeTree:
                 self.parent.nodeType = 2
                 self.parent.midLeft = None
 
-        # Het volgende zorgt ervoor dat alle kinderen weten wat hun (nieuwe) ouder is. Laat u niet misleiden, setChildrenParent()
+        # Het volgende zorgt ervoor dat alle kinderen weten wat hun (nieuwe) ouder is. Laat u niet misleiden, set_children_parent()
         # zorgt ervoor dat de kinderen van node weten wat hun ouder is, de kinderen van self.parent worden niet op hun ouder gecheckt,
         # maar de kinderen van deze kinderen wel.
         if self.parent.left is not None:
-            self.parent.left.setChildrenParent()
+            self.parent.left.set_children_parent()
         if self.parent.midLeft is not None:
-            self.parent.midLeft.setChildrenParent()
+            self.parent.midLeft.set_children_parent()
         if self.parent.right is not None:
-            self.parent.right.setChildrenParent()
+            self.parent.right.set_children_parent()
 
         # Als de ouder leeg blijkt te zijn, moet het hele algoritme hier terug
         # op uitgevoerd worden.
@@ -597,7 +597,7 @@ class AdtTwoThreeTree:
             subtree.rootRight = subtree.rootRight.next
             return True
 
-        if self.parent is None and self.rootRight is None and self.isEmpty(
+        if self.parent is None and self.rootRight is None and self.is_empty(
         ):   # Als het item het enigste item is in de
             # hele boom, moet dit item gewoon weg
             self.rootLeft = None
@@ -607,7 +607,7 @@ class AdtTwoThreeTree:
         # zal leeg achterblijven.
         # In het geval van een 3-knoop moet het item verwijderd worden, maar er moet rekening gehouden worden met de regel
         # dat een 2-knoop altijd een root in rootLeft heeft zitten.
-        if subtree.isEmpty():
+        if subtree.is_empty():
             if numb == 1 and subtree.nodeType == 2:
                 # node moet leeggemaakt worden (= item wordt verwijderd)
                 subtree.rootLeft = None
@@ -631,9 +631,9 @@ class AdtTwoThreeTree:
             # succesor
             if numb == 1 and subtree.nodeType == 3:
                 # in de middelste deelboom gezocht worden
-                inordSuc = subtree.midLeft.inorderSuccessor()
+                inordSuc = subtree.midLeft.inorder_successor()
             else:                                                   # In alle andere gevallen in de rechter deelboom
-                inordSuc = subtree.right.inorderSuccessor()
+                inordSuc = subtree.right.inorder_successor()
 
             # een kopie zorgt ervoor dat de inorder successor niet "verloren" gaat. De inorder successor bevind zich sowieso in
             # rootLeft, want anders zou de hele essence van de inorder
@@ -652,7 +652,7 @@ class AdtTwoThreeTree:
                 subtree.rootLeft = kopie
                 return inordSuc.remove(key)
 
-    def setChildrenParent(self):
+    def set_children_parent(self):
         """
         Zorgt ervoor dat de kinderen van de tree als parent de tree zelf hebben. Dit kan nodig zijn bij het verwijderen,
         wanneer kinderen van ouder verwisselen.
@@ -665,7 +665,7 @@ class AdtTwoThreeTree:
         if self.right is not None:
             self.right.parent = self
 
-    def printInorder(self):
+    def print_inorder(self):
         """
         Print de items (zoeksleutels om makkelijk te zien of het juist is) volgens gesorteerde searchkey volgorde.
         :return:
@@ -673,29 +673,29 @@ class AdtTwoThreeTree:
         if self.rootLeft is None:       # Als de node geen rootLeft heeft, dan is deze leeg. Dit geval kan enkel bij een lege wortel bereikt worden.
             print("Empty tree, nothing to print.")
             return
-        if self.isEmpty():              # Als de node geen kinderen heeft, wordt het item/worden de items in de node geprint
+        if self.is_empty():              # Als de node geen kinderen heeft, wordt het item/worden de items in de node geprint
             print(self.rootLeft.key)
             if self.nodeType == 3:      # Als het een 3-knoop is, heeft de node een rechteritem, dit moet ook geprint worden
                 print(self.rootRight.key)
             return
-        if self.nodeType == 2:          # Als het een 2-knoop is, die niet leeg is, dan moet printInorder van de 2 kinderen gedaan
+        if self.nodeType == 2:          # Als het een 2-knoop is, die niet leeg is, dan moet print_inorder van de 2 kinderen gedaan
                                         # worden volgens de logische volgorde
                                         # van inorer traverse. Het item in de
                                         # node moet ook geprint worden
-            self.left.printInorder()
+            self.left.print_inorder()
             print(self.rootLeft.key)
-            self.right.printInorder()
-        if self.nodeType == 3:          # Als het een 3-knoop is, die niet leeg is, dan moet printInorder van de 3 kinderen gedaan
+            self.right.print_inorder()
+        if self.nodeType == 3:          # Als het een 3-knoop is, die niet leeg is, dan moet print_inorder van de 3 kinderen gedaan
                                         # worden volgens de logische volgorde
                                         # van inorder traverse. De items in de
                                         # node moeten ook geprint worden.
-            self.left.printInorder()
+            self.left.print_inorder()
             print(self.rootLeft.key)
-            self.midLeft.printInorder()
+            self.midLeft.print_inorder()
             print(self.rootRight.key)
-            self.right.printInorder()
+            self.right.print_inorder()
 
-    def createDotFile(self, filename):
+    def create_dot_file(self, filename):
         """
         Maakt een dotfile aan van de huidige boom.
         : filename  :   De naam die aan de .dot file gegeven wordt.
@@ -714,15 +714,15 @@ class AdtTwoThreeTree:
         dotFile.write("\n" + 'edge [color="#1aba4a"];')
         dotFile.write("\n" + 'graph [rankdir=TD, bgcolor="#34373d"];')
 
-        # Enkel als de boom niet volledig leeg is kan er met de addNodeToFile
+        # Enkel als de boom niet volledig leeg is kan er met de add_node_to_file
         # functie gewerkt worden:
         if self.rootLeft is not None:
-            # de addNodeToFile functie zal de nodige nodes en edges toevoegen
+            # de add_node_to_file functie zal de nodige nodes en edges toevoegen
             # aan 'dotFile'
-            self.addNodeToFile(dotFile)
+            self.add_node_to_file(dotFile)
         dotFile.write("\n" + "}")
 
-    def addNodeToFile(self, file):
+    def add_node_to_file(self, file):
         """
         De functie die het werkelijke werk doet voor het maken van de .dot file. Het voegt de nodes en edges toe.
         :param file: de file waarin gewerkt wordt
@@ -744,7 +744,7 @@ class AdtTwoThreeTree:
         # Als de node leeg is (gn kinderen), dan moet de node zelf wel nog worden aangemaakt via de syntax die hierboven is aangehaald
         # Hoe deze wordt aangemaakt hangt af van of het een 2-knoop of 3-knoop is. De naam is echter enkel afhankelijk van de linkerRoot
         # en is dus in beide gevallen gelijk.
-        if self.isEmpty():
+        if self.is_empty():
             if self.nodeType == 2:
                 file.write("\n" + nodeName + ' [label=" ' + leftKey + '"];')
             else:
@@ -760,8 +760,8 @@ class AdtTwoThreeTree:
         # ook aangemaakt worden.
         elif self.nodeType == 2:
             file.write("\n" + nodeName + ' [label=" ' + leftKey + '"];')
-            self.left.addNodeToFile(file)
-            self.right.addNodeToFile(file)
+            self.left.add_node_to_file(file)
+            self.right.add_node_to_file(file)
 
         # Als het een niet-lege 3-knoop is, moet de functie ook bij de 3 kinderen worden toegepast en de node zelf moet
         # ook aangemaakt worden.
@@ -773,9 +773,9 @@ class AdtTwoThreeTree:
                        '| ' +
                        str(self.rootRight.key) +
                        '"];')
-            self.left.addNodeToFile(file)
-            self.midLeft.addNodeToFile(file)
-            self.right.addNodeToFile(file)
+            self.left.add_node_to_file(file)
+            self.midLeft.add_node_to_file(file)
+            self.right.add_node_to_file(file)
 
         # Als de node een parent heeft, dan moet er een edge tussen deze twee komen (een pijl van parent naar node),
         # de node van de parent is al aangemaakt (de recursieve oproepen starten vanaf de root) en de naam van deze

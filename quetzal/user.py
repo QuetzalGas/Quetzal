@@ -77,7 +77,7 @@ class UserContainer:
         if self.type == 'bs':
             self.table.insert(user.email, user)
         elif self.type == '23':
-            self.table.insertItem(user.email, user)
+            self.table.insert_item(user.email, user)
         elif self.type == '234':
             self.table.table_insert(user.email, user)
         elif self.type == 'rb':
@@ -125,9 +125,9 @@ class UserContainer:
             return self.table.is_empty()
 
     def calculate_id(self):
-        id = self.idcounter
+        id_ = self.idcounter
         self.idcounter += 1
-        return id
+        return id_
 
 
 class User:
@@ -135,7 +135,7 @@ class User:
     A customer of the chocolade bar.
     """
 
-    def __init__(self, id, firstname, lastname, email):
+    def __init__(self, id_, firstname, lastname, email):
         """
         Initializes a new customer with their name, email and unique id.
         PRE :   'id' is the unique id of the user. 'firstname', 'lastname' and 'email' are data of the user.
@@ -144,7 +144,7 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.id = id
+        self.id = id_
 
     def get_id(self):
         """

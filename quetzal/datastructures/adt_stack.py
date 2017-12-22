@@ -1,8 +1,7 @@
-class Node:
-    def __init__(self, item, next):
+class _Node:
+    def __init__(self, item, next_):
         self.item = item
-        self.next = next
-
+        self.next = next_
 
 class AdtStack:
     def __init__(self):
@@ -24,14 +23,13 @@ class AdtStack:
         """
         return self.top is None
 
-    def push(self, newItem):
+    def push(self, item):
         """
         Pushes a new item onto the stack.
         :param newItem: The item that needs to be added to the stack
         :return: If it succeeded.
         """
-        newNode = Node(newItem, self.top)
-        self.top = newNode
+        self.top = _Node(item, self.top)
         return True
 
     def pop(self):
@@ -41,6 +39,7 @@ class AdtStack:
         """
         if self.top is None:
             return False
+
         self.top = self.top.next
         return True
 
@@ -52,6 +51,7 @@ class AdtStack:
         """
         if self.top is None:
             return False
+
         old_top = self.top
         self.top = self.top.next
         return old_top, True

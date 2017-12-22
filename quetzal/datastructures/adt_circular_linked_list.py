@@ -19,7 +19,7 @@ class AdtCircularLinkedList:
         >>> l.dummy_head.next == l.dummy_head
         True
         """
-        self.dummy_head = Node(None, None)
+        self.dummy_head = _Node(None, None)
         self.dummy_head.next = self.dummy_head
         self.head = self.dummy_head
 
@@ -90,7 +90,7 @@ class AdtCircularLinkedList:
                 length += 1
         return length
 
-    def insert(self, index, newItem):
+    def insert(self, index, new_item):
         """
         Voegt het element 'newItem' toe op positie 'index' in de gelinkte ketting, als
         1 <= index <= get_length()+1.
@@ -124,8 +124,7 @@ class AdtCircularLinkedList:
             cur = self.head
             for i in range(index - 1):
                 cur = cur.next
-            newNode = _Node(newItem, cur.next)
-            cur.next = newNode
+            cur.next = _Node(new_item, cur.next)
             return True
         return False
 
@@ -159,8 +158,8 @@ class AdtCircularLinkedList:
         """
         if index >= 1 and index <= self.get_length():
             cur = self.head
-            prev = Node(None, cur)
-            prev = Node(None, cur)
+            prev = _Node(None, cur)
+            prev = _Node(None, cur)
             for i in range(index):
                 cur = cur.next
                 prev = prev.next
