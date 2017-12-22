@@ -81,7 +81,7 @@ class AdtDoublyLinkedList:
         if self.head is None:
             return self.insertBeginning(newItem)
         else:
-            last_node = self.searchNode(self.length-1)
+            last_node = self.searchNode(self.length)
             new_node = Double_Node(newItem, last_node, None)
             last_node.next = new_node
             self.tail = new_node

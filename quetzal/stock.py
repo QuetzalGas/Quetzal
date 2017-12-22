@@ -77,7 +77,7 @@ class Stock:
             return self.chilipepperList.isEmpty()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.isEmpty()
-        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruin" or product_type == "bruine chocolade":
             return self.brownChocolateList.isEmpty()
         elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
             return self.milkChocolateList.isEmpty()
@@ -122,7 +122,7 @@ class Stock:
             return self.marshmallowList.getLength()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.getLength()
-        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruin" or product_type == "bruine chocolade":
             return self.brownChocolateList.getLength()
         elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
             return self.blackChocolateList.getLength()

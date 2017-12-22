@@ -112,7 +112,7 @@ class Quetzal:
             cm.addProduct(k)
 
         order = Order(email, datetime, cm)
-        
+
         self.new_orders.append(order)
 
     """
@@ -155,22 +155,23 @@ class Quetzal:
 
         state.append(new_orders_string)
 
-        # waiting_orders = ''
-        # first2 = False
-        # if self.employees.get_waiting_orders() is not None:
-        #     for i in self.employees.get_waiting_orders():
-        #         i = i.get_chocolatemilk.getWorkLoad()
-        #         if not first2:
-        #             first2 = True
-        #         else:
-        #             waiting_orders += ','
-        #
-        #         new_orders_string += format(i)
-        state.append('')
+        waiting_orders = ''
+        first2 = False
+        waiting = self.employees.get_waiting_orders()
+        if waiting is not None:
+            for i in waiting:
+                i = i.get_chocolatemilk().getWorkLoad()
+                if not first2:
+                    first2 = True
+                else:
+                    waiting_orders += ','
+
+                waiting_orders += format(i)
+        state.append(waiting_orders)
 
         state.append(self.stock.get_size('wit'))
         state.append(self.stock.get_size('melk'))
-        state.append(self.stock.get_size('bruine'))
+        state.append(self.stock.get_size('bruin'))
         state.append(self.stock.get_size('zwart'))
         state.append(self.stock.get_size('honing'))
         state.append(self.stock.get_size('marshmallow'))
@@ -189,16 +190,16 @@ class Quetzal:
     te presenteren.
     """
     def step(self):
+        for i in self.new_orders:
+            self.order_queue.enqueue(i)
+
+        self.order_queue = self.employees.start(self.order_queue)
         state = self.get_state()
         self.history.append(state)
         self.timestep += 1
 
-        for i in self.new_orders:
-            self.order_queue.enqueue(i)
-
-        self.employees.start(self.order_queue)
-
         self.new_orders = []
+        return state
 
     """ 
     +get_datetime(): DateTime {query}
@@ -262,7 +263,7 @@ class Quetzal:
 
         html += "				<tr>\n"
 
-        k = self.get_state()
+        k = self.step()
         for i in k:
             html += "					<td>{}</td>\n".format(i)
 
@@ -274,5 +275,5 @@ class Quetzal:
 	</body>\n\
 </html>"
 
-        with open('log{}.html'.format(self.timestep), 'w') as f:
+        with open('log{}.html'.format(self.timestep-1), 'w') as f:
             f.write(html)
