@@ -1,5 +1,6 @@
 from .datastructures import *
 
+
 class UserContainer:
     """
     Contains all users (customers) and their orders. The initializing of a user starts here.
@@ -9,6 +10,7 @@ class UserContainer:
     PRE :   'type' decided whether the users will be stored in a 23, 234 or RB-tree or hashmap (type == 23 or 234 or rb or h)
     POST:   Depending op 'type', the UserContainer now contains a table which is a 23, 234, rb or BS tree or a hashmap.
     """
+
     def __init__(self, type):
         self.idcounter = 0
         if type == 'bs' or type == 'BS':
@@ -25,7 +27,8 @@ class UserContainer:
             self.table = AdtRedBlackTree()
         elif type == 'h' or type == 'H':
             self.type = 'h'
-            self.table = AdtHashMap(254, 2)  # 254 is the max length of a valid email-address
+            # 254 is the max length of a valid email-address
+            self.table = AdtHashMap(254, 2)
         else:
             raise ValueError("Unvalid type.")
 
@@ -38,23 +41,23 @@ class UserContainer:
                 to the order-list of the user (new user or not).
         """
         if self.type == 'bs':
-            result = self.table.searchTreeRetrieve(email)
+            result = self.table.search_tree_retrieve(email)
             resultRetrieve = result[0]
             if resultRetrieve is not False:
                 retrievedItem = result[1].item
         elif self.type == '23':
-            result = self.table.retrieveItem(email)
+            result = self.table.retrieve_item(email)
             resultRetrieve = result[1]
             retrievedItem = result[0]
         elif self.type == '234':
-            result = self.table.tableRetrieve(email)
+            result = self.table.table_retrieve(email)
             resultRetrieve = result[1]
             if result[0] is not None:
                 retrievedItem = result[0].item
         # elif self.type == 'rb':
         #     resultRetrieve =
-        else:   #hashmap
-            resultRetrieve = self.table.tableRetrieve(email)
+        else:  # hashmap
+            resultRetrieve = self.table.table_retrieve(email)
             retrievedItem = resultRetrieve  # Hashmap return False or Node, zo not a tuple
 
         if(resultRetrieve is not False):
@@ -74,13 +77,13 @@ class UserContainer:
         if self.type == 'bs':
             self.table.insert(user.email, user)
         elif self.type == '23':
-            self.table.insertItem(user.email, user)
+            self.table.insert_item(user.email, user)
         elif self.type == '234':
-            self.table.tableInsert(user.email, user)
+            self.table.table_insert(user.email, user)
         elif self.type == 'rb':
             self.table.insert(user.email, user)
         elif self.type == 'h':
-            self.table.tableInsert(user.email, user)
+            self.table.table_insert(user.email, user)
 
     def retrieve_user(self, email):
         """
@@ -90,19 +93,19 @@ class UserContainer:
                 If there wasn't a user with 'email' as email adress, None and False is returned.
         """
         if self.type == 'bs':
-            user = self.table.searchTreeRetrieve(email)[1]
+            user = self.table.search_tree_retrieve(email)[1]
             if user is not None:
                 user = user.item
         elif self.type == '23':
-            user = self.table.retrieveItem(email)[0]
+            user = self.table.retrieve_item(email)[0]
         elif self.type == '234':
-            user = self.table.tableRetrieve(email)[0]
+            user = self.table.table_retrieve(email)[0]
             if user is not None:
                 user = user.item
         # elif self.type == 'rb':
         #     resultRetrieve =
         else:  # hashmap
-            user = self.table.tableRetrieve(email)
+            user = self.table.table_retrieve(email)
         if (user is False or user is None):
             return False, None
         else:
@@ -117,20 +120,22 @@ class UserContainer:
         POST:   True is returned if the table is empty.
         """
         if self.type == 'bs' or self.type == '23' or self.type == '234':
-            return self.table.tableIsEmpty()
+            return self.table.table_is_empty()
         if self.type == 'h':
-            return self.table.isEmpty()
+            return self.table.is_empty()
 
     def calculate_id(self):
-        id = self.idcounter
+        id_ = self.idcounter
         self.idcounter += 1
-        return id
+        return id_
+
 
 class User:
     """
     A customer of the chocolade bar.
     """
-    def __init__(self, id,  firstname, lastname, email):
+
+    def __init__(self, id_, firstname, lastname, email):
         """
         Initializes a new customer with their name, email and unique id.
         PRE :   'id' is the unique id of the user. 'firstname', 'lastname' and 'email' are data of the user.
@@ -139,7 +144,7 @@ class User:
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.id = id
+        self.id = id_
 
     def get_id(self):
         """

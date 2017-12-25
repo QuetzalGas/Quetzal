@@ -5,6 +5,7 @@ from.datastructures import adt_queue
 from.chocolatemilk import ChocolateMilk
 from unittest import TestCase
 
+
 class TestEmployeePresent(TestCase):
     def testAddEmployee(self):
         employee1 = Employee(1, "testvoornaam1", "testachternaam1", 10)
@@ -33,7 +34,6 @@ class TestEmployeePresent(TestCase):
         self.assertEqual(employee2.orderHandeling, order)
         self.assertEqual(employee2.creditsToHandle, 5)
         self.assertEqual(employee2.creditsStillToDo, 5)
-
 
     def testProcessAndDone(self):
         employee1 = Employee(1, "testvoornaam1", "testachternaam1", 10)

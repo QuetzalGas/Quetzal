@@ -3,6 +3,7 @@ from.order import Order
 from.chocolatemilk import ChocolateMilk
 from unittest import TestCase
 
+
 class TestEmployee(TestCase):
     def testInitAndGetters(self):
         employee = Employee(1, "testvoornaam1", "testachternaam1", 10)

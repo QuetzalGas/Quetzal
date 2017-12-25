@@ -13,10 +13,10 @@ class Employee:
         self.firstName = first_name
         self.lastName = last_name
         self.workload = workload
-        self.creditsStillToDo = ""
-        self.creditsToHandle = 0
-        self.orderHandeling = None
-        #TODO add to datastructure for employees
+        self.credits_still_to_do = ""
+        self.credits_to_handle = 0
+        self.order_handeling = None
+        # TODO add to datastructure for employees
 
     def __del__(self):
         """
@@ -28,10 +28,10 @@ class Employee:
         self.firstName = None
         self.lastName = None
         self.workload = 0
-        self.creditsStillToDo = 0
-        self.creditsToHandle = 0
-        self.orderHandeling = None
-        #TODO remove from datastructure for employees
+        self.credits_still_to_do = 0
+        self.credits_to_handle = 0
+        self.order_handeling = None
+        # TODO remove from datastructure for employees
         return True
 
     def get_id(self):
@@ -60,7 +60,7 @@ class Employee:
         Returns the credits the employee still has to process.
         :return: The remaining credits of an order.
         """
-        return self.creditsStillToDo
+        return self.credits_still_to_do
 
     def set_load(self, load):
         """
@@ -71,29 +71,29 @@ class Employee:
         """
         self.workload = load
 
-    def set_orderLoad(self, order):
+    def set_order_load(self, order):
         """
         Sets the order that the employee has to process.
         :param order: The order to process
         PRE: Order has to be from the Order class and it has to have valid data. Orderhandeling has to be empty.
         POST: The employee now has the data to process an order.
         """
-        self.orderHandeling = order
-        self.creditsToHandle = order.get_chocolatemilk().getWorkLoad()
-        self.creditsStillToDo = self.creditsToHandle
+        self.order_handeling = order
+        self.credits_to_handle = order.get_chocolatemilk().get_workload()
+        self.credits_still_to_do = self.credits_to_handle
 
     def process(self):
         """
         Handles an order with a certain workload.
         POST: The order will partially or fully be processed.
         """
-        self.creditsStillToDo = self.workload - self.creditsStillToDo
-        if self.creditsStillToDo < 0:
-            self.creditsStillToDo = -self.creditsStillToDo
+        self.credits_still_to_do = self.workload - self.credits_still_to_do
+        if self.credits_still_to_do < 0:
+            self.credits_still_to_do = -self.credits_still_to_do
             return None
         else:
-            order = self.orderHandeling
-            self.creditsStillToDo = ""
-            self.creditsToHandle = 0
-            self.orderHandeling = None
+            order = self.order_handeling
+            self.credits_still_to_do = ""
+            self.credits_to_handle = 0
+            self.order_handeling = None
             return order

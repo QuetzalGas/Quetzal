@@ -1,4 +1,5 @@
-from .datastructures import adt_doubly_linked_list
+from .datastructures import *
+
 
 class ChocolateMilk:
     def __init__(self, id_):
@@ -9,44 +10,43 @@ class ChocolateMilk:
         """
         self.id = id_
         self.price = 2
-        self.contains = adt_doubly_linked_list.AdtDoublyLinkedList()
+        self.contains = AdtDoublyLinkedList()
         self.workload = 5
 
-    def getId(self):
+    def get_id(self):
         """
         Returns the id of the chocolatemilk.
         :return: The id of the chocolatemilk.
         """
         return self.id
 
-    def getIngredients(self):
+    def get_ingredients(self):
         """
         Returns the ingredients in the chocolatemilk.
         :return: A double linked list with all the ingredients.
         """
         return self.contains
 
-    def getWorkLoad(self):
+    def get_workload(self):
         """
         Returns the workload the chocolatemilk creates.
         :return: The workload of the employee.
         """
         return self.workload
 
-    def getTotalPrice(self):
+    def get_total_price(self):
         """
         Returns the total price of the chocolatemilk.
         :return: The total price of the chocolatemilk.
         """
         return self.price
 
-    def addProduct(self, product):
+    def add_product(self, product):
         """
         Add a product to the chocolatemilk.
         :param product: The product to be added.
         PRE: Procuct has of the Product class and can't be empty.
         """
-        self.contains.insertBeginning(product)
+        self.contains.insert_beginning(product)
         self.workload += 1
         self.price += product.get_price()
-

@@ -1,8 +1,8 @@
 class Date:
     def __init__(self, year, month, day):
         """ Initialize a new date object with the passed year, month and day.
-        
-        :param year: an integer 
+
+        :param year: an integer
         :param month:
         :param day:
         """

@@ -2,6 +2,7 @@ from unittest import TestCase
 from .stock import Stock
 from .product import *
 
+
 def giveListofstock(listy, type):
     myList = list()
     if type == 'cll':
@@ -18,8 +19,9 @@ def giveListofstock(listy, type):
                 cur = cur.next
     return myList
 
+
 class testStock(TestCase):
-    def testEmptyBeforeAdding(self, type = 'cll'):
+    def testEmptyBeforeAdding(self, type='cll'):
         stock = Stock(type)
         self.assertTrue(stock.is_empty("chilipeper"))
         self.assertTrue(stock.is_empty("honing"))
@@ -50,26 +52,29 @@ class testStock(TestCase):
         stock.add_item(Honey(4))
         stock.add_item(Honey(10))
         stock.add_item(Honey(3))
-        self.assertEqual([3,10,4,2], giveListofstock(stock.honeyList, type))
+        self.assertEqual([3, 10, 4, 2], giveListofstock(stock.honeyList, type))
 
         stock.add_item(Chilipepper(3))
         stock.add_item(Chilipepper(4))
         stock.add_item(Chilipepper(12))
         stock.add_item(Chilipepper(5))
-        self.assertEqual([5,12,4,3], giveListofstock(stock.chilipepperList, type))
+        self.assertEqual([5, 12, 4, 3], giveListofstock(
+            stock.chilipepperList, type))
 
         stock.pop_item('honing', 4)
-        self.assertEqual([2,3,10], giveListofstock(stock.honeyList, type))
+        self.assertEqual([2, 3, 10], giveListofstock(stock.honeyList, type))
 
         stock.pop_item('chilipeper', 3)
-        self.assertEqual([4,5,12], giveListofstock(stock.chilipepperList, type))
+        self.assertEqual([4, 5, 12], giveListofstock(
+            stock.chilipepperList, type))
 
         stock.add_item(Chilipepper(8))
         stock.add_item(Chilipepper(13))
         stock.add_item(Chilipepper(35))
         stock.add_item(Chilipepper(1))
         stock.pop_item('chilipeper', 10)
-        self.assertEqual([1,4,5,8,13,35], giveListofstock(stock.chilipepperList, type))
+        self.assertEqual([1, 4, 5, 8, 13, 35], giveListofstock(
+            stock.chilipepperList, type))
 
     def testCleanStock(self, type='cll'):
         stock = Stock(type)
@@ -90,12 +95,12 @@ class testStock(TestCase):
         ##
         stock.add_item(Chocolateshot(8, "bruin"))
         stock.add_item(Chocolateshot(9, "bruin"))
-        stock.add_item(Chocolateshot(10,"bruin"))
-        stock.add_item(Chocolateshot(11,"bruin"))
+        stock.add_item(Chocolateshot(10, "bruin"))
+        stock.add_item(Chocolateshot(11, "bruin"))
         ##
-        stock.add_item(Chocolateshot(11,"wit"))
-        stock.add_item(Chocolateshot(10,"wit"))
-        stock.add_item(Chocolateshot(9,  "wit"))
+        stock.add_item(Chocolateshot(11, "wit"))
+        stock.add_item(Chocolateshot(10, "wit"))
+        stock.add_item(Chocolateshot(9, "wit"))
         stock.add_item(Chocolateshot(8, "wit"))
         ##
         stock.add_item(Chocolateshot(54, "melk"))
@@ -105,9 +110,14 @@ class testStock(TestCase):
         ##
         stock.clean_stock(10)
 
-        self.assertEqual([10,12,78], giveListofstock(stock.chilipepperList, type))
-        self.assertEqual([13,18,23], giveListofstock(stock.honeyList, type))
-        self.assertEqual([11,16,21,32], giveListofstock(stock.marshmallowList, type))
-        self.assertEqual([10,11], giveListofstock(stock.brownChocolateList, type))
-        self.assertEqual([10,11], giveListofstock(stock.whiteChocolateList, type))
-        self.assertEqual([54,54,54], giveListofstock(stock.milkChocolateList, type))
+        self.assertEqual([10, 12, 78], giveListofstock(
+            stock.chilipepperList, type))
+        self.assertEqual([13, 18, 23], giveListofstock(stock.honeyList, type))
+        self.assertEqual([11, 16, 21, 32], giveListofstock(
+            stock.marshmallowList, type))
+        self.assertEqual([10, 11], giveListofstock(
+            stock.brownChocolateList, type))
+        self.assertEqual([10, 11], giveListofstock(
+            stock.whiteChocolateList, type))
+        self.assertEqual([54, 54, 54], giveListofstock(
+            stock.milkChocolateList, type))

@@ -50,17 +50,21 @@ class Product:
         """
         return self.expiration_date
 
+
 class Chilipepper(Product):
     def __init__(self, expiration_date):
         super().__init__("chilipeper", 0.25, 1, expiration_date)
+
 
 class Honey(Product):
     def __init__(self, expiration_date):
         super().__init__("honing", 0.5, 1, expiration_date)
 
+
 class Marshmallow(Product):
     def __init__(self, expiration_date):
         super().__init__("marshmallow", 0.75, 1, expiration_date)
+
 
 class Chocolateshot(Product):
     def __init__(self, expiration_date, taste):
