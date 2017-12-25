@@ -78,11 +78,11 @@ class Stock:
             return self.chilipepperList.is_empty()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.is_empty()
-        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruin" or product_type == "bruine chocolade":
             return self.brownChocolateList.is_empty()
-        elif product_type == "milk chocolate" or product_type == "milk" or product_type == "melk" or product_type == "melk chocolade":
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
             return self.milkChocolateList.is_empty()
-        elif product_type == "black chocolade" or product_type == "black" or product_type == "zwart" or product_type == "zwarte chocolade":
+        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
             return self.blackChocolateList.is_empty()
         elif product_type == "marshmallow" or product_type == "Marshmallow":
             return self.marshmallowList.is_empty()
@@ -123,11 +123,11 @@ class Stock:
             return self.marshmallowList.get_length()
         elif product_type == "witte chocolade" or product_type == "wit" or product_type == "white" or product_type == "white chocolate":
             return self.whiteChocolateList.get_length()
-        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruine" or product_type == "bruine chocolade":
+        elif product_type == "brown chocolate" or product_type == "brown" or product_type == "bruin" or product_type == "bruine chocolade":
             return self.brownChocolateList.get_length()
-        elif product_type == "black chocolade" or product_type == "black" or product_type == "zwart" or product_type == "zwarte chocolade":
+        elif product_type == "black chocolade" or product_type == "black" or product_type =="zwart" or product_type == "zwarte chocolade":
             return self.blackChocolateList.get_length()
-        elif product_type == "milk chocolate" or product_type == "milk" or product_type == "melk" or product_type == "melk chocolade":
+        elif product_type == "milk chocolate" or product_type == "milk" or product_type =="melk" or product_type == "melk chocolade":
             return self.milkChocolateList.get_length()
         elif product_type == "chilipeper" or product_type == "chili pepper" or product_type == "chilipepper":
             return self.chilipepperList.get_length()

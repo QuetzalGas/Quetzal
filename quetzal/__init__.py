@@ -169,22 +169,23 @@ class Quetzal:
 
         state.append(new_orders_string)
 
-        # waiting_orders = ''
-        # first2 = False
-        # if self.employees.get_waiting_orders() is not None:
-        #     for i in self.employees.get_waiting_orders():
-        #         i = i.get_chocolatemilk.get_workload()
-        #         if not first2:
-        #             first2 = True
-        #         else:
-        #             waiting_orders += ','
-        #
-        #         new_orders_string += format(i)
-        state.append('')
+        waiting_orders = ''
+        first2 = False
+        waiting = self.employees.get_waiting_orders()
+        if waiting is not None:
+            for i in waiting:
+                i = i.get_chocolatemilk().get_workload()
+                if not first2:
+                    first2 = True
+                else:
+                    waiting_orders += ','
+
+                waiting_orders += format(i)
+        state.append(waiting_orders)
 
         state.append(self.stock.get_size('wit'))
         state.append(self.stock.get_size('melk'))
-        state.append(self.stock.get_size('bruine'))
+        state.append(self.stock.get_size('bruin'))
         state.append(self.stock.get_size('zwart'))
         state.append(self.stock.get_size('honing'))
         state.append(self.stock.get_size('marshmallow'))
@@ -203,16 +204,16 @@ class Quetzal:
     """
 
     def step(self):
+        for i in self.new_orders:
+            self.order_queue.enqueue(i)
+
+        self.order_queue = self.employees.start(self.order_queue)
         state = self.get_state()
         self.history.append(state)
         self.timestep += 1
 
-        for i in self.new_orders:
-            self.order_queue.enqueue(i)
-
-        self.employees.start(self.order_queue)
-
         self.new_orders = []
+        return state
 
     """
     +get_datetime(): DateTime {query}
@@ -282,15 +283,6 @@ class Quetzal:
                 html += "					<td>{}</td>\n".format(j)
 
             html += "				</tr>\n"
-
-        html += "				<tr>\n"
-
-        k = self.get_state()
-        for i in k:
-            html += "					<td>{}</td>\n".format(i)
-
-        html += "				</tr>\n"
-
         html += "			</tbody>\n\
 		</table>\n\
 	</body>\n\

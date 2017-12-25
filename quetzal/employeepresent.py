@@ -33,19 +33,19 @@ class EmployeePresent:
         PRE: Queue has to contain valid orders (from order class) that are not yet processed.
         POST: The first order will get processed if there are employees available.
         """
-        # Reset handeled_orders
-        self.handeled_orders = []
         self.order_queue = queue
-        if self.stack.is_empty() or queue.is_empty():
-            # Resume the rest of the order
-            self.process_and_done()
-            return None
-        else:
-            while not self.stack.is_empty() and not queue.is_empty():
-                order = self.order_queue.dequeue()
+        reserve = AdtQueue()
+        reserve2 = AdtQueue()
+        self.process_and_done()
+        while not queue.is_empty():
+            order = self.order_queue.dequeue()
+            if not self.stack.is_empty():
                 self.assign_order(order)
-            self.process_and_done()
-        return self.handeled_orders
+            else:
+                reserve.enqueue(order)
+                reserve2.enqueue(order)
+        self.order_queue = reserve2
+        return reserve
 
     def assign_order(self, order):
         """
@@ -61,12 +61,16 @@ class EmployeePresent:
         """
         Processes the orders and checks which employees are done.
         """
-        for i in self.employees_working:
-            if i.get_credits_still_to_do == "":
-                # self.handeled_orders.append(order)
-                self.stack.push(i)
-                self.employees_working.remove(i)
+        index_to_delete = []
+        for j in range(0, len(self.employees_working)):
+            i = self.employees_working[j]
             i.process()
+            if i.get_credits_still_to_do() == "":
+                self.stack.push(i)
+                index_to_delete.append(j)
+        index_to_delete.reverse()
+        for index in index_to_delete:
+            del self.employees_working[index]
 
     def make_data_lists(self):
         """
@@ -74,7 +78,6 @@ class EmployeePresent:
         :return: A list with all the workloads.
         """
         self.stack_list = []
-        self.employees_working_list = []
 
         while not self.stack.is_empty():
             employee_node = self.stack.pop_and_return()[0]
@@ -112,14 +115,13 @@ class EmployeePresent:
                 break
         return name
 
-    # def get_waiting_orders(self):
-    #     if self.order_queue is None or self.order_queue.is_empty():
-    #         return None
-    #     else:
-    #         queuelist = []
-    #         keeporders = []
-    #         while not self.order_queue.is_empty():
-    #             order = self.order_queue.dequeue()
-    #             keeporders.append(order)
-    #             queuelist.append(order)
-    #         return queuelist
+    def get_waiting_orders(self):
+        if self.order_queue is None or self.order_queue.is_empty():
+            return None
+        else:
+            queuelist = []
+            while not self.order_queue.is_empty():
+                order = self.order_queue.dequeue()
+
+                queuelist.append(order)
+            return queuelist
