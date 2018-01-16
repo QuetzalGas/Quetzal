@@ -63,9 +63,12 @@ class Node:
         This is used to rotate a right leaning 3-node to a left leaning 3-
         node.
 
-            self                           x
-         a        x          =>      self       c
-               b     c            a        b
+             |                     |
+            self                   x
+           /    \                 / \ 
+          a      x    =>      self   c
+                / \          /    \ 
+               b   c        a      b
         """
         parent = self.parent
 
@@ -99,9 +102,12 @@ class Node:
 
     def rotate_right(self):
         """
-               self           x
-            x        c  => a     self
-         a     b              b        c
+              |              |
+             self            x
+            /    \          / \ 
+           x      c   =>   a   self
+          / \                 /    \ 
+         a   b               b      c
         """
         parent = self.parent
 
@@ -196,13 +202,33 @@ class Node:
         p_left = self.parent.is_left_child()
 
         if t_left and p_left:
+            #     3
+            #    /
+            #   2   =>     2
+            #  /          / \
+            # 1          1   3
             self.parent.parent.rotate_right()
         elif not t_left and not p_left:
+            # 1
+            #  \
+            #   2   =>     2
+            #    \        / \
+            #     3      1   3
             self.parent.parent.rotate_left()
         elif t_left and not p_left:
+            # 1
+            #  \
+            #   3   =>     2
+            #  /          / \
+            # 2          1   3
             self.parent.rotate_right()
             self.parent.rotate_left()
         elif not t_left and p_left:
+            #   3
+            #  /
+            # 1     =>     2
+            #  \          / \
+            #   2        1   3
             self.parent.rotate_left()
             self.parent.rotate_right()
 
