@@ -187,6 +187,20 @@ class Node:
                         self.parent.rotate_right()
 
     def fix_4_node(self):
+        """ Fix four-nodes.
+
+           (a)    (b)    (c)    (d)
+              3  1       1        3
+             /    \       \      /
+            2      2       3    1
+           /        \     /      \ 
+          1          3   2        2
+
+        Restructure to:
+            2
+           / \ 
+          1   3
+        """
         # When called, we know that the recently added node must be red.
 
         # Root
@@ -202,33 +216,17 @@ class Node:
         p_left = self.parent.is_left_child()
 
         if t_left and p_left:
-            #     3
-            #    /
-            #   2   =>     2
-            #  /          / \
-            # 1          1   3
+            # (a)
             self.parent.parent.rotate_right()
         elif not t_left and not p_left:
-            # 1
-            #  \
-            #   2   =>     2
-            #    \        / \
-            #     3      1   3
+            # (b)
             self.parent.parent.rotate_left()
         elif t_left and not p_left:
-            # 1
-            #  \
-            #   3   =>     2
-            #  /          / \
-            # 2          1   3
+            # (c)
             self.parent.rotate_right()
             self.parent.rotate_left()
         elif not t_left and p_left:
-            #   3
-            #  /
-            # 1     =>     2
-            #  \          / \
-            #   2        1   3
+            # (d)
             self.parent.rotate_left()
             self.parent.rotate_right()
 
