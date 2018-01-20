@@ -47,18 +47,18 @@ class EmployeePresent:
         reserve = AdtQueue()
         reserve2 = AdtQueue()
         self.handled_orders = []
-        self.process_and_done()
+        self._process_and_done()
         while not queue.is_empty():
             order = self.order_queue.dequeue()
             if not self.stack.is_empty():
-                self.assign_order(order)
+                self._assign_order(order)
             else:
                 reserve.enqueue(order)
                 reserve2.enqueue(order)
         self.order_queue = reserve2
         return reserve, self.handled_orders
 
-    def assign_order(self, order):
+    def _assign_order(self, order):
         """ Assigns an order to one of the employees.
 
         :param order: The order that's going to be assigned to an employee.
@@ -71,7 +71,7 @@ class EmployeePresent:
         employee.set_order_load(order)
         self.employees_working.append(employee)
 
-    def process_and_done(self):
+    def _process_and_done(self):
         """ Processes the orders and checks which employees are done.
 
         PRE: None
@@ -82,7 +82,7 @@ class EmployeePresent:
             i = self.employees_working[j]
             order = i.get_order()
             i.process()
-            if i.get_credits_still_to_do() == "":
+            if i.get_credits_still_to_do() == 0:
                 self.stack.push(i)
                 self.handled_orders.append(order)
                 index_to_delete.append(j)
@@ -91,24 +91,22 @@ class EmployeePresent:
             del self.employees_working[index]
 
     def make_data_lists(self):
-        """ Makes a list with all the workload of all the employees on the stack.
+        """ Makes a list with all the employees on the stack.
 
-        :return: A list with all the workloads.
+        :return: A list with all the employees on the stack.
 
         PRE: None
-        POST: Stack_list has a list with all the working employees.
+        POST: Stack_list has a list with all the employees that are not working.
         """
-        self.stack_list = []
-
+        stack_list = []
         while not self.stack.is_empty():
             employee_node = self.stack.pop_and_return()[0]
             employee = employee_node.item
-            self.stack_list.append(employee)
-        self.stack_list.reverse()
-        for i in self.stack_list:
+            stack_list.append(employee)
+        stack_list.reverse()
+        for i in stack_list:
             self.stack.push(i)
-
-        return self.stack_list
+        return stack_list
 
     def get_remaining_workload(self, id_):
         """ Searches for the remaining workload of an employee.

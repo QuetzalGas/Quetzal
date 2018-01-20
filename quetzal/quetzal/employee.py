@@ -14,8 +14,7 @@ class Employee:
         self.firstName = first_name
         self.lastName = last_name
         self.workload = workload
-        self.credits_still_to_do = ""
-        self.credits_to_handle = 0
+        self.credits_still_to_do = 0
         self.order_handeling = None
 
     def __del__(self):
@@ -31,7 +30,6 @@ class Employee:
         self.lastName = None
         self.workload = 0
         self.credits_still_to_do = 0
-        self.credits_to_handle = 0
         if self.order_handeling is not None:
             return False
         self.order_handeling = None
@@ -107,8 +105,7 @@ class Employee:
         POST: The employee now has the data to process an order.
         """
         self.order_handeling = order
-        self.credits_to_handle = order.get_chocolatemilk().get_workload()
-        self.credits_still_to_do = self.credits_to_handle
+        self.credits_still_to_do = order.get_chocolatemilk().get_workload()
 
     def process(self):
         """ Handles an order with a certain workload.
@@ -122,7 +119,6 @@ class Employee:
             return None
         else:
             order = self.order_handeling
-            self.credits_still_to_do = ""
-            self.credits_to_handle = 0
+            self.credits_still_to_do = 0
             self.order_handeling = None
             return order
