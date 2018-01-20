@@ -1,6 +1,5 @@
 from .datastructures import *
 
-
 class ChocolateMilk:
     def __init__(self, id_):
         """

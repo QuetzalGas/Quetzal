@@ -1,5 +1,5 @@
-from.datastructures import *
-from.employee import Employee
+from .datastructures import *
+from .employee import Employee
 
 
 class EmployeePresent:

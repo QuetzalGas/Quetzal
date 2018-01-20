@@ -1,8 +1,7 @@
 from unittest import TestCase
-from .user import UserContainer
+from quetzal.user import UserContainer
 
-
-class testUserContainer(TestCase):
+class TestUserContainer(TestCase):
 
     def testadd_if_unknown_user(self, type='234'):
         container = UserContainer(type)

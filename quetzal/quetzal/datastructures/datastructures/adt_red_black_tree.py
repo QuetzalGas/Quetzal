@@ -1,11 +1,68 @@
+from .adt_iterators import FusedIterator, InorderIterator, PreorderIterator
+
 class Node:
     def __init__(self, key, content):
         self.key = key
-        self.content = content
+
+        if content is None:
+            self.content = None
+        else:
+            self.content = [content]
+
         self.black = False
         self.left = None
         self.right = None
         self.parent = None
+
+    def is_color_valid(self):
+        """ Validate color combination.
+        :return: True if valid, False otherwise.
+        """
+        if self.black:
+            if (self.left is None) and (self.right is None):
+                # A black leaf node is OK.
+                return True
+            elif (self.left is not None) and (self.right is not None):
+                # A black node with two children has no restriction on the
+                # colors of the children
+                return True
+            elif (self.left is None) and (self.right is not None):
+                # If only right child, that child must be red.
+                return not self.right.black
+            else:
+                # If only left child, that child must be red.
+                return not self.left.black
+        else:
+            if (self.left is None) and (self.right is None):
+                # A red leaf node is OK.
+                return True
+            elif (self.left is not None) and (self.right is not None):
+                # Both children of a red node must be black.
+                return self.left.black and self.right.black
+            else:
+                # A red node must have either zero, or two children.
+                return False
+
+    def is_child_relation_valid(self):
+        if self.left is not None:
+            if not (self.left.parent == self):
+                return False
+
+        if self.right is not None:
+            if not (self.right.parent == self):
+                return False
+
+        return True
+
+    def is_node_valid(self):
+        return self.is_color_valid() and self.is_child_relation_valid()
+
+    def __iter__(self):
+        return FusedIterator(self)
+
+    def __next__(self):
+        # for the iterator
+        return (self.key, self.content, self.black)
 
     def is_black(self):
         return self.black
@@ -13,7 +70,7 @@ class Node:
     def is_red(self):
         return not self.black
 
-    def is_four_node(self):
+    def is_four_node_root(self):
         return (self.left is not None and not self.left.black) and\
                (self.right is not None and not self.right.black)
 
@@ -60,7 +117,7 @@ class Node:
         further from the root. This operation preserves the in-order property
         of the RB-tree.
 
-        This is used to rotate a right leaning 3-node to a left leaning 3-
+        This is used to transform a right leaning 3-node to a left leaning 3-
         node.
 
              |                     |
@@ -152,16 +209,21 @@ class Node:
         return previous
 
     def split(self):
-        if not self.is_four_node():
-            return
+        """ Split four nodes
+        :return: the new root of the subtree.
+        """
+        if not self.is_four_node_root():
+            return self
 
         if self.parent is None:
             # Root
             self.flip_color()
             self.black = True
+            return self
         else:
             if self.parent.is_two_node():
                 self.flip_color()
+                return self
             else:
                 # 3-node parent
                 if self.is_left_child():
@@ -203,13 +265,12 @@ class Node:
         """
         # When called, we know that the recently added node must be red.
 
-        # Root
         if self.parent is None:
             # Can't happen actually....
-            return
+            raise RuntimeError('Impossible....')
 
-        # Not a four node.
         if self.parent.black:
+            # If the parent is black, we have a valid 4 node.
             return
 
         t_left = self.is_left_child()
@@ -231,25 +292,7 @@ class Node:
             self.parent.rotate_right()
 
     def insert(self, key, content):
-        if self.key is None:
-            self.key = key
-            self.content = content
-            return self
-
-        self.split()
-
-        if key > self.key:
-            if self.right is None:
-                self.set_right_child(Node(key, content))
-                self.right.fix_4_node()
-            else:
-                self.right.insert(key, content)
-        elif key < self.key:
-            if self.left is None:
-                self.set_left_child(Node(key, content))
-                self.left.fix_4_node()
-            else:
-                self.left.insert(key, content)
+        self._insert(key, content)
 
         root = self
 
@@ -258,6 +301,37 @@ class Node:
 
         root.black = True
         return root
+
+    def _insert(self, key, content):
+        if self.key is None:
+            # If this node is empty, we set the content and the key to the
+            # inserted values.
+            self.key = key
+            self.content = [content]
+            return
+
+        # All four-nodes must be split first. We can take a small shortcut in
+        # some two scenario's if we explicitly store the left and right
+        # subtrees before we split.
+        left = self.left
+        right = self.right
+        self.split()
+
+        # TODO: first split, or check key first?
+        if key == self.key:
+            self.content.append(content)
+        elif key > self.key:
+            if right is None:
+                self.set_right_child(Node(key, content))
+                self.right.fix_4_node()
+            else:
+                right._insert(key, content)
+        elif key < self.key:
+            if left is None:
+                self.set_left_child(Node(key, content))
+                self.left.fix_4_node()
+            else:
+                left._insert(key, content)
 
     def combine(self):
         # Root nodes can not be combined.
@@ -288,7 +362,7 @@ class Node:
                 return
 
             # Four node
-            if sibling.is_four_node():
+            if sibling.is_four_node_root():
                 if is_left:
                     sibling.rotate_right()
                     # self.parent.rotate_left()
@@ -366,11 +440,11 @@ class Node:
             return None
 
         if self.black:
-            output = '  node{}[label = "<l>|<m> {}|<r>"];\n'.format(
-                c, self.content)
+            output = '  node{}[label = "<l>|<m> {}: {}|<r>"];\n'.format(
+                c, self.key, self.content)
         else:
-            output = '  node{}[label = "<l>|<m> {}|<r>", color=red];\n'.format(
-                c, self.content)
+            output = '  node{}[label = "<l>|<m> {}: {}|<r>", color=red];\n'.format(
+                c, self.key, self.content)
 
         root = c
 
@@ -408,7 +482,6 @@ class Node:
 
         return (output, c + 1)
 
-
 class AdtRedBlackTree:
     def __init__(self):
         self.root = Node(None, None)
@@ -438,31 +511,12 @@ class AdtRedBlackTree:
             of.write('  label="{}";\n'.format(label))
             of.write('}')
 
+    def iter_inorder(self):
+        return InorderIterator(self.root)
 
-def standard(offset=0):
-    a = Node(offset + 0, "a")
-    a.black = True
-    b = Node(offset + 2, "b")
-    b.black = True
-    c = Node(offset + 4, "c")
-    c.black = True
-    d = Node(offset + 6, "d")
-    d.black = True
+    def iter_preorder(self):
+        return PreorderIterator(self.root)
 
-    S = Node(offset + 1, "S")
-    S.set_left_child(a)
-    S.set_right_child(b)
-
-    L = Node(offset + 5, "L")
-    L.set_left_child(c)
-    L.set_right_child(d)
-
-    M = Node(offset + 3, "M")
-    M.black = True
-    M.set_left_child(S)
-    M.set_right_child(L)
-
-    return M
 
 
 def b2():
@@ -474,7 +528,6 @@ def b2():
     P.set_left_child(M)
 
     return P
-
 
 def b4():
     M = standard()
@@ -509,16 +562,6 @@ def b6():
     P.set_right_child(Q)
 
     return P
-
-
-def print_rb(rb, filename):
-    with open(filename, 'w') as of:
-        of.write('digraph rb {\n')
-        of.write('  node[shape = record];\n')
-        out = rb.dot()
-        of.write(out[0])
-        of.write('}')
-
 
 def insert():
     R = Node(60, 60)

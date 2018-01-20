@@ -1,14 +1,13 @@
 from unittest import TestCase
-from .stock import Stock
-from .product import *
-
+from quetzal.stock import Stock
+from quetzal.product import *
 
 def giveListofstock(listy, type):
     myList = list()
     if type == 'cll':
-        if not listy.isEmpty():
+        if not listy.is_empty():
             cur = listy.head
-            while cur.next is not listy.dummyhead:
+            while cur.next is not listy.dummy_head:
                 cur = cur.next
                 myList.append(cur.item.get_expiration_date())
     else:
@@ -20,7 +19,7 @@ def giveListofstock(listy, type):
     return myList
 
 
-class testStock(TestCase):
+class TestStock(TestCase):
     def testEmptyBeforeAdding(self, type='cll'):
         stock = Stock(type)
         self.assertTrue(stock.is_empty("chilipeper"))
