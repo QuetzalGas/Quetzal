@@ -8,6 +8,11 @@ SEPARATE_CHAINING = 2
 
 class _DataNode:
     def __init__(self, search_key, data):
+        """ Creates new datanode.
+
+        :param search_key: The searchkey of the node.
+        :param data: The data of the node.
+        """
         self.search_key = search_key
         self.data = data
 
