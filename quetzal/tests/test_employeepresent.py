@@ -1,8 +1,8 @@
-from.employeepresent import EmployeePresent
-from.employee import Employee
-from.order import Order
-from.datastructures import adt_queue
-from.chocolatemilk import ChocolateMilk
+from quetzal.employeepresent import EmployeePresent
+from quetzal.employee import Employee
+from quetzal.order import Order
+from quetzal.datastructures import adt_queue
+from quetzal.chocolatemilk import ChocolateMilk
 from unittest import TestCase
 
 

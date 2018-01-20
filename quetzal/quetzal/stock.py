@@ -2,7 +2,6 @@ from .datastructures import *
 from .product import *
 from unittest import TestCase
 
-
 class Stock:
     def __init__(self, type):
         """

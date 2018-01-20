@@ -1,6 +1,5 @@
 from . import AdtDoublyLinkedList
 
-
 class AdtQueue:
     def __init__(self):
         self.storage = AdtDoublyLinkedList()

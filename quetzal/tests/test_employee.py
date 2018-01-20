@@ -1,8 +1,7 @@
-from.employee import Employee
-from.order import Order
-from.chocolatemilk import ChocolateMilk
+from quetzal.employee import Employee
+from quetzal.order import Order
+from quetzal.chocolatemilk import ChocolateMilk
 from unittest import TestCase
-
 
 class TestEmployee(TestCase):
     def testInitAndGetters(self):

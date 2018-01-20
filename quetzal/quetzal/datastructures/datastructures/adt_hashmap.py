@@ -5,7 +5,6 @@ LI0NEAR_PROBING = 0
 QUADRATIC_PROBING = 1
 SEPERATE_CHAINING = 2
 
-
 class _DataNode:
     def __init__(self, search_key, data):
         self.search_key = search_key
