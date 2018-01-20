@@ -1,9 +1,10 @@
 # import dll
 from . import AdtDoublyLinkedList
 
-LI0NEAR_PROBING = 0
+LINEAR_PROBING = 0
 QUADRATIC_PROBING = 1
-SEPERATE_CHAINING = 2
+SEPARATE_CHAINING = 2
+
 
 class _DataNode:
     def __init__(self, search_key, data):
@@ -19,24 +20,24 @@ class AdtHashMap:
     def __init__(self, length, collision_type):
         self.lijst = None
         # If the params are valid, create the main variables
-        if self.create_hashmap(length, collision_type):
+        if self._create_hashmap(length, collision_type):
             self.length = length
             self.collision_type = collision_type
 
-    def create_hashmap(self, length, collision_type):
-        """
-        Create a new hashmap.
+    def _create_hashmap(self, length, collision_type):
+        """ Create a new hashmap.
+
         :param length: The length of the table.
         :param collision_type: The way to solve a collision.
-        :return: True if the creation was succesfull, false otherwise.
+        :return: True if the creation was successful, false otherwise.
         """
         # Input validation
         if 0 > collision_type > 2:
-            print("Invalid collision_type!!")
+            ValueError("Invalid collision type!")
             return False
 
         if length <= 0:
-            print("Invalid length!")
+            ValueError("Invalid length!")
             return False
 
         # Creating map
@@ -51,41 +52,41 @@ class AdtHashMap:
         return True
 
     def is_empty(self):
-        """
-        Checks if the list is empty.
+        """ Checks if the list is empty.
+
         :return: True if list is empty, false otherwise
         """
         for item in self.lijst:
-            if self.collision_type == 2:
+            if self.collision_type == SEPARATE_CHAINING:
                 if not item.is_empty():
                     return False
             elif item != "":
                 return False
         return True
 
-    def table_insert(self, search_key, data):
-        """
-        Inserts a new element in the table.
+    def __setitem__(self, search_key, data):
+        """ Inserts a new element in the table.
+
         :param search_key: The new item to insert
         :param data: The data that needs to be stored
         :return: True if the insertion succeeded, false otherwise.
         """
-        # Calculate adres and make datanode
-        adres = self.calculate_address(search_key)
+        # Calculate address and make datanode
+        adres = self._calculate_address(search_key)
         new_node = _DataNode(search_key, data)
         # Check if a collision occurs
         if self.lijst[adres] != "":
-            return self.solve_collision(adres, new_node, False)
+            return self._solve_collision(adres, new_node, False)
         else:
-            if self.collision_type == 2:
+            if self.collision_type == SEPARATE_CHAINING:
                 self.lijst[adres].insertBeginning(new_node)
             else:
                 self.lijst[adres] = new_node
             return True
 
-    def calculate_address(self, search_key):
-        """
-        Calculates the adres with the hashfunction.
+    def _calculate_address(self, search_key):
+        """ Calculates the adres with the hashfunction.
+
         :param search_key: The key to be used in the function
         :return: The adres calculated by the hash function.
         """
@@ -96,68 +97,76 @@ class AdtHashMap:
             adres = search_key % self.length
         return adres
 
-    def table_retrieve(self, search_key):
-        """
-        Returns an item from the hashmap.
+    def __getitem__(self, search_key):
+        """ Returns an item from the hashmap.
+
         :param search_key: The item to search for and return.
         :return: item: The item that was found with the searchkey.
         :return: node: The node linked with the search_key or None if nothing was found
         """
         if self.is_empty():
             return False
-        adres = self.calculate_address(search_key)
-        if self.collision_type == 2:
-            return self.solve_collision(adres, search_key, True)
-        position = self.solve_collision(adres, search_key, True)
+        adres = self._calculate_address(search_key)
+        if self.collision_type == SEPARATE_CHAINING:
+            return self._solve_collision(adres, search_key, True)
+        position = self._solve_collision(adres, search_key, True)
         node = self.lijst[position]
         return node
 
-    def table_delete(self, search_key):
-        """
-        Deletes item from hashmap.
+    def __delitem__(self, search_key):
+        """ Deletes item from hashmap.
+
         :param search_key: Key from the node that needs to be deleted.
         :return: True if the deletion succeeded, false otherwise.
         """
         if self.is_empty():
             return False
-        adres = self.calculate_address(search_key)
-        if self.collision_type == 2:
-            deleted = self.seperate_chaining(adres, search_key, True, True)
+        adres = self._calculate_address(search_key)
+        if self.collision_type == SEPARATE_CHAINING:
+            deleted = self._seperate_chaining(adres, search_key, True, True)
             if deleted:
                 return deleted
             else:
                 return True
         else:
-            position = self.solve_collision(adres, search_key, True)
+            position = self._solve_collision(adres, search_key, True)
             if not position:
                 return position
             else:
                 self.lijst[position] = ""
                 return True
 
-    def solve_collision(self, adres, data, search):
+    def __contains__(self, search_key):
+        """ Finds data with a given searchkey in the map.
+
+        :param search_key: Key from the node that has to be found.
+        :return: True if the searchkey is in the map, false otherwise.
         """
-        Solves a collision by chosing from one of the methods.
-        :param adres: Adres that caused collision
+        pass
+
+    def _solve_collision(self, adres, data, search):
+        """ Solves a collision by choosing from one of the methods.
+
+        :param adres: Address that caused collision
         :param data: The item to be inserted.
         :param search: Indicates if the algorithm has to search or not.
-        :return: success, adres: Indicates wether the collision was solved. True if it was,
+        :return: success, address: Indicates whether the collision was solved. True if it was,
         false if it couldn't solve the collision.
         """
-        if self.collision_type == 0:
-            return self.linear_probing(adres, data, search)
-        elif self.collision_type == 1:
-            return self.quadratic_probing(adres, data, search)
-        elif self.collision_type == 2:
-            return self.seperate_chaining(adres, data, search, False)
+        if self.collision_type == LINEAR_PROBING:
+            return self._linear_probing(adres, data, search)
+        elif self.collision_type == QUADRATIC_PROBING:
+            return self._quadratic_probing(adres, data, search)
+        elif self.collision_type == SEPARATE_CHAINING:
+            return self._seperate_chaining(adres, data, search, False)
 
-    def linear_probing(self, adres, data, search):
-        """
-        Solve a collision with linear probing.
-        :param adres: Adres that caused collision.
+    def _linear_probing(self, adres, data, search):
+        """ Solve a collision with linear probing.
+
+        :param adres: Address that caused collision.
         :param data: The item to be inserted.
         :param search: Indicates if the algorithm has to search or not.
-        :return: Indicates wether the collision was solved. True if it was,
+        :return: Indicates whether the collision was solved. True if it was,
         false if it couldn't solve the collision.
         """
         current_adres = adres
@@ -184,19 +193,19 @@ class AdtHashMap:
             if current_adres == self.length:
                 current_adres = 0
 
-    def quadratic_probing(self, adres, data, search):
-        """
-        Solve a collision with quadratic probing.
-        :param adres: Adres that caused collision.
+    def _quadratic_probing(self, adres, data, search):
+        """ Solve a collision with quadratic probing.
+
+        :param adres: Address that caused collision.
         :param data: The item to be inserted.
         :param search: Indicates if the algorithm has to search or not.
-        :return: Indicates wether the collision was solved. True if it was,
+        :return: Indicates whether the collision was solved. True if it was,
         false if it couldn't solve the collision.
         """
         current_adres = adres
         # We put i on 2 because 1**2 is already visited by current_adres
         i = 1
-        # Starts on 1 because we already visited the initial adres
+        # Starts on 1 because we already visited the initial address
         count = 1
         while True:
             # Search through the list for the searchkey
@@ -220,14 +229,14 @@ class AdtHashMap:
             # if current_adres >= self.length:
             #     current_adres = 0
 
-    def seperate_chaining(self, adres, data, search, delete):
-        """
-        Solve a collision with seperate chaining.
-        :param adres: Adres that caused collision.
+    def _seperate_chaining(self, adres, data, search, delete):
+        """ Solve a collision with separate chaining.
+
+        :param adres: Address that caused collision.
         :param data: The item to be inserted.
         :param search: Indicates if the algorithm has to search or not.
         :param delete: Indicates if the algorithm has to delete or not.
-        :return: Indicates wether the collision was solved or the item found. True if it was,
+        :return: Indicates whether the collision was solved or the item found. True if it was,
         false if it couldn't solve the collision.
         """
         if search:
