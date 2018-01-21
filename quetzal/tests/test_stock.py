@@ -1,36 +1,165 @@
 from unittest import TestCase
-from quetzal.stock import Stock
-from quetzal.product import *
+from quetzal import *
 
-def giveListofstock(listy, type):
-    myList = list()
-    if type == 'cll':
-        if not listy.is_empty():
-            cur = listy.head
-            while cur.next is not listy.dummy_head:
-                cur = cur.next
-                myList.append(cur.item.get_expiration_date())
-    else:
-        if not listy.isEmpty():
-            cur = listy.head
-            for i in range(0, listy.getLength()):
-                myList.append(cur.item.get_expiration_date())
-                cur = cur.next
-    return myList
-
+def get_list_of_stock(stock_list):
+    dates = []
+    for i in range(1, len(stock_list)):
+        dates.append(stock_list[i].get_expiration_date())
+    return dates
 
 class TestStock(TestCase):
-    def testEmptyBeforeAdding(self, type='cll'):
-        stock = Stock(type)
+
+    def test_empty(self):
+        s = Stock(["wit", "zwart", "bruin"], AdtCircularLinkedList)
+        self.assertTrue(s.is_empty("wit"))
+        self.assertTrue(s.is_empty("zwart"))
+        self.assertTrue(s.is_empty("bruin"))
+        self.assertTrue(s.is_empty("honing"))
+        self.assertEqual(0, s.get_size("wit"))
+        self.assertEqual(0, s.get_size("bruin"))
+        self.assertEqual(0, s.get_size("zwart"))
+        self.assertEqual(0, s.get_size("honing"))
+        self.assertEqual(["wit", "zwart", "bruin"], s.get_product_list())
+
+    def test_add_items(self):
+        s = Stock(["wit", "zwart", "bruin"], AdtCircularLinkedList)
+        self.assertTrue(s.add_item(Chocolateshot(Date(2020, 10, 2), "wit")))
+        self.assertFalse(s.is_empty("wit"))
+        self.assertTrue(s.is_empty("zwart"))
+        self.assertTrue(s.is_empty("bruin"))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2020, 9, 13), "wit")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2019, 7, 2), "wit")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2019, 10, 2), "zwart")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2019, 10, 2), "zwart")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2020, 7, 21), "zwart")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2020, 6, 22), "zwart")))
+        self.assertTrue(s.add_item(Chocolateshot(Date(2016, 5, 2), "bruin")))
+        self.assertFalse(s.is_empty("zwart"))
+        self.assertFalse(s.is_empty("bruin"))
+        self.assertEqual(3, s.get_size("wit"))
+        self.assertEqual(4, s.get_size("zwart"))
+        self.assertEqual(1, s.get_size("bruin"))
+        self.assertFalse(s.add_item(Marshmallow(Date(2018, 1, 1))))
+        self.assertFalse(s.add_item(Chocolateshot(Date(2018, 1, 1), "melk")))
+        self.assertTrue(s.is_empty("marshmallow"))
+        self.assertTrue(s.is_empty("melk"))
+
+    def test_clean_stock_2(self):
+        s = Stock(["honing", "chilipeper", "marshmallow","wit", "zwart", "bruin"], AdtCircularLinkedList)
+        self.assertEqual(["honing", "chilipeper", "marshmallow","wit", "zwart", "bruin"], s.get_product_list())
+        for i in range(2,30,3):
+            self.assertTrue(s.add_item(Chilipepper(Date(2018, 9, i))))
+            self.assertTrue(s.add_item(Chocolateshot(Date(2018, 10, i), "wit")))
+            self.assertTrue(s.add_item(Marshmallow(Date(2018, 10, i))))
+            self.assertTrue(s.add_item(Chocolateshot(Date(2018, 10, i), "zwart")))
+            self.assertTrue(s.add_item(Honey(Date(2018, 12, i))))
+        self.assertEqual(10, s.get_size("wit"))
+        self.assertEqual(10, s.get_size("honing"))
+        self.assertEqual(10, s.get_size("marshmallow"))
+        self.assertEqual(10, s.get_size("chilipeper"))
+        self.assertEqual(10, s.get_size("zwart"))
+        self.assertEqual(0, s.get_size("snoep"))
+        self.assertEqual(28, len(s.clean_stock(Date(2018, 10, 20))))
+        self.assertEqual(0, s.get_size("chilipeper"))
+        self.assertEqual(4, s.get_size("wit"))
+        self.assertEqual(4, s.get_size("zwart"))
+        self.assertEqual(10, s.get_size("honing"))
+        self.assertEqual(4, s.get_size("marshmallow"))
+
+    def test_clean_stock_3(self):
+        s = Stock(["honing", "chilipeper", "marshmallow", "wit", "zwart", "bruin"], AdtCircularLinkedList)
+        self.assertEqual(["honing", "chilipeper", "marshmallow", "wit", "zwart", "bruin"], s.get_product_list())
+        for i in range(2,30,3):
+            self.assertTrue(s.add_item(Chilipepper(i-20)))
+            self.assertTrue(s.add_item(Chocolateshot(i, "wit")))
+            self.assertTrue(s.add_item(Marshmallow(i)))
+            self.assertTrue(s.add_item(Chocolateshot(i, "zwart")))
+            self.assertTrue(s.add_item(Honey(i+100)))
+        self.assertEqual(10, s.get_size("wit"))
+        self.assertEqual(10, s.get_size("honing"))
+        self.assertEqual(10, s.get_size("marshmallow"))
+        self.assertEqual(0, s.get_size("bruin"))
+        self.assertEqual(0, s.get_size("snoep"))
+        s.clean_stock(20)
+        self.assertEqual(0, s.get_size("chilipeper"))
+        self.assertEqual(4, s.get_size("wit"))
+        self.assertEqual(10, s.get_size("honing"))
+        self.assertEqual(4, s.get_size("marshmallow"))
+        self.assertTrue(s.is_empty("bruin"))
+
+    def test_pop_items(self):
+        s = Stock(["honing", "chilipeper", "marshmallow", "wit", "zwart", "bruin"], AdtCircularLinkedList)
+        self.assertEqual(["honing", "chilipeper", "marshmallow", "wit", "zwart", "bruin"], s.get_product_list())
+        for i in range(2, 30, 3):
+            self.assertTrue(s.add_item(Chilipepper(Date(2018, 9, i))))
+            self.assertTrue(s.add_item(Chocolateshot(Date(2018, 10, i), "wit")))
+            self.assertTrue(s.add_item(Marshmallow(Date(2018, 10, i))))
+            self.assertTrue(s.add_item(Chocolateshot(Date(2018, 10, i), "zwart")))
+            self.assertTrue(s.add_item(Honey(Date(2018, 12, i))))
+        self.assertEqual(28, len(s.clean_stock(Date(2018, 10, 20))))
+        self.assertEqual(None, s.pop_item("bruin", Date(2017, 10, 20)))
+        self.assertEqual(None, s.pop_item("wit", Date(2020, 2, 2)))
+        self.assertEqual(Date(2018, 10, 20), s.pop_item("marshmallow", Date(2017, 10, 20)).get_expiration_date())
+        self.assertEqual(Date(2018, 10, 23), s.pop_item("marshmallow", Date(2017, 10, 20)).get_expiration_date())
+        self.assertEqual(2, s.get_size("marshmallow"))
+        self.assertEqual(Date(2018, 10, 26), s.pop_item("marshmallow", Date(2017, 10, 20)).get_expiration_date())
+        self.assertEqual(Date(2018, 10, 29), s.pop_item("marshmallow", Date(2017, 10, 20)).get_expiration_date())
+        self.assertTrue(s.is_empty("marshmallow"))
+        self.assertEqual(None, s.pop_item("marshmallow", Date(2017, 10, 20)))
+        self.assertEqual(None, s.pop_item("honing", Date(2021, 1, 1)))
+        self.assertEqual("honing", s.pop_item("honing", Date(2018, 1, 1)).get_name())
+        self.assertEqual(Date(2018, 12, 5), s.pop_item("honing", Date(2018, 1, 1)).get_expiration_date())
+        self.assertEqual(Date(2018, 12, 20), s.pop_item("honing", Date(2018, 12, 19)).get_expiration_date())
+        self.assertEqual(7, s.get_size("honing"))
+        self.assertTrue(s.add_item(Marshmallow(Date(2019, 1, 1))))
+        self.assertFalse(s.is_empty("marshmallow"))
+        self.assertEqual(1, s.get_size("marshmallow"))
+        self.assertEqual(["honing", "chilipeper", "marshmallow", "wit", "zwart", "bruin"], s.get_product_list())
+
+    def test_sort(self):
+        s = Stock(["honing"], AdtCircularLinkedList)
+        self.assertTrue(s.add_item(Honey(Date(2018, 12, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2017, 1, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2018, 6, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2017, 1, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2018, 12, 20))))
+        self.assertTrue(s.add_item(Honey(Date(2018, 8, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2017, 12, 1))))
+        self.assertTrue(s.add_item(Honey(Date(2017, 8, 1))))
+        self.assertEqual(8, s.get_size("honing"))
+        self.assertEqual(Date(2018, 12, 1), s.stocks[0][1].get_expiration_date())
+        self.assertEqual(Date(2017, 1, 1), s.stocks[0][2].get_expiration_date())
+        self.assertEqual(Date(2018, 6, 1), s.stocks[0][3].get_expiration_date())
+        self.assertEqual(Date(2017, 1, 1), s.stocks[0][4].get_expiration_date())
+        self.assertEqual(Date(2018, 12, 20), s.stocks[0][5].get_expiration_date())
+        self.assertEqual(Date(2018, 8, 1), s.stocks[0][6].get_expiration_date())
+        self.assertEqual(Date(2017, 12, 1), s.stocks[0][7].get_expiration_date())
+        self.assertEqual(Date(2017, 8, 1), s.stocks[0][8].get_expiration_date())
+        s._sort()
+        self.assertEqual(8, s.get_size("honing"))
+        self.assertEqual(Date(2017, 1, 1), s.stocks[0][1].get_expiration_date())
+        self.assertEqual(Date(2017, 1, 1), s.stocks[0][2].get_expiration_date())
+        self.assertEqual(Date(2017, 8, 1), s.stocks[0][3].get_expiration_date())
+        self.assertEqual(Date(2017, 12, 1), s.stocks[0][4].get_expiration_date())
+        self.assertEqual(Date(2018, 6, 1), s.stocks[0][5].get_expiration_date())
+        self.assertEqual(Date(2018, 8, 1), s.stocks[0][6].get_expiration_date())
+        self.assertEqual(Date(2018, 12, 1), s.stocks[0][7].get_expiration_date())
+        self.assertEqual(Date(2018, 12, 20), s.stocks[0][8].get_expiration_date())
+
+    def test_empty_before_adding(self, type = AdtCircularLinkedList):
+        stock = Stock(["honing", "chilipeper", "marshmallow", "wit", "zwart", "melk"], type)
         self.assertTrue(stock.is_empty("chilipeper"))
         self.assertTrue(stock.is_empty("honing"))
         self.assertTrue(stock.is_empty("wit"))
         self.assertTrue(stock.is_empty("melk"))
         self.assertTrue(stock.is_empty("bruin"))
+        self.assertTrue(stock.is_empty("zwart"))
         self.assertTrue(stock.is_empty("marshmallow"))
+        self.assertTrue(stock.is_empty("snoep"))
 
-    def testEmptyAfterAdding(self, type='cll'):
-        stock = Stock(type)
+    def test_empty_after_adding(self, type = AdtCircularLinkedList):
+        stock = Stock(["honing", "chilipeper", "marshmallow", "wit", "bruin", "zwart", "melk"], type)
+        stock.add_item(Chocolateshot(2, "wit"))
         stock.add_item(Chocolateshot(2, "wit"))
         stock.add_item(Marshmallow(3))
         stock.add_item(Honey(2))
@@ -45,38 +174,33 @@ class TestStock(TestCase):
         self.assertFalse(stock.is_empty("bruin"))
         self.assertFalse(stock.is_empty("marshmallow"))
 
-    def testAddAndPop(self, type='cll'):
-        stock = Stock(type)
+    def test_add_and_pop(self, type = AdtCircularLinkedList):
+        stock = Stock(["honing", "chilipeper", "marshmallow", "wit", "bruin", "zwart", "melk"], type)
         stock.add_item(Honey(2))
         stock.add_item(Honey(4))
         stock.add_item(Honey(10))
         stock.add_item(Honey(3))
-        self.assertEqual([3, 10, 4, 2], giveListofstock(stock.honeyList, type))
-
+        self.assertEqual([2, 4, 10, 3], get_list_of_stock(stock.stocks[0]))
         stock.add_item(Chilipepper(3))
         stock.add_item(Chilipepper(4))
         stock.add_item(Chilipepper(12))
         stock.add_item(Chilipepper(5))
-        self.assertEqual([5, 12, 4, 3], giveListofstock(
-            stock.chilipepperList, type))
-
+        self.assertEqual([3, 4, 12, 5], get_list_of_stock(stock.stocks[1]))
         stock.pop_item('honing', 4)
-        self.assertEqual([2, 3, 10], giveListofstock(stock.honeyList, type))
+        self.assertEqual([2, 3, 10], get_list_of_stock(stock.stocks[0]))
 
         stock.pop_item('chilipeper', 3)
-        self.assertEqual([4, 5, 12], giveListofstock(
-            stock.chilipepperList, type))
+        self.assertEqual([4, 5, 12], get_list_of_stock(stock.stocks[1]))
 
         stock.add_item(Chilipepper(8))
         stock.add_item(Chilipepper(13))
         stock.add_item(Chilipepper(35))
         stock.add_item(Chilipepper(1))
         stock.pop_item('chilipeper', 10)
-        self.assertEqual([1, 4, 5, 8, 13, 35], giveListofstock(
-            stock.chilipepperList, type))
+        self.assertEqual([1, 4, 5, 8, 13, 35], get_list_of_stock(stock.stocks[1]))
 
-    def testCleanStock(self, type='cll'):
-        stock = Stock(type)
+    def test_clean_stock(self, type = AdtCircularLinkedList):
+        stock = Stock(["honing", "chilipeper", "marshmallow", "wit", "bruin", "zwart", "melk"], type)
         stock.add_item(Chilipepper(1))
         stock.add_item(Chilipepper(10))
         stock.add_item(Chilipepper(12))
@@ -109,14 +233,9 @@ class TestStock(TestCase):
         ##
         stock.clean_stock(10)
 
-        self.assertEqual([10, 12, 78], giveListofstock(
-            stock.chilipepperList, type))
-        self.assertEqual([13, 18, 23], giveListofstock(stock.honeyList, type))
-        self.assertEqual([11, 16, 21, 32], giveListofstock(
-            stock.marshmallowList, type))
-        self.assertEqual([10, 11], giveListofstock(
-            stock.brownChocolateList, type))
-        self.assertEqual([10, 11], giveListofstock(
-            stock.whiteChocolateList, type))
-        self.assertEqual([54, 54, 54], giveListofstock(
-            stock.milkChocolateList, type))
+        self.assertEqual([10, 12, 78], get_list_of_stock(stock.stocks[1]))
+        self.assertEqual([13, 18, 23], get_list_of_stock(stock.stocks[0]))
+        self.assertEqual([11, 16, 21, 32], get_list_of_stock(stock.stocks[2]))
+        self.assertEqual([10, 11], get_list_of_stock(stock.stocks[4]))
+        self.assertEqual([10, 11], get_list_of_stock(stock.stocks[3]))
+        self.assertEqual([54, 54, 54], get_list_of_stock(stock.stocks[6]))
