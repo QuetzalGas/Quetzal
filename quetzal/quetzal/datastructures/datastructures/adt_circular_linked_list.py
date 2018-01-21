@@ -113,3 +113,20 @@ class AdtCircularLinkedList:
                 return True
         return False
 
+    def __repr__(self):
+        string = "digraph G {\ngraph [\nrankdir = \"LR\"\n];\n\n"
+        for i in range(len(self)):
+            string += str(i)
+            string += " [\nlabel = \""
+            string += str(i)
+            string += ": "
+            string += str(self[i])
+            string += "\"\nshape = \"record\"\n];\n\n"
+        for i in range(len(self)):
+            string += str(i)
+            string += " -> "
+        if not self.is_empty():
+            string += str(0)
+        string += "\n}"
+        return string
+
