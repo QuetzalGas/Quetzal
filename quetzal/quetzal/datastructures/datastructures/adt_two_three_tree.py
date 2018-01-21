@@ -216,6 +216,7 @@ class AdtTwoThreeTree:
             for nodes in current.root:
                 if nodes.key == key:
                     return True, current.root[counter].item
+                counter += 1
             # If it's not found, then there must be checked if we can look any further in the subtrees or not.
             if current._no_children():
                 return False, None

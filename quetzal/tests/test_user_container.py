@@ -1,10 +1,12 @@
 from unittest import TestCase
 from quetzal.user import UserContainer
+from quetzal import *
 
 class TestUserContainer(TestCase):
-
-    def testadd_if_unknown_user(self, type='234'):
-        container = UserContainer(type)
+    def setUp(self):
+        self.type = AdtTwoThreeTree()
+    def testadd_if_unknown_user(self):
+        container = UserContainer(self.type)
         container.add_if_unknown_user(
             'Gintoki', 'Sakata', 'gin-sensei@gmail.com')
         container.add_if_unknown_user('Morty', 'duwaerts', 'scared@gmail.com')
@@ -29,8 +31,8 @@ class TestUserContainer(TestCase):
         container.add_if_unknown_user(
             'Witchking-of', 'Angmar', 'barad.dur@mordor.be')
 
-    def testretrieve_user(self, type='234'):
-        container = UserContainer(type)
+    def testretrieve_user(self):
+        container = UserContainer(self.type)
         container.add_if_unknown_user(
             'Gintoki', 'Sakata', 'gin-sensei@gmail.com')
         container.add_if_unknown_user('Morty', 'duwaerts', 'scared@gmail.com')
@@ -66,10 +68,18 @@ class TestUserContainer(TestCase):
         self.assertEqual(0, container.retrieve_user(
             "gin-sensei@gmail.com")[1].get_id())
 
-    def testIsEmpty(self, type='bs'):
-        container = UserContainer(type)
+    def testIsEmpty(self):
+        container = UserContainer(self.type)
         self.assertTrue(container.is_empty())
 
         container.add_if_unknown_user(
             'Gimli', 'Something', 'minesOfmoria@farlindon.com')
         self.assertFalse(container.is_empty())
+
+    def test_wrong_type(self):
+        raised = False
+        try:
+            UserContainer("hey")
+        except:
+            raised = True
+        self.assertTrue(raised)

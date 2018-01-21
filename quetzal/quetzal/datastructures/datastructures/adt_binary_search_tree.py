@@ -1,6 +1,3 @@
-import random
-from datetime import datetime
-
 class _TreeItem:
     def __init__(self, key, item):
         if item is None:
@@ -219,7 +216,7 @@ class AdtBinarySearchTree:
         string = root_name + ' [label="'
         size_root = len(self.root.item)
         for i in range(0, size_root):
-            string += self.root.item[i]
+            string += str(self.root.item[i])
             if i < size_root-1:
                 string += ", "
         string += '"];\n'
