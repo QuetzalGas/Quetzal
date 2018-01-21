@@ -74,6 +74,8 @@ class AdtCircularLinkedList:
         if 0 <= index < len(self):
             cur = self.head
             prev = _Node(None, cur)
+
+            # +1 because we take the dummy node as cur the first time
             for i in range(index+1):
                 cur = cur.next
                 prev = prev.next
@@ -90,8 +92,24 @@ class AdtCircularLinkedList:
         """
         if 0 <= index < len(self):
             cur = self.head
+            
             for i in range(index+1):
                 cur = cur.next
             return cur.item
         else:
             raise IndexError("")
+
+
+    def __contains__(self, item):
+        """ Searches for an item in the list.
+
+        :param item: The item to search.
+        :return: True if the item is in the list, false otherwise.
+        """
+        cur = self.head
+        for i in range(self.get_length() + 1):
+            cur = cur.next
+            if cur.item == item:
+                return True
+        return False
+
