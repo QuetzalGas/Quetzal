@@ -31,7 +31,7 @@ class AdtCircularLinkedList:
         """
         return self.dummy_head.next == self.dummy_head
 
-    def get_length(self):
+    def __len__(self):
         """ Returns the amount of elements in the list.
 
         :return: The number of elements in the list.
@@ -44,110 +44,72 @@ class AdtCircularLinkedList:
                 length += 1
         return length
 
-    def insert(self, index, new_item):
+    def __setitem__(self, index, new_item):
         """ Adds a new element at a given location.
 
         :param index: Position where the new element needs to be added.
         :param new_item: Element that needs to be added.
-        :return: True als het toevoegen gelukt is. #TODO weg en vervangen met raise
-        >>> l = AdtCircularLinkedList()
-        >>> l.insert(0,10)
-        False
-        >>> l.insert(1,0)
-        True
-        >>> l.insert(2,5)
-        True
-        >>> l.insert(3,"abc")
-        False
-        >>> l.insert(3,7)
-        True
-        >>> l.insert(10, 8)
-        False
-        >>> l.insert(4, -56)
-        True
-        >>> l.get_length()
-        4
+        :raise TypeError if new_item is not the same type as the items in the list
+        :raise IndexError if index is out of range
         """
 
         if not self.is_empty():
             if not isinstance(new_item, type(self.head.next.item)):
-                return False
+                raise TypeError("")
 
-        if (index >= 0) and (index <= (self.get_length())):
+        if (index >= 0) and (index <= (len(self))):
             cur = self.head
-            for i in range(index - 1): #TODO -1 weg?
+            for i in range(index):
                 cur = cur.next
             cur.next = _Node(new_item, cur.next)
-            return True
-        return False
+        else:
+            raise IndexError("")
 
-    def delete(self, index):
+    def __delitem__(self, index):
         """ Delete the element on position 'index'.
 
         :param index: positie van het element dat verwijderd moet worden.
-        :return: True als het verwijderen gelukt is.
-        >>> l = AdtCircularLinkedList()
-        >>> l.insert(1,0)
-        True
-        >>> l.insert(2,5)
-        True
-        >>> l.insert(3,7)
-        True
-        >>> l.insert(4, -56)
-        True
-        >>> l.delete(2)
-        True
-        >>> l.delete(2)
-        True
-        >>> l.get_length()
-        2
-        >>> l.retrieve(2)
-        (-56, True)
-        >>> l.delete(0)
-        False
-        >>> l.delete(10)
-        False
+        :raise IndexError if index is out of range
         """
-        if 0 <= index < self.get_length():
+        if 0 <= index < len(self):
             cur = self.head
             prev = _Node(None, cur)
-            for i in range(index):
+
+            # +1 because we take the dummy node as cur the first time
+            for i in range(index+1):
                 cur = cur.next
                 prev = prev.next
             prev.next = cur.next
-            return True
-        return False
+        else:
+            raise IndexError("")
 
-    def retrieve(self, index):
+    def __getitem__(self, index):
         """ Returns the element on position 'index".
 
         :param index: positie van het element.
-        :return: element, True als het opvragen gelukt is.
-        >>> l = AdtCircularLinkedList()
-        >>> l.insert(1,0)
-        True
-        >>> l.insert(2,5)
-        True
-        >>> l.insert(3,7)
-        True
-        >>> l.insert(4, -56)
-        True
-        >>> l.retrieve(0)
-        (None, False)
-        >>> l.retrieve(2)
-        (5, True)
-        >>> l.retrieve(5)
-        (None, False)
-        >>> l.retrieve(4)
-        (-56, True)
-        >>> l.delete(1)
-        True
-        >>> l.retrieve(1)
-        (5, True)
+        :raise IndexError if index is out of range
+        :return: element
         """
-        if 0 <= index < self.get_length():
+        if 0 <= index < len(self):
             cur = self.head
-            for i in range(index):
+            
+            for i in range(index+1):
                 cur = cur.next
-            return cur.item, True
-        return None, False
+            return cur.item
+        else:
+            raise IndexError("")
+
+
+    def __contains__(self, item):
+        """ Searches for an item in the list.
+
+        :param item: The item to search.
+        :return: True if the item is in the list, false otherwise.
+        """
+        cur = self.head
+        for i in range(self.get_length() + 1):
+            cur = cur.next
+            if cur.item == item:
+                return True
+        return False
+
