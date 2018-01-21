@@ -35,7 +35,7 @@ class AdtDoublyLinkedList:
         """
         return self.length == 0
 
-    def get_length(self):
+    def __len__(self):
         """ Returns the length of the list
 
         :return: The length of the list
@@ -47,122 +47,105 @@ class AdtDoublyLinkedList:
 
         :param index: The index to insert into
         :param new_item: The item to insert
-        :return: Boolean: If the insertion succeeded
+        :raise: KeyError if the index is not correct.
         """
         if self.head is None or index == 0:
-            return self._insert_beginning(new_item)
-        elif index > self.length:
-            return self._insert_end(new_item)
+            self._insert_beginning(new_item)
+        elif index == self.length:
+            self._insert_end(new_item)
+        elif not 0 <= index <= self.length:
+            raise KeyError("Index out of range!")
         else:
             current_node = self._search_node(index - 1)
             new_node = _Node(new_item, current_node, current_node.next)
-            # Correct the prev from the node after the new node
+            # Correct the prev from the node after the current node
             current_node.next.prev = new_node
-            # Correct the next from the node before the new node
+            # Correct the next from the current node
             current_node.next = new_node
             self.length += 1
-            return True
 
     def _insert_beginning(self, new_item):
-        """
-        Inserts a node at the beginning of the list.
-        :param new_item: The item to insert
-        :return: Boolean: If the insertion succeeded
+        """ Inserts a node at the beginning of the list.
+
+        :param new_item: The item to insert into the list.
         """
         new_node = _Node(new_item, None, self.head)
         if self.head is not None:
             self.head.prev = new_node
-            self.tail = self.head
+        else:
+            self.tail = new_node
         self.head = new_node
         self.length += 1
-        return True
 
     def _insert_end(self, new_item):
-        """
-        Inserts a node at the end of the list.
-        :param newItem: The item to insert
-        :return: Boolean: If the insertion succeeded
-        """
-        if self.head is None:
-            return self._insert_beginning(new_item)
-        else:
-            last_node = self._search_node(self.length)
-            new_node = _Node(new_item, last_node, None)
-            last_node.next = new_node
-            self.tail = new_node
-            self.length += 1
-            return True
+        """ Inserts a node at the end of the list.
 
-    def __delitem__(self, key):
+        :param new_item: The item to insert into the list.
         """
-        Deletes a node from the list.
+        last_node = self.tail
+        new_node = _Node(new_item, last_node, None)
+        last_node.next = new_node
+        self.tail = new_node
+        self.length += 1
+
+    def __delitem__(self, index):
+        """ Deletes a node from the list.
+
         :param index: The index of the node that needs to be removed
-        :return: Boolean: If the insertion succeeded
+        :raise: KeyError if the index is incorrect.
         """
-        if index < 1:
-            index = 1
-        if index > self.get_length():
-            index = self.get_length()
+        if not 0 <= index < self.length:
+            raise KeyError("Index out of range!")
 
         deleted_node = self._search_node(index)
         before_node = deleted_node.prev
         after_node = deleted_node.next
 
-        if index == 1:
+        if index == 0:
             self.head = after_node
+        if index == self.length - 1:
+            self.tail = before_node
         if before_node is not None:
             before_node.next = after_node
         if after_node is not None:
             after_node.prev = before_node
-
         self.length -= 1
-        return True
 
-    def __getitem__(self, item):
-        """
-        Deletes a node from the list and returns the data from the node.
+    def __getitem__(self, index):
+        """ Get a node from the list and returns the data from the node.
+
         :param index: The index of the node that needs to be retrieved
         :return: The retrieved item
-        :return: Boolean: If the insertion succeeded
+        :raise: KeyError if the index is incorrect.
         """
-        if index < 1:
-            index = 1
-        if index > self.get_length():
-            index = self.get_length()
+        if not 0 <= index < self.length:
+            raise KeyError("Index out of range!")
 
-        deleted_node = self._search_node(index)
-        before_node = deleted_node.prev
-        after_node = deleted_node.next
+        found_node = self._search_node(index)
+        return found_node.item
 
-        if index == 1:
-            self.head = after_node
-        if before_node is not None:
-            before_node.next = after_node
-        if after_node is not None:
-            after_node.prev = before_node
+    def __contains__(self, item):
+        """ Checks if the list contains a node with a given item.
 
-        self.length -= 1
-        return deleted_node.item, True
+        :param item: The item to search for.
+        :return: True if the item is in the list, false otherwise.
+        """
+        current_node = self.head
+        while current_node is not None:
+            if current_node.item == item:
+                return True
+            current_node = current_node.next
+        return False
 
     def _search_node(self, index):
-        """
-        Searches the location of the node just before the given index.
-        :param index: The index of the node to search
-        :return: The found node
+        """ Searches the location of the node on the given index.
+
+        :param index: The index of the node to search.
+        :return: The found node.
         """
         i = 0
         current_node = self.head
-
-        while i < index - 1:
+        while i < index:
             current_node = current_node.next
             i += 1
-
         return current_node
-
-    def _search_item(self, index):
-        result = self._search_node(index)
-
-        if result is None:
-            return None, False
-        else:
-            return result.item, True
