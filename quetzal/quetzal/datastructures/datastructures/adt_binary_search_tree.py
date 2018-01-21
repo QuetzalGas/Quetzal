@@ -1,220 +1,237 @@
-# Joke Duwaerts, Binaire zoekboom
-
-
 class _TreeItem:
     def __init__(self, key, item):
         self.item = item
         self.key = key
 
-
 class AdtBinarySearchTree:
-    def __init__(self, root=None, left=None, right=None, parent=None):
-        """
-        Een nieuwe binaire boom wordt geïnitialiseerd.
-        :param root: de wortel van de binaire zoekboom
-        :param left: het linkerkind van de boom, dat oftewel None is, oftewel ook een binaire zoekboom
-        :param right: het rechterkind: oftewel None oftewel ook binaire zoekboom
-        :param parent: Elke BST heeft een parent, behalve als in de root de eigenlijke wortel van de gehele BST zit, deze heeft geen parent.
-        """
-        self.root = root
-        self.left = left
-        self.right = right
-        self.parent = parent
+    def __init__(self, root=None):
+        self.root = []
+        if not root is None:
+            self.root.append(root)
+        self.left = None
+        self.right = None
+        self.parent = None
 
     def destroy(self):
         self.root = None
         self.right = None
         self.left = None
 
-    def is_empty(self):
-        """
-        Checkt of de binaire boom leeg is.
-        :return: geeft True indien leeg, False indien niet leeg.
+    def _no_children(self):
+        """ Checks whether the tree has children or not.
+
+        :return: True if it doesn't have any children, False otherwise.
         """
         if (self.left is None) and (self.right is None):
             return True
         else:
             return False
 
-    def table_is_empty(self):
-        return self.root is None
+    def is_empty(self):
+        """ Checks whether the tree is completely empty (no children and empty root).
 
-    def insert(self, key, item):
-        self.search_tree_insert(_TreeItem(key, item))
+        :return: True if the root is empty, False otherwise.
+        """
+        return len(self.root) == 0
 
-    def search_tree_insert(self, item):
+    def __setitem__(self, key, item):
+        """ Interface to insert a treeElement with 'key' as searchkey and 'item' as content.
+
+        :param key: The searchkey of the new node.
+        :param item: The contents of the new node.
+        :raise: If key or item is of incorrect type, an exception is raised.
         """
-        Voegt nieuwe TreeNode toe aan binaire zoekboom, op de juiste plaats, als er nog geen item met dezelfde zoeksleutel aanwezig is.
-        :param item: een TreeNode
-        :return: geeft True indien de zoeksleutel van de TreeNode nog niet aanwezig was,
-                 geeft False indien het wel al aanwezig was.
+        if not self.is_empty():
+            if not isinstance(key, type(self.root[0].key)) or not isinstance(item, type(self.root[0].item)):
+                raise TypeError("Unable to set item: key and.or item of incorrect type!")
+
+        self._search_tree_insert(_TreeItem(key, item))
+
+    def _search_tree_insert(self, item):
+        """ Adds 'item' to the tree.
+
+        :param item: Item is the object to be inserted. It is of type _TreeItem.
         """
-        if self.root is None and self.parent is None:
-            self.root = item
+        # If the tree is completely empty, item must be added to it's root.
+        if self.is_empty() and self.parent is None:
+            self.root.append(item)
             return
 
-        if item.key < self.root.key:
-            # Als de key van item kleiner is dan de key van de root,
+        # If here, item's key must be compared to the root's keys. Depending on the result:
+        # * a new BST must be made for the item.
+        # * the search must continue in one of the children.
+        # * the item must be added to the root (same searchkey).
+        if item.key < self.root[0].key:
             if self.left is None:
-                # en de linkerdeelboom is leeg,
-                # maak dan een nieuwe BinarySearchTree aan met als root 'item'.
                 self.left = AdtBinarySearchTree(item)
-                # Deze nieuwe BST heeft als ouder de huidige BST.
                 self.left.parent = self
-                return True
+                return
             else:
-                # Als er al een linkerkind was, zoek dan verder naar een plaats
-                # bij dat linkerkind.
-                return self.left.search_tree_insert(item)
-        elif item.key > self.root.key:
-            # Zelfde logica als hierboven.
+                return self.left._search_tree_insert(item)
+        elif item.key > self.root[0].key:
             if self.right is None:
                 self.right = AdtBinarySearchTree(item)
                 self.right.parent = self
-                return True
+                return
             else:
-                return self.right.search_tree_insert(item)
+                return self.right._search_tree_insert(item)
 
-        if item.key == self.root.key:
-            # Als item.key == de key van de root, dan is er dus al een node met deze key
-            # en moet er geen nieuwe worden toegevoegd, geeft False terug.
-            return False
+        if item.key == self.root[0].key:
+            self.root.append(item)
+            return
 
-    def search_tree_retrieve(self, key, subtree=False):
+    def __getitem__(self, key):
+        """ Interface to the actual _retrieve() method. This method returns the node, not the subtree.
+
+        :param key: The searchkey of which a node is searched.
+        :return: (False, None) if there is no node with the searchkey == 'key', (True, node) otherwise.
+        :raise : If key is of incorrect type, an exception is raised.
         """
-        Indien een item met de gevraagde zoeksleutel aanwezig is, wordt de root (TreeNode) OF (sub)binaire zoekboom met de zoeksleutel teruggegeven.
-        :param key: de zoeksleutel, waar naar wordt gezocht.
-        :param subtree: Als deze op True wordt gezegd, wordt een subtree teruggeven en geen TreeNode, dit wordt gebruikt bij de
-                        remove functie.
-        :return: geeft de (sub) binaire boom terug als er een TreeNode met de zoeksleutel aanwezig is, anders geeft het False terug
+        if not self.is_empty():
+            if not isinstance(key, type(self.root[0].key)):
+                raise TypeError("Unable to get item: key of incorrect type!")
+
+        subtree = self._retrieve(key)[1]
+        if subtree is None:
+            return False, None
+        return True, subtree.root[0]
+
+    def __contains__(self, key):
+        """ Interface to the actual _retrieve() method. This method returns a bool.
+
+        :param key: The searchkey of which a node is searched.
+        :return: False if there is no node with the searchkey == 'key', True otherwise.
         """
-        if (self.root is None) and (self.parent is None):
+        return self._retrieve(key)[0]
+
+    def _retrieve(self, key):
+        """ Retrieves an item with the given searchkey.
+
+        :param key: The searchkey of which a node is searched.
+        :raise: If the given 'key' is of incorrect type, an exception is raised.
+        :return: (False, None) if there is no node with the searchkey == 'key', (True, subtree) otherwise.
+        """
+        if len(self.root) == 0 and (self.parent is None):       # if the whole tree is empty, false is returned
             return (False, None)
-        # als key kleiner is dan de key van de root, zoek dan verder in de
-        if key < self.root.key and self.left is not None:
-            # linkerdeelboom, als deze aanwezig is.
-            return self.left.search_tree_retrieve(key, subtree)
-        # als key groter is dan de key van de root, zoek dan verder in de
-        elif key > self.root.key and self.right is not None:
-            # rechterdeelboom, als deze aanwezig is.
-            return self.right.search_tree_retrieve(key, subtree)
-        # Als key == de key van de root, geef dan True door en...
-        if key == self.root.key:
-            if subtree:
-                # ...de subtree, in het geval we een subtree terug willen. (subtree=True)
-                return (True, self)
-            # ...de TreeNode, in het algemene geval.
-            return (True, self.root)
+        # If here, the key is compared to the key of the root. If they are not equal and the tree has children/a child,
+        # the search will continue in a child.
+        if key < self.root[0].key and self.left is not None:
+            return self.left._retrieve(key)
+        elif key > self.root[0].key and self.right is not None:
+            return self.right._retrieve(key)
+        if key == self.root[0].key:
+            return (True, self)
         else:
-            # De key is niet teruggevonden, geef False terug en None.
             return (False, None)
 
-    def inorder_traverse(self):
+    def _inorder_successor(self, right_child):
+        """ Returns the inorder successor. Important: the subtree with which this method is called is always the right
+        subtree of the (sub)tree of which we search the inorder successor. This enables the method to search to the most
+        left node.
+
+        :param right_child: The right subtree of the node of which the inorder successor is searched.
+        :return: The subtree containing the inorder successor.
         """
-        Bezoekt de nodes van de BST volgens inorder traverse volgorde. Geeft een lijst van de rootItems in deze volgorde terug.
-        """
-        list_inorder = list()
-
-        if self.left is not None:
-            # Verleng de huidige lijst met de lijst van de linkerdeelboom
-            list_inorder = list_inorder + self.left.inorder_traverse()
-
-        # voeg het root.item er vervolgens aan toe
-        list_inorder.append(self.root.item)
-
-        if self.right is not None:
-            # Verleng de huidige lijst met de lijst van de rechterdeelboom
-            list_inorder = list_inorder + self.right.inorder_traverse()
-
-        return list_inorder
-
-    def inorder_successor(self, right_child):
-        """
-        Geeft de inorder successor terug. Zoekt dus naar het meest linkse kind in de rechterdeelboom van de node (rightChild).
-        Préconditie : node heeft een rechterkind (dit rechterkind wordt ingegeven, niet de node zelf)
-        :param node: de knoop waarvan men de inorder successor wilt vinden
-        :return: de inorder successor
-        """
+        # As long as there is a left child, the search will continue. If the tree has no left child, it's root is the
+        # inorder successor.
         if right_child.left is not None:
-            # rightChild heeft nog een linkerkind, ga dan zoeken naar een linkerkind bij dat kind
-            return self.inorder_successor(right_child.left)
+            return self._inorder_successor(right_child.left)
         else:
-            # geen linkerkind meer, dan is de huidige subtree de inorder
-            # successor
             return right_child
 
-    def act_remove(self):
+    def _act_remove(self):
+        """ Removes a node in a recursively, which is the reason for it being a seperate function from __delitem__().
         """
-        Verwijdert de knoop (of juister: een _TreeItem dat in de root zit van de (sub)tree.
-        """
-        if self.parent:                             # als node niet wortel is, dus WEL een parent heeft:
-            # en ze is leeg, dan moet de parent op de plaats van de node geen
-            # kind meer hebben.
-            if self.is_empty() is True:
-                if self.parent.left == self:        # Bepaal of node het linker- of rechterkind is en zet dan het juiste kind van
-                    self.parent.left = None  # de parent op None.
+        if self.parent:     # Making sure the node is deleted from it's parent's children.
+            if self._no_children() is True:
+                if self.parent.left == self:
+                    self.parent.left = None
                 else:
                     self.parent.right = None
 
+        # If there is only one child, transfer the root and it's children to this (sub)tree.
         if (self.left is None) and self.right:
-            # Als node maar één kind heeft, een rechterkind:
-            # stap 1: Plaats dan in de root de root van het rechterkind
             self.root = self.right.root
-            # stap 2: Neem de kinderen van dat rechterkind over
             self.left = self.right.left
             self.right = self.right.right
         elif (self.right is None) and self.left:
-            # Als node maar één kind heeft, een linkerkind
-            # stap 1: Plaats dan in de root de root van het linkerkind
             self.root = self.left.root
-            # stap 2: Neem de kinderen van dat linkerkind over
             self.right = self.left.right
             self.left = self.left.left
+        # If there are two children, swap places with the inorder successor and carry this function out on that subtree.
         if self.left and self.right:
-            # Als node twee kinderen heeft, zoek dan de inorder succesor,
-            inorderSucc = self.inorder_successor(self.right)
-            # plaats de root van deze succ in de huidige root en
-            self.root = inorderSucc.root  
-            # zorg dat deze inorder successor verwijderd wordt.
-            inorderSucc.act_remove()
+            inorderSucc = self._inorder_successor(self.right)
+            self.root = inorderSucc.root
+            inorderSucc._act_remove()
 
-        # zorg er voor dat de kinderen die verplaatst zijn, allemaal de juiste parent krijgen
-        #   (maw dat ze 'weten' dat de huidige (sub)tree de parent is).
+        # The possibly moved children should of this (sub)tree should know that this is their parent.
         if self.left:
             self.left.parent = self
         if self.right:
             self.right.parent = self
 
-    def remove(self, key):
-        """
-        Verifieert of de zoeksleutel voorkomt in de boom. Zo ja, dan gaat het effectieve verwijderen door in act_remove.
-        :param key: de zoeksleutel van de knoop die verwijderd moet worden
-        :return: Als key voorkomt geeft resultaat terug van het verwijderen (act_remove).
-                         niet voorkomt geeft het False terug.
-        """
-        (bool, subtree) = self.search_tree_retrieve(key, True)
+    def __delitem__(self, key):
+        """ Checks whether a node with the given 'key' is present, if so the remove will be carried out.
 
-        # True wordt bijgevoegd bij de parameterlijst van de retrievefunctie
-        # dit wil zeggen dat we een subtree terug willen krijgen en geen
-        # _TreeItem
-        if bool is False:
+        :param key: The searchkey of the node to be deleted.
+        :return: True if there was a node with searchkey == 'key', False otherwise.
+        """
+        if not self.is_empty():
+            if not isinstance(key, type(self.root[0].key)):
+                raise TypeError("Unable to delete item: key of incorrect type!")
+
+        (bool, subtree) = self._retrieve(key)
+
+        if bool is False:           # There is no node with the given key.
             return False
+        if len(subtree.root) > 1:   # If there are multiple items with the given searchkey
+            subtree.root.pop()
+            return True
         else:
-            # key komt voor, dus voer het verwijderen effectief uit
-            return subtree.act_remove()
+            return subtree._act_remove()
 
-    def print(self):
+    def __repr__(self):
+        """ The base method for creating a string that represents the dot-code.
+
+        :return: A string containing the dot-code to create a graph.
+        :raise: If the tree is empty, an exception is raised.
         """
-        Print de zoeksleutels van de TreeNodes in inorder_traverse.
+        if self.is_empty():
+            raise KeyError("Unable to create a dot-string of an empty tree!")
+        string = "digraph bst {\nnode [shape=Mrecord];\n"
+        string += self._get_string()
+        string += "}"
+        return string
+
+    def _get_string(self):
+        """ Makes the .dot string of the whole tree. It returns the current string, which is used not only outside this
+        method. Inside this method each string of the children is added to the current one, if this tree has children.
+
+        :return: A string containing all information of the nodes and the edges.
         """
+        root_name = "node" + str(self.root[0].key)
+        string = root_name + ' [label="'
+        size_root = len(self.root)
+        for i in range(0, size_root):
+            string += self.root[i].item
+            if i < size_root-1:
+                string += ", "
+        string += '"];\n'
 
-        # Bezoek eerst het linkerkind, als aanwezig
-        if self.left is not None:       
-            self.left.print()
+        if self.right and self.left:
+            string += self.left._get_string()
+            string += self.right._get_string()
+        if not self.left and self.right:
+            invis = "inv" + str(self.root[0].key) + "left"
+            string += invis + ' [style="invisible"];\n'
+            string += root_name + ' -> ' + invis + " [style=invis];\n"
+            string += self.right._get_string()
+        if not self.right and self.left:
+            self.left._get_string()
+            invis = "inv" + str(self.root[0].key) + "right"
+            string += invis + ' [style="invisible"];\n'
+            string += root_name + ' -> ' + invis + " [style=invis];\n"
 
-        # Dan de eigen root
-        print(self.root.key)            
-
-        # En vervolgens het rechterkind, als aanwezig
-        if self.right is not None:      
-            self.right.print()
+        if self.parent :
+            string += "node" + str(self.parent.root[0].key) + " -> " + root_name + ";\n"
+        return string
