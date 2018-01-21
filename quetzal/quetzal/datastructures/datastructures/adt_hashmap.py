@@ -22,7 +22,7 @@ class _DataNode:
 
 
 class AdtHashMap:
-    def __init__(self, length, collision_type):
+    def __init__(self, length=10, collision_type=2):
         """ Initialises a new hashmap with a certain length and collision type.
 
         :param length: The length of the hashmap.
@@ -246,7 +246,7 @@ class AdtHashMap:
             count += 1
             # Check if the whole list was checked
             if count == self.length:
-                return None
+                raise MemoryError("Hashmap is full!")
             # Make sure to keep looping over the list
             if current_adres >= self.length:
                 current_adres = current_adres % self.length

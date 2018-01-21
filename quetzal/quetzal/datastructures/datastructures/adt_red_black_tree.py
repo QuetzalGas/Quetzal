@@ -1,4 +1,5 @@
 from .adt_iterators import FusedIterator, InorderIterator, PreorderIterator
+from .adt_stack import AdtStack
 
 class Node:
     def __init__(self, key, content):
@@ -508,6 +509,33 @@ class AdtRedBlackTree:
     def __delitem__(self, key):
         self.root.delete(key)
         self.root = self.root.find_root()
+
+    def from_deser(self, preorder, red_nodes):
+        stack = AdtStack()
+
+        self.root = Node(preorder[0], preorder[0])
+        self.root.black = True
+        stack.push(self.root)
+
+        for i in preorder[1:]:
+            temp = None
+
+            while (not stack.is_empty()) and (i > stack.get_top().key):
+                temp = stack.pop_and_return()[0]
+                temp = temp.item
+
+            child = Node(i, i)
+
+            if i not in red_nodes:
+                child.black = True
+
+            if temp is not None:
+                temp.set_right_child(child)
+            else:
+                temp = stack.get_top()
+                temp.set_left_child(child)
+
+            stack.push(child)
 
     def __repr__(self):
         return self.root.dot()
