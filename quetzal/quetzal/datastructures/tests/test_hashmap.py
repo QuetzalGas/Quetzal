@@ -1,8 +1,34 @@
 from quetzal import *
 from unittest import TestCase
 
+
 class TestHashmap(TestCase):
-    # tests voor linear probing
+    # General
+
+    def testRetrieveEmpty(self):
+        hashmap = AdtHashMap(1, 1)
+        try:
+            hashmap[0]
+        except KeyError:
+            self.assertTrue(True)
+
+    def testDeleteEmpty(self):
+        hashmap = AdtHashMap(1, 1)
+        try:
+            del hashmap[0]
+        except KeyError:
+            self.assertTrue(True)
+
+    # Tests for linear probing
+
+    def testLinearProbing(self):
+        hashmap = AdtHashMap(5, 0)
+        hashmap[3] = "test"
+        hashmap[33] = "test2"
+        self.assertEqual(hashmap.lijst[3].search_key, 3)
+        self.assertEqual(hashmap.lijst[4].search_key, 33)
+        hashmap["searchkey"] = "test3"
+        self.assertEqual(hashmap.lijst[0].search_key, "searchkey")
 
     def testLinearProbingFull(self):
         hashmap = AdtHashMap(5, 0)
@@ -13,119 +39,133 @@ class TestHashmap(TestCase):
         hashmap[123] = "test5"
         try:
             hashmap[13] = "test6"
-        except:
+            self.assertTrue(False)
+        except MemoryError:
             self.assertTrue(True)
 
-
-    def testLinearProbing(self):
+    def testGetLP(self):
         hashmap = AdtHashMap(5, 0)
-        hashmap.tableInsert(3, "test")
-        hashmap.tableInsert(33, "test2")
-        self.assertEqual(hashmap.lijst[3].searchKey, 3)
-        hashmap.tableInsert("searchkey", "test2")
-
-    def testRetrieveLP(self):
-        hashmap = AdtHashMap(5, 0)
-        hashmap.tableInsert(4, "test")
-        self.assertEqual(hashmap.tableRetrieve(4).searchKey, 4)
-        self.assertFalse(hashmap.tableRetrieve(5))
+        hashmap[4] = "test"
+        self.assertEqual(hashmap[4], "test")
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
 
     def testDeleteLP(self):
         hashmap = AdtHashMap(5, 0)
-        hashmap.tableInsert(5, "test")
-        self.assertTrue(hashmap.tableDelete(5))
-        self.assertFalse(hashmap.tableRetrieve(5))
-        self.assertTrue(hashmap.isEmpty())
+        hashmap[5] = "test"
+        del hashmap[5]
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
+        self.assertTrue(hashmap.is_empty())
 
-    def testSolveCollisionLP(self):
+    def testContainsLP(self):
         hashmap = AdtHashMap(5, 0)
-        hashmap.tableInsert(3, "test")
-        hashmap.tableInsert(33, "test")
-        hashmap.tableInsert(23, "test")
-        hashmap.tableInsert(88, "test")
-        hashmap.tableInsert(123, "test")
-        self.assertFalse(hashmap.tableInsert(13, "test"))
+        hashmap[3] = "test1"
+        hashmap[33] = "test2"
+        hashmap[23] = "test3"
+        self.assertTrue(3 in hashmap)
+        self.assertTrue(33 in hashmap)
+        self.assertTrue(23 in hashmap)
+        self.assertFalse(56 in hashmap)
 
-    # tests voor quadratic probing
-
-    def testQuadraticProbingFull(self):
-        hashmap = AdtHashMap(5, 1)
-        hashmap.tableInsert(2, "test")
-        hashmap.tableInsert(7, "test")
-        hashmap.tableInsert(5, "test")
-        hashmap.tableInsert(15, "test")
-        hashmap.tableInsert(25, "test")
-        self.assertFalse(hashmap.tableInsert(35, "test"))
+    # Tests for quadratic probing
 
     def testQuadraticProbing(self):
         hashmap = AdtHashMap(5, 1)
-        hashmap.tableInsert(15, "test")
-        hashmap.tableInsert(25, "test")
-        self.assertEqual(hashmap.lijst[0].searchKey, 15)
-        self.assertEqual(hashmap.lijst[1].searchKey, 25)
+        hashmap[15] = "test"
+        hashmap[25] = "test"
+        hashmap[35] = "test"
+        self.assertEqual(hashmap.lijst[0].search_key, 15)
+        self.assertEqual(hashmap.lijst[1].search_key, 25)
+        self.assertEqual(hashmap.lijst[4].search_key, 35)
 
-    def testRetrieveQP(self):
+    def testQuadraticProbingFull(self):
         hashmap = AdtHashMap(5, 1)
-        hashmap.tableInsert(4, "test")
-        self.assertEqual(hashmap.tableRetrieve(4).searchKey, 4)
+        hashmap[2] = "test"
+        hashmap[7] = "test"
+        hashmap[5] = "test"
+        hashmap[15] = "test"
+        hashmap[25] = "test"
+        try:
+            hashmap[35] = "test"
+        except MemoryError:
+            self.assertTrue(True)
+
+    def testGetQP(self):
+        hashmap = AdtHashMap(5, 1)
+        hashmap[4] = "test"
+        self.assertEqual(hashmap[4], "test")
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
 
     def testDeleteQP(self):
         hashmap = AdtHashMap(5, 1)
-        hashmap.tableInsert(5, "test")
-        self.assertTrue(hashmap.tableDelete(5))
-        self.assertFalse(hashmap.tableRetrieve(5))
-        self.assertTrue(hashmap.isEmpty())
+        hashmap[5] = "test"
+        del hashmap[5]
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
+        self.assertTrue(hashmap.is_empty())
 
-    def testSolveCollisionQP(self):
-        hashmap = AdtHashMap(5, 1)
-        hashmap.tableInsert(3, "test")
-        hashmap.tableInsert(33, "test")
-        hashmap.tableInsert(23, "test")
-        self.assertFalse(hashmap.tableInsert(88, "test"))
-        self.assertEqual(hashmap.lijst[2].searchKey, 23)
+    def testContainsQP(self):
+        hashmap = AdtHashMap(5, 0)
+        hashmap[3] = "test1"
+        hashmap[33] = "test2"
+        hashmap[23] = "test3"
+        self.assertTrue(3 in hashmap)
+        self.assertTrue(33 in hashmap)
+        self.assertTrue(23 in hashmap)
+        self.assertFalse(56 in hashmap)
 
-    # tests voor seperate chaining
+    # Tests for separate chaining
 
-    def testSeperateChainingFull(self):
+    def testSeparateChaining(self):
         hashmap = AdtHashMap(5, 2)
-        hashmap.tableInsert(0, "test1")
-        hashmap.tableInsert(0, "test2")
-        hashmap.tableInsert(0, "test3")
-        hashmap.tableInsert(3, "test")
-        hashmap.tableInsert(3, "test1")
-        self.assertTrue(hashmap.tableInsert(3, "test"))
+        hashmap[15] = "test"
+        hashmap[25] = "test"
+        #self.assertEqual(hashmap.lijst[0].)
 
-    def testSeperateChaining(self):
+    def testSeparateChainingFull(self):
         hashmap = AdtHashMap(5, 2)
-        self.assertTrue(hashmap.tableInsert(15, "test"))
-        self.assertTrue(hashmap.tableInsert(25, "test"))
+        hashmap[0] = "test"
+        hashmap[1] = "test"
+        hashmap[2] = "test"
+        hashmap[3] = "test"
+        hashmap[4] = "test"
+        hashmap[5] = "test"
+        hashmap[6] = "test"
+        self.assertTrue(True)
 
-    def testRetrieveSC(self):
+    def testGetSC(self):
         hashmap = AdtHashMap(5, 2)
-        hashmap.tableInsert(4, "test")
-        self.assertEqual(hashmap.tableRetrieve(4).searchKey, 4)
+        hashmap[4] = "test"
+        self.assertEqual(hashmap[4], "test")
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
 
     def testDeleteSC(self):
-        hashmap = AdtHashMap(5, 2)
-        hashmap.tableInsert(5, "test")
-        hashmap.tableDelete(5)
-        self.assertTrue(hashmap.isEmpty())
-
-    def testSolveCollisionSC(self):
-        hashmap = AdtHashMap(5, 2)
-        hashmap.tableInsert(3, "test")
-        hashmap.tableInsert(33, "test")
-        hashmap.tableInsert(23, "test")
-        hashmap.tableInsert(88, "test")
-        hashmap.tableInsert(123, "test")
-        self.assertTrue(hashmap.tableInsert(3, "test"))
-
-    # algemeen
-
-    def testRetrieveEmpty(self):
-        hashmap = AdtHashMap(1, 1)
-        self.assertFalse(hashmap.tableRetrieve(0))
-
-    def testDeleteEmpty(self):
-        hashmap = AdtHashMap(1, 1)
-        self.assertFalse(hashmap.tableDelete(5))
+        hashmap = AdtHashMap(5, 1)
+        hashmap[5] = "test"
+        del hashmap[5]
+        try:
+            hashmap[5]
+        except KeyError:
+            self.assertTrue(True)
+        self.assertTrue(hashmap.is_empty())
+        hashmap[5] = "test"
+        hashmap[15] = "test"
+        hashmap[25] = "test"
+        del hashmap[15]
+        self.assertEqual(hashmap.lijst[0].get_length(), 2)
+        del hashmap[5]
+        del hashmap[25]
+        self.assertTrue(hashmap.is_empty())

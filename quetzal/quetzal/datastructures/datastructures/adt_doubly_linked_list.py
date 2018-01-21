@@ -1,5 +1,11 @@
 class _Node:
     def __init__(self, item, prev, next):
+        """ Creates new node.
+
+        :param item: Item that contains data.
+        :param prev: Previous node.
+        :param next:  Next node.
+        """
         self.item = item
         self.prev = prev
         self.next = next
@@ -7,11 +13,14 @@ class _Node:
 
 class AdtDoublyLinkedList:
     def __init__(self):
+        """
+        Creates a new doubly linked list.
+        """
         self.head = None
         self.tail = None
         self.length = 0
 
-    def destroy_list(self):
+    def __del__(self):
         """
         Destroys the current double linked list.
         """
@@ -20,32 +29,32 @@ class AdtDoublyLinkedList:
         self.length = 0
 
     def is_empty(self):
-        """
-        Checks if a list is empty.
+        """ Checks if a list is empty.
+
         :return: Boolean: If the list is empty or not.
         """
-        return (self.get_length() == 0)
+        return self.length == 0
 
     def get_length(self):
-        """
-        Returns the length of the list
-        :return: Integer
+        """ Returns the length of the list
+
+        :return: The length of the list
         """
         return self.length
 
-    def insert(self, index, new_item):
-        """
-        Inserts a node into a given location.
+    def __setitem__(self, index, new_item):
+        """ Inserts a node into a given location.
+
         :param index: The index to insert into
-        :param newItem: The item to insert
+        :param new_item: The item to insert
         :return: Boolean: If the insertion succeeded
         """
-        if (self.head is None) or (index <= 1):
-            return self.insert_beginning(new_item)
+        if self.head is None or index == 0:
+            return self._insert_beginning(new_item)
         elif index > self.length:
-            return self.insert_end(new_item)
+            return self._insert_end(new_item)
         else:
-            current_node = self.search_node(index - 1)
+            current_node = self._search_node(index - 1)
             new_node = _Node(new_item, current_node, current_node.next)
             # Correct the prev from the node after the new node
             current_node.next.prev = new_node
@@ -54,10 +63,10 @@ class AdtDoublyLinkedList:
             self.length += 1
             return True
 
-    def insert_beginning(self, new_item):
+    def _insert_beginning(self, new_item):
         """
         Inserts a node at the beginning of the list.
-        :param newItem: The item to insert
+        :param new_item: The item to insert
         :return: Boolean: If the insertion succeeded
         """
         new_node = _Node(new_item, None, self.head)
@@ -68,23 +77,23 @@ class AdtDoublyLinkedList:
         self.length += 1
         return True
 
-    def insert_end(self, new_item):
+    def _insert_end(self, new_item):
         """
         Inserts a node at the end of the list.
         :param newItem: The item to insert
         :return: Boolean: If the insertion succeeded
         """
         if self.head is None:
-            return self.insert_beginning(new_item)
+            return self._insert_beginning(new_item)
         else:
-            last_node = self.search_node(self.length)
+            last_node = self._search_node(self.length)
             new_node = _Node(new_item, last_node, None)
             last_node.next = new_node
             self.tail = new_node
             self.length += 1
             return True
 
-    def delete(self, index):
+    def __delitem__(self, key):
         """
         Deletes a node from the list.
         :param index: The index of the node that needs to be removed
@@ -95,7 +104,7 @@ class AdtDoublyLinkedList:
         if index > self.get_length():
             index = self.get_length()
 
-        deleted_node = self.search_node(index)
+        deleted_node = self._search_node(index)
         before_node = deleted_node.prev
         after_node = deleted_node.next
 
@@ -109,7 +118,7 @@ class AdtDoublyLinkedList:
         self.length -= 1
         return True
 
-    def retrieve(self, index):
+    def __getitem__(self, item):
         """
         Deletes a node from the list and returns the data from the node.
         :param index: The index of the node that needs to be retrieved
@@ -121,7 +130,7 @@ class AdtDoublyLinkedList:
         if index > self.get_length():
             index = self.get_length()
 
-        deleted_node = self.search_node(index)
+        deleted_node = self._search_node(index)
         before_node = deleted_node.prev
         after_node = deleted_node.next
 
@@ -135,7 +144,7 @@ class AdtDoublyLinkedList:
         self.length -= 1
         return deleted_node.item, True
 
-    def search_node(self, index):
+    def _search_node(self, index):
         """
         Searches the location of the node just before the given index.
         :param index: The index of the node to search
@@ -150,8 +159,8 @@ class AdtDoublyLinkedList:
 
         return current_node
 
-    def search_item(self, index):
-        result = self.search_node(index)
+    def _search_item(self, index):
+        result = self._search_node(index)
 
         if result is None:
             return None, False
