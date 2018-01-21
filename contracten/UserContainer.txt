@@ -1,0 +1,44 @@
+Note:   TableType is used to refer to either a AdtBinarySearchTree,
+\\AdtTwoThreeTree, AdtTwoThreeFourTree, AdtRedBlacktree or Hashmap.
+
+Class UserContainer
+\\A class that enables the users to be stored either in a AdtBinarySearchTree,
+\\AdtTwoThreeTree, AdtTwoThreeFourTree, AdtRedBlacktree or Hashmap.
+
+    *idcounter:Integer
+    \\A that increases by one each time a new user is added.
+    \\This number is used as a new user's id.
+    *table:[BST,23,234,RB-tree or hashmap]
+    \\The table that contains the users.
+
++__init__(in table:TableType)
+\\Initialises a new userContainer.
+\\PRE Table is a table of type AdtBinarySearchTree, AdtTwoThreeTree,
+\\    AdtTwoThreeFourTree, AdtRedBlacktree or Hashmap.
+\\POST A new userContainer is created, containing an empty table and a idcounter
+\\     set at 0.
+
++add_if_unknown_user(in firstname:String, in lastname:String, in email:String)
+\\Checks whether a user with the given 'email' is already present in the table.
+\\If not, a new user is added to the table with the given 'firstname', 'lastname'
+\\and 'email'.
+\\PRE Firstname, lastname and email must be strings.
+\\POST A new user is created in case there wasn't yet a user with the given email.
+\\     If there was already such a user, the table is not adjusted.
+
++add_new_user(in user:User)
+\\Adds a new user to the table.
+\\PRE 'User' must be of type User.
+\\POST If user is of type User, it is added to the table.
+\\     If not, an exception is raised.
+
++retrieve_user(in email:String) {query}
+\\Retrieves a user with the given 'email'.
+\\PRE Email is a string.
+\\POST If a user with the given 'email' is present in the table, it is returned
+\\     together with a boolean True. If not, False and None is returned.
+
++is_empty() {query}
+\\Checks whether the table is empty.
+\\PRE None
+\\POST True if the table is empty, False otherwise.

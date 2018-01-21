@@ -1,0 +1,36 @@
+Class User
+\\A customer of the chocolade bar.
+
+    *firstname:string
+    \\The user's firstname.
+    *lastname:string
+    \\The user's lastname.
+    *email:string
+    \\The user's email.
+    *id:integer
+    \\The user's id.
+
++__init__(in id:Integer, in firstname:String, in lastname:String, in email:String)
+\\Initialises a new customer/user.
+\\PRE Id must be an integer, firstname, lastname and email must be strings.
+\\POST A new user is created, with it's data.
+
++get_id(out id:Integer) {query}
+\\Returns the id of the user.
+\\PRE None
+\\POST Id is the id of the user.
+
++get_firstname(out firstname:String) {query}
+\\Returns the firstname of the user.
+\\PRE None
+\\POST Firstname is the firstname of the user.
+
++get_lastname(out firstname:String) {query}
+\\Returns the lastname of the user.
+\\PRE None
+\\POST Lastname is the lastname of the user.
+
++get_email(out lastname:String) {query}
+\\Returns the email of the user.
+\\PRE None
+\\POST Email is the email of the user.
