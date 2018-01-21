@@ -206,7 +206,7 @@ class Quetzal:
         for i in self.new_orders:
             self.order_queue.enqueue(i)
 
-        self.order_queue = self.employees.start(self.order_queue)
+        self.order_queue = self.employees.start(self.order_queue)[0]
         state = self.get_state()
         self.history.append(state)
         self.timestep += 1

@@ -1,0 +1,63 @@
+class EmployeePresent
+\\Contains all functions that process the orders per timestep
+
+	*employees_working:List
+	\\A list of all the employees that are working
+    *stack:Stack
+    \\Stack with all the employees that are available
+    *handled_orders:List
+    \\List with all the order that were processed in that timestep
+    *employees_present:List
+    \\A list of all the employees that are present in the bar
+    *order_queue:Queue
+    \\Queue of the incoming orders
+
++_init_()
+\\Initialises a new  order handling system.
+\\PRE: None
+\\POST: A new system is initialised.
+
++_del_()
+\\Deletes the system.
+\\PRE: None
+\\POST: The object will be destroyed.
+
++add_employee(in employee:Employee)
+\\Registers an employee for the work day.
+\\PRE: Employee has to be of the employee class.
+\\POST: Employee will be on the stack and available to handle orders.
+
++start(in queue:Queue, out reserve:Queue, out handled_orders:List)
+\\Begin processing the queue with orders.
+\\PRE: Queue has to contain valid orders (from order class) that are not yet processed.
+\\POST: The first order will get processed if there are employees available.
+
++assign_order(in order:Order)
+\\Assigns an order to one of the employees.
+\\PRE: None
+\\POST: The employee that was added last on the stack now has an order to process.
+
++process_and_done()
+\\Processes the orders and checks which employees are done.
+\\PRE: None
+\\POST: Every order gets processed for one timestep and employees that are finished are back on the stack.
+
++make_data_lists()  {query}
+\\Makes a list with all the workload of all the employees on the stack.
+\\PRE: None
+\\POST: Stack_list has a list with all the working employees.
+
++get_remaining_workload(in id_:Integer, out credits:Integer)  {query}
+\\Searches for the remaining workload of an employee.
+\\PRE: id_ has to be a valid employee id.
+\\POST: Credits contains the workload of the employee with the given id or None if the id doesn't match.
+
++get_employee_name(in id_:Integer, out name:String)  {query}
+\\Searches for the name of an employee.
+\\PRE: id_ has to be a valid employee id.
+\\POST: Name will be the full name of the employee if an employee with that id exists. Otherwise it will be None.
+
++get_waiting_orders(out queuelist:List)  {query}
+\\Makes a list with all the orders that are still waiting to be processed.
+\\PRE: None
+\\POST: Queuelist will contain either None if the queue is empty or a list with all the orders that are waiting to be processed.
