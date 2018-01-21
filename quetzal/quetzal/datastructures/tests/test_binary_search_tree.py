@@ -1,5 +1,5 @@
-from unittest import TestCase
-from ..datastructures import *
+﻿from unittest import TestCase
+from datastructures import *
 import random
 from datetime import datetime
 
@@ -7,82 +7,138 @@ class TestBsTree(TestCase):
     def test_empty(self):
         tree = AdtBinarySearchTree()
         self.assertTrue(tree.is_empty())
-        tree.__setitem__(5, "5")
+        tree[5] = "5"
         self.assertFalse(tree.is_empty())
-        tree.__setitem__(8, "8")
+        tree[8] = "8"
         self.assertFalse(tree.is_empty())
 
     def test_retrieve(self):
         tree = AdtBinarySearchTree()
-        tree.__setitem__(3, "3")
-        tree.__setitem__(9, "9")
-        tree.__setitem__(3, "3")
-        tree.__setitem__(3, "3")
-        tree.__setitem__(5, "5")
-        tree.__setitem__(6, "6")
-        tree.__setitem__(12, "12")
-        tree.__setitem__(14, "14")
+        tree[3] = "3"
+        tree[9] = "9"
+        tree[3] = "3"
+        tree[3] = "3"
+        tree[5] = "5"
+        tree[6] = "6"
+        tree[12] = "12"
+        tree[14] = "14"
 
-        # keys's present in tree
-        self.assertTrue(tree.__contains__(3))
-        self.assertTrue(tree.__contains__(5))
-        self.assertTrue(tree.__contains__(12))
-        self.assertTrue(tree.__contains__(14))
-        self.assertTrue(tree.__contains__(9))
-        self.assertTrue(tree.__contains__(6))
+        # keys present in tree
+        self.assertTrue(3 in tree)
+        self.assertTrue(9 in tree)
+        self.assertTrue(5 in tree)
+        self.assertTrue(6 in tree)
+        self.assertTrue(12 in tree)
+        self.assertTrue(14 in tree)
 
-        self.assertEqual(3,tree.__getitem__(3)[1].key)
-        self.assertEqual(5,tree.__getitem__(5)[1].key)
-        self.assertEqual(12,tree.__getitem__(12)[1].key)
-        self.assertEqual(14,tree.__getitem__(14)[1].key)
-        self.assertEqual(9,tree.__getitem__(9)[1].key)
-        self.assertEqual(6,tree.__getitem__(6)[1].key)
+        # keys not present in tree
+        self.assertFalse(8 in tree)
+        self.assertFalse(10 in tree)
+        self.assertFalse(17 in tree)
+        self.assertFalse(55 in tree)
+        self.assertFalse(0 in tree)
+        self.assertFalse(4 in tree)
 
-        # key's present not in e
-        self.assertFalse(tree.__contains__(8))
-        self.assertFalse(tree.__contains__(10))
-        self.assertFalse(tree.__contains__(17))
-        self.assertFalse(tree.__contains__(55))
-        self.assertFalse(tree.__contains__(0))
-        self.assertFalse(tree.__contains__(4))
+    def test_delete(self):
+        tree = AdtBinarySearchTree()
+        tree[1] = "1"
+        tree[2] = "2"
+        tree[28] = "28"
+        tree[0] = "0"
+        tree[19] = "19"
+        tree[11] = "11"
 
-def genereer_bst(aantal):
-    """
-    Deze functie maakt een boom aan met 'aantal' TreeItems.
-    :param aantal: geeft het aantal TreeItems.
+        self.assertTrue(1 in tree)
+        del tree[1]
+        self.assertFalse(1 in tree)
+        self.assertTrue(28 in tree)
+        del tree[28]
+        self.assertFalse(28 in tree)
+        self.assertTrue(11 in tree)
+        del tree[11]
+        self.assertFalse(11 in tree)
+
+    def test_duplicate(self):
+        tree = AdtBinarySearchTree()
+        tree[5] = "5.1"
+        tree[6] = "6.1"
+        tree[5] = "5.2"
+        tree[5] = "5.3"
+        tree[2] = "2.1"
+        tree[2] = "2.2"
+
+        self.assertEqual(tree[5], "5.1")
+        self.assertEqual(tree[6], "6.1")
+        del tree[5]
+        self.assertEqual(tree[5], "5.2")
+        del tree[5]
+        self.assertEqual(tree[5], "5.3")
+        self.assertEqual(tree[2], "2.1")
+        del tree[2]
+        self.assertEqual(tree[2], "2.2")
+        del tree[2]
+        self.assertIsNone(tree[2])
+
+    def test_fuzzing(self, aantal=200):
+        tree = AdtBinarySearchTree()
+        lijst = genereer(tree, aantal)
+        for i in range(int(aantal/4)):
+            random.seed(datetime.now())
+            randomInLijst = random.randint(0, len(lijst) - 1)
+            key = lijst[randomInLijst]
+            self.assertTrue(key in tree)
+            del tree[key]
+            self.assertFalse(key in tree)
+            del lijst[randomInLijst]
+
+        raised = False
+        try:
+            tree2 = AdtBinarySearchTree()
+            genereer(tree2, 200)
+            removing(tree2, 200)
+        except:
+            raised = True
+        self.assertFalse(raised)
+
+
+def genereer(tree, N):
+    """ Inserts 90% of numbers from zero to N in the given tree.
+
+    :param N: Number of items that should be inserted in the tree.
+    :param tree: The tree in which the items will be inserted.
     :return: geeft een TwoThreeTree terug.
     """
+    lijstMetTreeItems = []
+    secondLijst = []
+    for i in range(N):
+        lijstMetTreeItems.append(i)       
+    size = N                                           
+    for i in range(int(N*(9/10))):
+        random.seed(datetime.now())
+        randomInLijst = random.randint(0, N - 1)
+        item = lijstMetTreeItems[randomInLijst]
+        secondLijst.append(item)
+        del lijstMetTreeItems[randomInLijst]
+        tree[item] = str(item)
+        N -= 1
 
-    lijstCijfers = list()
-    for i in range(aantal):
-        lijstCijfers.append(i)       # Invoegen TreeItems met zoeksleutel 'i' en item de string van 'i'
-    tree = AdtBinarySearchTree()
-    size = aantal                                           # Bepaalt hoe veel keer de loop wordt gedaan
-    for i in range(size+(int(size/2))):
-        random.seed(datetime.now())                         # Om ervoor te zorgen dat de seed steeds veranderd naargelang de tijd
-        randomInLijst = random.randint(0, aantal - 1)       # RandomInLijst is de index voor de lijst die random werd gekozen
-        item = lijstCijfers[randomInLijst]                  # item is nu het TreeItem dat op de random index in LijstMetTreeItems zat
-        tree.__setitem__(item, str(item))                        # Het TreeItems plaatsen in de boom
-    tree.__repr__()
-    return tree
+    return secondLijst
 
-def removing_bst(tree, aantal):
+def removing(tree, N):
+    """ Deletes all items but one from the tree. During this deletion the dot-string method is called. This way the
+    structure of the tree is checked.
+
+    :param tree:    The tree from which the elements will be deleted.
+    :param N:  The number of items in this tree.
     """
-    Verwijderd alle TreeItems, behalve 1 uit de boom. Er wordt 1 overgelaten om te checken of alles zeker oké is.
-    :param tree:    De 23-boom waarvan men de TreeItems gaat verwijderen.
-    :param aantal:  Het aantal items in de 'tree'.
-    """
-    # Een lijst wordt aangemaakt met hierin: 1,2,...,aantal
     lijstMetKeys = list()
-    for i in range(aantal):
+    for i in range(N):
         lijstMetKeys.append(i)
 
-    while not tree._no_children():
+    while not tree._no_children() and not len(lijstMetKeys) == 0:
         random.seed(datetime.now())
-        randomInLijst = random.randint(0, aantal - 1)
+        randomInLijst = random.randint(0, len(lijstMetKeys) - 1)
         key = lijstMetKeys[randomInLijst]
-        tree.__delitem__(key)
-        tree.__repr__()
-
-a = genereer_bst(200)
-removing_bst(a, 200)
+        del tree[key]
+        del lijstMetKeys[randomInLijst]
+        repr(tree)     # extra check of the "relationship" between children and parent (and vice versa)

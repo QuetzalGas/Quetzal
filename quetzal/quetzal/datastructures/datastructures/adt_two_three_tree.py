@@ -36,7 +36,7 @@ class AdtTwoThreeTree:
         return len(self.root) == 0
 
     def _compare_and_put_in_place(self, newItem):
-        """ Compares newItem with the key's of the root-nodes and puts it in the correct position.
+        """ Compares newItem with the keys of the root-nodes and puts it in the correct position.
 
         :param newItem: Item to be inserted in the root.
         :return: A value representing the place of the insertion. This value is used inside the _split() method.
@@ -187,6 +187,15 @@ class AdtTwoThreeTree:
         """ Searches for the given 'key' inside the whole tree.
 
         :param key: The searchkey of which a node is searched.
+        :return: None if there is no node with the searchkey == 'key', node-item otherwise.
+        :raise: If the given 'key' is of incorrect type or the tree is empty, an exception is raised.
+        """
+        return self._retrieve(key)[1]
+
+    def _retrieve(self, key):
+        """ Searches for the given 'key' inside the whole tree.
+
+        :param key: The searchkey of which a node is searched.
         :return: (False, None) if there is no node with the searchkey == 'key', (True, node) otherwise.
         :raise: If the given 'key' is of incorrect type or the tree is empty, an exception is raised.
         """
@@ -202,7 +211,7 @@ class AdtTwoThreeTree:
             # Looping over the root-nodes to check if any of them have a searchkey equal to the given key.
             for nodes in current.root:
                 if nodes.key == key:
-                    return True, current.root[counter]
+                    return True, current.root[counter].item
             # If it's not found, then there must be checked if we can look any further in the subtrees or not.
             if current._no_children():
                 return False, None
@@ -216,12 +225,12 @@ class AdtTwoThreeTree:
                 current = current.children[1]
 
     def __contains__(self, key):
-        """ Does the action of the __getitem__(key), but only return a boolean.
+        """ Does the action of the _retrieve(key), but only returns a boolean.
 
         :param key: The searchkey of which a node is searched.
         :return: True if there is a node with searchkey == 'key', false otherwise.
         """
-        return self.__getitem__(key)[0]
+        return self._retrieve(key)[0]
 
     def _fix(self):
         """ Excecutes the fix algorithm, which means merging the (correct) parent's root-node with the 2-node neighbour
@@ -324,8 +333,8 @@ class AdtTwoThreeTree:
             current.root[counter] = current.root[counter].next
             return True
 
-        # Only item in tree, so just set the root to an emty list
-        if current.is_empty():
+        # Only item in tree, so just set the root to an empty list
+        if current._no_children() and current.parent is None:
             self.root = []
             return True
 
