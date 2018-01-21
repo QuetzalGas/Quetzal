@@ -2,3 +2,7 @@ __pycache__
 *.tar
 *.tar.gz
 .idea
+.dot
+.png
+.html
+test_output

@@ -473,12 +473,12 @@ class TestRbTree(TestCase):
     def write_dot_and_execute(self, rb, filename):
         self.write_file(rb, filename + '.dot')
 
-        directory = 'tests/test_red_black_tree_output'
+        directory = 'tests/test_output/red_black_tree'
         filename = directory + '/' + filename
         os.system('dot -Tpng {} -o {}'.format(filename + '.dot', filename + '.png'))
 
     def write_file(self, rb, filename):
-        directory = 'tests/test_red_black_tree_output'
+        directory = 'tests/test_output/red_black_tree'
         with open(directory + '/' + filename, 'w') as of:
             of.write('digraph rb {\n')
             of.write('  node[shape = record];\n')
@@ -489,13 +489,13 @@ class TestRbTree(TestCase):
             of.write('}')
 
     def create_directory(self, directory):
-        root = 'tests/test_red_black_tree_output'
+        root = 'tests/test_output/red_black_tree'
         if not os.path.exists(root + '/' + directory):
             os.makedirs(root + '/' + directory)
 
     @classmethod
     def setUpClass(cls):
-        root = 'tests/test_red_black_tree_output'
+        root = 'tests/test_output/red_black_tree'
 
         if os.path.exists(root):
             shutil.rmtree(root)
