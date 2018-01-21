@@ -1,13 +1,17 @@
+import random
+from datetime import datetime
+
 class _TreeItem:
     def __init__(self, key, item):
-        self.item = item
+        if item is None:
+            self.item = None
+        else:
+            self.item = [item]
         self.key = key
 
 class AdtBinarySearchTree:
     def __init__(self, root=None):
-        self.root = []
-        if not root is None:
-            self.root.append(root)
+        self.root = root
         self.left = None
         self.right = None
         self.parent = None
@@ -32,7 +36,7 @@ class AdtBinarySearchTree:
 
         :return: True if the root is empty, False otherwise.
         """
-        return len(self.root) == 0
+        return self.root is None
 
     def __setitem__(self, key, item):
         """ Interface to insert a treeElement with 'key' as searchkey and 'item' as content.
@@ -42,7 +46,7 @@ class AdtBinarySearchTree:
         :raise: If key or item is of incorrect type, an exception is raised.
         """
         if not self.is_empty():
-            if not isinstance(key, type(self.root[0].key)) or not isinstance(item, type(self.root[0].item)):
+            if not isinstance(key, type(self.root.key)) or not isinstance(item, type(self.root.item[0])):
                 raise TypeError("Unable to set item: key and.or item of incorrect type!")
 
         self._search_tree_insert(_TreeItem(key, item))
@@ -54,21 +58,21 @@ class AdtBinarySearchTree:
         """
         # If the tree is completely empty, item must be added to it's root.
         if self.is_empty() and self.parent is None:
-            self.root.append(item)
+            self.root = item
             return
 
         # If here, item's key must be compared to the root's keys. Depending on the result:
         # * a new BST must be made for the item.
         # * the search must continue in one of the children.
         # * the item must be added to the root (same searchkey).
-        if item.key < self.root[0].key:
+        if item.key < self.root.key:
             if self.left is None:
                 self.left = AdtBinarySearchTree(item)
                 self.left.parent = self
                 return
             else:
                 return self.left._search_tree_insert(item)
-        elif item.key > self.root[0].key:
+        elif item.key > self.root.key:
             if self.right is None:
                 self.right = AdtBinarySearchTree(item)
                 self.right.parent = self
@@ -76,8 +80,8 @@ class AdtBinarySearchTree:
             else:
                 return self.right._search_tree_insert(item)
 
-        if item.key == self.root[0].key:
-            self.root.append(item)
+        if item.key == self.root.key:
+            self.root.item.append(item.item[0])
             return
 
     def __getitem__(self, key):
@@ -88,13 +92,13 @@ class AdtBinarySearchTree:
         :raise : If key is of incorrect type, an exception is raised.
         """
         if not self.is_empty():
-            if not isinstance(key, type(self.root[0].key)):
+            if not isinstance(key, type(self.root.key)):
                 raise TypeError("Unable to get item: key of incorrect type!")
 
         subtree = self._retrieve(key)[1]
         if subtree is None:
-            return False, None
-        return True, subtree.root[0]
+            return None
+        return subtree.root.item[0]
 
     def __contains__(self, key):
         """ Interface to the actual _retrieve() method. This method returns a bool.
@@ -111,15 +115,15 @@ class AdtBinarySearchTree:
         :raise: If the given 'key' is of incorrect type, an exception is raised.
         :return: (False, None) if there is no node with the searchkey == 'key', (True, subtree) otherwise.
         """
-        if len(self.root) == 0 and (self.parent is None):       # if the whole tree is empty, false is returned
+        if self.root is None and (self.parent is None):       # if the whole tree is empty, false is returned
             return (False, None)
         # If here, the key is compared to the key of the root. If they are not equal and the tree has children/a child,
         # the search will continue in a child.
-        if key < self.root[0].key and self.left is not None:
+        if key < self.root.key and self.left is not None:
             return self.left._retrieve(key)
-        elif key > self.root[0].key and self.right is not None:
+        elif key > self.root.key and self.right is not None:
             return self.right._retrieve(key)
-        if key == self.root[0].key:
+        if key == self.root.key:
             return (True, self)
         else:
             return (False, None)
@@ -159,7 +163,7 @@ class AdtBinarySearchTree:
             self.right = self.left.right
             self.left = self.left.left
         # If there are two children, swap places with the inorder successor and carry this function out on that subtree.
-        if self.left and self.right:
+        elif self.left and self.right:
             inorderSucc = self._inorder_successor(self.right)
             self.root = inorderSucc.root
             inorderSucc._act_remove()
@@ -177,15 +181,15 @@ class AdtBinarySearchTree:
         :return: True if there was a node with searchkey == 'key', False otherwise.
         """
         if not self.is_empty():
-            if not isinstance(key, type(self.root[0].key)):
+            if not isinstance(key, type(self.root.key)):
                 raise TypeError("Unable to delete item: key of incorrect type!")
 
         (bool, subtree) = self._retrieve(key)
 
         if bool is False:           # There is no node with the given key.
             return False
-        if len(subtree.root) > 1:   # If there are multiple items with the given searchkey
-            subtree.root.pop()
+        if len(subtree.root.item) > 1:   # If there are multiple items with the given searchkey
+            del subtree.root.item[0]
             return True
         else:
             return subtree._act_remove()
@@ -209,11 +213,11 @@ class AdtBinarySearchTree:
 
         :return: A string containing all information of the nodes and the edges.
         """
-        root_name = "node" + str(self.root[0].key)
+        root_name = "node" + str(self.root.key)
         string = root_name + ' [label="'
-        size_root = len(self.root)
+        size_root = len(self.root.item)
         for i in range(0, size_root):
-            string += self.root[i].item
+            string += self.root.item[i]
             if i < size_root-1:
                 string += ", "
         string += '"];\n'
@@ -222,16 +226,16 @@ class AdtBinarySearchTree:
             string += self.left._get_string()
             string += self.right._get_string()
         if not self.left and self.right:
-            invis = "inv" + str(self.root[0].key) + "left"
+            invis = "inv" + str(self.root.key) + "left"
             string += invis + ' [style="invisible"];\n'
             string += root_name + ' -> ' + invis + " [style=invis];\n"
             string += self.right._get_string()
         if not self.right and self.left:
+            string += self.left._get_string()
             self.left._get_string()
-            invis = "inv" + str(self.root[0].key) + "right"
+            invis = "inv" + str(self.root.key) + "right"
             string += invis + ' [style="invisible"];\n'
             string += root_name + ' -> ' + invis + " [style=invis];\n"
-
-        if self.parent :
-            string += "node" + str(self.parent.root[0].key) + " -> " + root_name + ";\n"
+        if self.parent:
+            string += "node" + str(self.parent.root.key) + " -> " + root_name + ";\n"
         return string
