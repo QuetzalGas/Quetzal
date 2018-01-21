@@ -208,22 +208,28 @@ class Node:
 
         return previous
 
+    def find_root(self):
+        root = self
+
+        while root.parent is not None:
+            root = root.parent
+
+        return root
+
+
     def split(self):
         """ Split four nodes
-        :return: the new root of the subtree.
         """
         if not self.is_four_node_root():
-            return self
+            return
 
         if self.parent is None:
             # Root
             self.flip_color()
             self.black = True
-            return self
         else:
             if self.parent.is_two_node():
                 self.flip_color()
-                return self
             else:
                 # 3-node parent
                 if self.is_left_child():
@@ -294,12 +300,9 @@ class Node:
     def insert(self, key, content):
         self._insert(key, content)
 
-        root = self
-
-        while root.parent is not None:
-            root = root.parent
-
+        root = self.find_root()
         root.black = True
+
         return root
 
     def _insert(self, key, content):
@@ -317,7 +320,6 @@ class Node:
         right = self.right
         self.split()
 
-        # TODO: first split, or check key first?
         if key == self.key:
             self.content.append(content)
         elif key > self.key:
@@ -374,6 +376,15 @@ class Node:
                 return
 
             # Three node
+
+    def _combine_parent_two_node(self):
+        pass
+
+    def _combine_parent_three_node(self):
+        pass
+
+    def _combine_parent_four_node(self):
+        pass
 
     def delete(self, key):
         self.combine()
@@ -487,19 +498,19 @@ class AdtRedBlackTree:
         self.root = Node(None, None)
         self.root.black = True
 
-    def insert(self, key, content=None):
-        if content is None:
-            self.root = self.root.insert(key, key)
-        else:
-            self.root = self.root.insert(key, content)
+    def __getitem__(self, key):
+        raise KeyError
 
+    def __setitem__(self, key, value):
+        self.root = self.root.insert(key, value)
         self.root.black = True
 
-    def delete(self, key):
+    def __delitem__(self, key):
         self.root.delete(key)
+        self.root = self.root.find_root()
 
-        while self.root.parent is not None:
-            self.root = self.root.parent
+    def __repr__(self):
+        return self.root.dot()
 
     def dot(self, filename, label):
         with open(filename, 'w') as of:
@@ -511,73 +522,11 @@ class AdtRedBlackTree:
             of.write('  label="{}";\n'.format(label))
             of.write('}')
 
+    def __iter__(self):
+        return self.iter_inorder()
+
     def iter_inorder(self):
         return InorderIterator(self.root)
 
     def iter_preorder(self):
         return PreorderIterator(self.root)
-
-
-
-def b2():
-    M = standard()
-
-    e = Node("e")
-    P = Node("P")
-    P.set_right_child(e)
-    P.set_left_child(M)
-
-    return P
-
-def b4():
-    M = standard()
-
-    e = Node("e")
-    f = Node("f")
-    P = Node("P")
-    P.set_right_child(e)
-    P.set_left_child(M)
-    P.black = False
-    Q = Node("Q")
-    Q.set_left_child(P)
-    Q.set_right_child(f)
-
-    return Q
-
-
-def b6():
-    M = standard(3)
-
-    P = Node(2, "P")
-    P.black = True
-    x = Node(1, 'x')
-    x.black = True
-    P.set_left_child(x)
-
-    Q = Node(10, "Q")
-    f = Node(11, 'f')
-    f.black = True
-    Q.set_right_child(f)
-    Q.set_left_child(M)
-    P.set_right_child(Q)
-
-    return P
-
-def insert():
-    R = Node(60, 60)
-    R.black = True
-    R = R.insert(30, 30)
-    R = R.insert(10, 10)
-    R = R.insert(20, 20)
-    R = R.insert(50, 50)
-    R = R.insert(40, 40)
-    R = R.insert(70, 70)
-    R = R.insert(80, 80)
-    R = R.insert(15, 15)
-    R = R.insert(90, 90)
-    R = R.insert(100, 100)
-
-    print_rb(R, "R.dot")
-
-
-# insert()
