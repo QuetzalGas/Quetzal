@@ -23,7 +23,7 @@ class TestBsTree(TestCase):
         tree[12] = "12"
         tree[14] = "14"
 
-        # keys's present in tree
+        # keys present in tree
         self.assertTrue(3 in tree)
         self.assertTrue(9 in tree)
         self.assertTrue(5 in tree)
@@ -31,7 +31,7 @@ class TestBsTree(TestCase):
         self.assertTrue(12 in tree)
         self.assertTrue(14 in tree)
 
-        # key's present not in tree
+        # keys not present in tree
         self.assertFalse(8 in tree)
         self.assertFalse(10 in tree)
         self.assertFalse(17 in tree)
@@ -104,15 +104,16 @@ class TestBsTree(TestCase):
 def genereer(tree, N):
     """ Inserts 90% of numbers from zero to N in the given tree.
 
-    :param aantal: geeft het aantal TreeItems.
+    :param N: Number of items that should be inserted in the tree.
+    :param tree: The tree in which the items will be inserted.
     :return: geeft een TwoThreeTree terug.
     """
     lijstMetTreeItems = []
     secondLijst = []
     for i in range(N):
-        lijstMetTreeItems.append(i)       # Invoegen TreeItems met zoeksleutel 'i' en item de string van 'i'
-    size = N                                           # Bepaalt hoe veel keer de loop wordt gedaan
-    for i in range(N):
+        lijstMetTreeItems.append(i)       
+    size = N                                           
+    for i in range(int(N*(9/10))):
         random.seed(datetime.now())
         randomInLijst = random.randint(0, N - 1)
         item = lijstMetTreeItems[randomInLijst]
@@ -123,15 +124,15 @@ def genereer(tree, N):
 
     return secondLijst
 
-def removing(tree, aantal):
+def removing(tree, N):
+    """ Deletes all items but one from the tree. During this deletion the dot-string method is called. This way the
+    structure of the tree is checked.
+
+    :param tree:    The tree from which the elements will be deleted.
+    :param N:  The number of items in this tree.
     """
-    Verwijderd alle TreeItems, behalve 1 uit de boom. Er wordt 1 overgelaten om te checken of alles zeker oké is.
-    :param tree:    De 23-boom waarvan men de TreeItems gaat verwijderen.
-    :param aantal:  Het aantal items in de 'tree'.
-    """
-    # Een lijst wordt aangemaakt met hierin: 1,2,...,aantal
     lijstMetKeys = list()
-    for i in range(aantal):
+    for i in range(N):
         lijstMetKeys.append(i)
 
     while not tree._no_children() and not len(lijstMetKeys) == 0:
