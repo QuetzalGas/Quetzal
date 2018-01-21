@@ -89,7 +89,7 @@ class AdtHashMap:
         new_node = _DataNode(search_key, data)
         # Collision can't occur with separate chaining
         if self.collision_type == SEPARATE_CHAINING:
-            self.lijst[adres].insertBeginning(new_node)
+            self.lijst[adres][0] = new_node
         else:
             # Check if a collision occurs
             if self.lijst[adres] != "":
@@ -119,6 +119,12 @@ class AdtHashMap:
         """
         if self.is_empty():
             raise KeyError("Hashmap is empty!")
+        if self.collision_type == SEPARATE_CHAINING:
+            datanode = self._seperate_chaining_search(search_key)
+            if datanode is None:
+                raise KeyError
+            else:
+                return datanode.data
         pos = self._find(search_key)
         if pos is None:
             raise KeyError("Hashmap does not contain given search key!")
@@ -133,6 +139,10 @@ class AdtHashMap:
         """
         if self.is_empty():
             raise KeyError("Hashmap is empty!")
+        if self.collision_type == SEPARATE_CHAINING:
+            # Exception is raised in function itself if key is not in map
+            self._separate_chaining_delete(search_key)
+            return
         pos = self._find(search_key)
         if pos is None:
             raise KeyError("Hashmap does not contain given search key!")
@@ -145,7 +155,10 @@ class AdtHashMap:
         :param search_key: Key from the node that has to be found.
         :return: True if the searchkey is in the map, false otherwise.
         """
-        pos = self._find(search_key)
+        if self.collision_type == SEPARATE_CHAINING:
+            pos = self._seperate_chaining_search(search_key)
+        else:
+            pos = self._find(search_key)
         if pos is None:
             return False
         else:
@@ -158,9 +171,7 @@ class AdtHashMap:
         :return: The position of the data or None
         """
         adres = self._calculate_address(search_key)
-        if self.collision_type == SEPARATE_CHAINING:
-            pos = self._seperate_chaining_search(adres, search_key)
-        elif self.collision_type == LINEAR_PROBING:
+        if self.collision_type == LINEAR_PROBING:
             pos = self._linear_probing_search(adres, search_key)
         else:
             pos = self._quadratic_probing_search(adres, search_key)
@@ -275,39 +286,30 @@ class AdtHashMap:
             if current_address >= self.length:
                 current_address = current_address % self.length
 
-    def _seperate_chaining(self, adres, data, delete):
-        """ Solve a collision with separate chaining.
+    def _separate_chaining_delete(self, search_key):
+        """ Deletes a node in the table.
 
-        :param adres: Address that caused collision.
-        :param data: The item to be inserted.
-        :param delete: Indicates if the algorithm has to delete or not.
-        :return: Indicates whether the collision was solved or the item found. True if it was,
-        false if it couldn't solve the collision.
+        :param search_key: The key of the node that needs to be deleted
+        :raise KeyError if the key does not occur in the list
         """
-        if search:
-            table = self.lijst[adres]
-            length = table.get_length()
-            current_link = table.head
-            counter = 0
-            while counter != length:
-                if current_link.item.search_key == data:
-                    if delete:
-                        table.delete(counter)
-                    else:
-                        return current_link.item
-                else:
-                    current_link = current_link.next
-                    counter += 1
-            return False
-        else:
-            self.lijst[adres].insert_beginning(data)
-            return True
+        adres = self._calculate_address(search_key)
+        double_list = self.lijst[adres]
+        for i in range(len(double_list)):
+            if double_list[i].search_key == search_key:
+                del double_list[i]
+                return
+        raise KeyError
 
-    def _seperate_chaining_search(self, adres, key):
-        """
+    def _seperate_chaining_search(self, key):
+        """ Searches for an element in the hashmap.
 
-        :param adres:
-        :param key:
-        :return:
+        :param key: The searchkey of the element to find.
+        :return: True if the element is in the map, false otherwise.
         """
-        pass
+        adres = self._calculate_address(key)
+        double_list = self.lijst[adres]
+        for i in range(len(double_list)):
+            if double_list[i].search_key == key:
+                return double_list[i]
+        return None
+

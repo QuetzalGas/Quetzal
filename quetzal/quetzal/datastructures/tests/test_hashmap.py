@@ -1,4 +1,4 @@
-from quetzal import *
+from datastructures import *
 from unittest import TestCase
 
 
@@ -135,12 +135,6 @@ class TestHashmap(TestCase):
 
     def testSeparateChaining(self):
         hashmap = AdtHashMap(5, 2)
-        hashmap[15] = "test"
-        hashmap[25] = "test"
-        #self.assertEqual(hashmap.lijst[0].)
-
-    def testSeparateChainingFull(self):
-        hashmap = AdtHashMap(5, 2)
         hashmap[0] = "test"
         hashmap[1] = "test"
         hashmap[2] = "test"
@@ -154,27 +148,34 @@ class TestHashmap(TestCase):
         hashmap = AdtHashMap(5, 2)
         hashmap[4] = "test"
         self.assertEqual(hashmap[4], "test")
-        try:
+        with self.assertRaises(KeyError):
             test = hashmap[5]
-            self.assertTrue(False)
-        except KeyError:
-            self.assertTrue(True)
 
     def testDeleteSC(self):
-        hashmap = AdtHashMap(5, 1)
+        hashmap = AdtHashMap(5, 2)
         hashmap[5] = "test"
         del hashmap[5]
-        try:
+        with self.assertRaises(KeyError):
             test = hashmap[5]
-            self.assertTrue(False)
-        except KeyError:
-            self.assertTrue(True)
         self.assertTrue(hashmap.is_empty())
-        hashmap[5] = "test"
-        hashmap[15] = "test"
-        hashmap[25] = "test"
+        hashmap[5] = "test1"
+        hashmap[15] = "test2"
+        hashmap[25] = "test3"
         del hashmap[15]
-        self.assertEqual(hashmap.lijst[0].get_length(), 2)
+        self.assertEqual(len(hashmap.lijst[0]), 2)
         del hashmap[5]
         del hashmap[25]
         self.assertTrue(hashmap.is_empty())
+
+    def testContainsSc(self):
+        hashmap = AdtHashMap(5, 2)
+        hashmap[0] = "test0"
+        hashmap[1] = "test1"
+        hashmap[5] = "test2"
+        hashmap[15] = "test3"
+        hashmap[25] = "test4"
+        self.assertTrue(0 in hashmap)
+        self.assertTrue(15 in hashmap)
+        self.assertTrue(1 in hashmap)
+        del hashmap[15]
+        self.assertFalse(15 in hashmap)
