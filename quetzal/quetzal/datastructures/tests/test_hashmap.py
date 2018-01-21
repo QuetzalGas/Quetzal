@@ -8,7 +8,8 @@ class TestHashmap(TestCase):
     def testRetrieveEmpty(self):
         hashmap = AdtHashMap(1, 1)
         try:
-            hashmap[0]
+            test = hashmap[0]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
 
@@ -16,6 +17,7 @@ class TestHashmap(TestCase):
         hashmap = AdtHashMap(1, 1)
         try:
             del hashmap[0]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
 
@@ -48,7 +50,8 @@ class TestHashmap(TestCase):
         hashmap[4] = "test"
         self.assertEqual(hashmap[4], "test")
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
 
@@ -57,7 +60,8 @@ class TestHashmap(TestCase):
         hashmap[5] = "test"
         del hashmap[5]
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
         self.assertTrue(hashmap.is_empty())
@@ -92,6 +96,7 @@ class TestHashmap(TestCase):
         hashmap[25] = "test"
         try:
             hashmap[35] = "test"
+            self.assertTrue(False)
         except MemoryError:
             self.assertTrue(True)
 
@@ -100,7 +105,8 @@ class TestHashmap(TestCase):
         hashmap[4] = "test"
         self.assertEqual(hashmap[4], "test")
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
 
@@ -109,7 +115,8 @@ class TestHashmap(TestCase):
         hashmap[5] = "test"
         del hashmap[5]
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
         self.assertTrue(hashmap.is_empty())
@@ -148,7 +155,8 @@ class TestHashmap(TestCase):
         hashmap[4] = "test"
         self.assertEqual(hashmap[4], "test")
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
 
@@ -157,7 +165,8 @@ class TestHashmap(TestCase):
         hashmap[5] = "test"
         del hashmap[5]
         try:
-            hashmap[5]
+            test = hashmap[5]
+            self.assertTrue(False)
         except KeyError:
             self.assertTrue(True)
         self.assertTrue(hashmap.is_empty())
