@@ -47,7 +47,7 @@ class AdtBinarySearchTree:
         """
         if not self.is_empty():
             if not isinstance(key, type(self.root.key)) or not isinstance(item, type(self.root.item[0])):
-                raise TypeError("Unable to set item: key and.or item of incorrect type!")
+                raise TypeError("Unable to set item: key and/or item of incorrect type!")
 
         self._search_tree_insert(_TreeItem(key, item))
 
@@ -95,7 +95,9 @@ class AdtBinarySearchTree:
             if not isinstance(key, type(self.root.key)):
                 raise TypeError("Unable to get item: key of incorrect type!")
 
-        subtree = self._retrieve(key)[1]
+        (bool, subtree) = self._retrieve(key)
+        if not bool:
+            raise KeyError("Unable to get item: key is missing!")
         if subtree is None:
             return None
         return subtree.root.item[0]
@@ -168,7 +170,7 @@ class AdtBinarySearchTree:
             self.root = inorderSucc.root
             inorderSucc._act_remove()
 
-        # The possibly moved children should of this (sub)tree should know that this is their parent.
+        # The possibly moved children of this (sub)tree should know that this is their parent.
         if self.left:
             self.left.parent = self
         if self.right:
@@ -187,10 +189,10 @@ class AdtBinarySearchTree:
         (bool, subtree) = self._retrieve(key)
 
         if bool is False:           # There is no node with the given key.
-            return False
+            raise KeyError("Unable to delete item: key is missing!")
         if len(subtree.root.item) > 1:   # If there are multiple items with the given searchkey
             del subtree.root.item[0]
-            return True
+            return
         else:
             return subtree._act_remove()
 
@@ -201,7 +203,7 @@ class AdtBinarySearchTree:
         :raise: If the tree is empty, an exception is raised.
         """
         if self.is_empty():
-            raise KeyError("Unable to create a dot-string of an empty tree!")
+            raise RuntimeError("Unable to create a dot-string of an empty tree!")
         string = "digraph bst {\nnode [shape=Mrecord];\n"
         string += self._get_string()
         string += "}"

@@ -77,7 +77,6 @@ class TestBsTree(TestCase):
         del tree[2]
         self.assertEqual(tree[2], "2.2")
         del tree[2]
-        self.assertIsNone(tree[2])
 
     def test_fuzzing(self, aantal=200):
         tree = AdtBinarySearchTree()
@@ -139,6 +138,8 @@ def removing(tree, N):
         random.seed(datetime.now())
         randomInLijst = random.randint(0, len(lijstMetKeys) - 1)
         key = lijstMetKeys[randomInLijst]
+        if key not in tree:
+            continue
         del tree[key]
         del lijstMetKeys[randomInLijst]
         repr(tree)     # extra check of the "relationship" between children and parent (and vice versa)

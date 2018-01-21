@@ -125,7 +125,7 @@ class AdtTwoThreeTree:
 
         :param key:  The searchkey of the new node.
         :param item: The content of the new node.
-        :raise: If key or item are of incorrect type, an exception is raised.
+        :raise: If key and/or item are of incorrect type, an exception is raised.
         """
         if not self.is_empty():
             if not isinstance(key, type(self.root[0].key)) or not isinstance(item, type(self.root[0].item)):
@@ -188,22 +188,26 @@ class AdtTwoThreeTree:
 
         :param key: The searchkey of which a node is searched.
         :return: None if there is no node with the searchkey == 'key', node-item otherwise.
-        :raise: If the given 'key' is of incorrect type or the tree is empty, an exception is raised.
+        :raise: If the given 'key' is of incorrect type or missing, an exception is raised.
         """
-        return self._retrieve(key)[1]
+        if not isinstance(key, type(self.root[0].key)):
+            raise TypeError("Unable to get item: key of incorrect type!")
+
+        (boolean, item) = self._retrieve(key)
+        if not boolean:
+            raise KeyError("Unable to get item: key is missing!")
+        if item is None:
+            return None
+        return item
 
     def _retrieve(self, key):
         """ Searches for the given 'key' inside the whole tree.
 
         :param key: The searchkey of which a node is searched.
         :return: (False, None) if there is no node with the searchkey == 'key', (True, node) otherwise.
-        :raise: If the given 'key' is of incorrect type or the tree is empty, an exception is raised.
         """
         if self.is_empty():
             return False, None
-
-        if not isinstance(key, type(self.root[0].key)):
-            raise TypeError("Unable to get item: key of incorrect type!")
 
         current = self
         while next is not None:
@@ -293,11 +297,11 @@ class AdtTwoThreeTree:
 
         :param key: The searchkey of the node to be deleted. Key should be of the same type as the tree's searchkeys.
         :return: True if there was a node with 'key' as searchkey, this node is deleted. False otherwise.
-        :raise: If the given 'key' is of incorrect type, an exception is raised.
+        :raise: If the given 'key' is of incorrect type or missing, an exception is raised.
         """
         # If the table is empty, then the key will surely not be present.
         if self.is_empty():
-            return False
+            raise KeyError("Unable to delete item: key is missing!")
 
         if not isinstance(key, type(self.root[0].key)):
             raise TypeError("Unable to delete item: key of incorrect type!")
@@ -318,7 +322,7 @@ class AdtTwoThreeTree:
                 break
             # If it's not found, then there must be checked if we can look any further in the subtrees or not.
             if current._no_children():
-                return False
+                raise KeyError("Unable to delete item: key is missing!")
             if key < current.root[0].key:
                 current = current.children[0]
                 continue
@@ -331,12 +335,12 @@ class AdtTwoThreeTree:
         # If there are multiple nodes with the same searchkey, removing only one of those nodes will suffice.
         if current.root[counter].next is not None:
             current.root[counter] = current.root[counter].next
-            return True
+            return
 
         # Only item in tree, so just set the root to an empty list
         if current._no_children() and current.parent is None:
             self.root = []
-            return True
+            return
 
         if current._no_children():
             # The node with the given key will have to be deleted, when here.
@@ -368,7 +372,7 @@ class AdtTwoThreeTree:
         :raise: If the tree is empty, an exception is raised.
         """
         if self.is_empty():
-            raise KeyError("Unable to create a dot-string of an empty tree.")
+            raise RuntimeError("Unable to create a dot-string of an empty tree.")
         string = "digraph 23 {\nnode [shape=Mrecord];\n"\
             + 'node [shape=Mrecord, style=filled, fillcolor="#34373d", fontcolor="#1aba4a",'\
             + ' fontname=Ubuntu, compound=true, color="#1aba4a"];\n'\
