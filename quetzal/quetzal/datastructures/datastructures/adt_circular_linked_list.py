@@ -63,7 +63,7 @@ class AdtCircularLinkedList:
                 cur = cur.next
             cur.next = _Node(new_item, cur.next)
         else:
-            raise IndexError("")
+            raise IndexError
 
     def __delitem__(self, index):
         """ Delete the element on position 'index'.
@@ -107,7 +107,7 @@ class AdtCircularLinkedList:
         :return: True if the item is in the list, false otherwise.
         """
         cur = self.head
-        for i in range(self.get_length() + 1):
+        for i in range(len(self) + 1):
             cur = cur.next
             if cur.item == item:
                 return True

@@ -2,6 +2,9 @@ from random import shuffle
 from itertools import permutations
 from unittest import TestCase
 
+import os
+import shutil
+
 from datastructures import *
 from datastructures.adt_red_black_tree import Node
 
@@ -36,30 +39,69 @@ def print_tests():
     print(check_preorder([2, 4, 5, 1, 3], [4, 2, 1, 3, 5], [True, True, False, False, True]))
     print(check_preorder([2, 5, 6, 1, 4, 3], [5, 2, 1, 4, 3, 6], [True, False, True, True, False, True]))
 
-def four_node_with_leaves(min_key = 0):
-    a = Node(min_key + 0, 'a')
+def two_node_with_leaves(min_key = 0, value = 'P', leaves = ['a', 'b']):
+    """
+      P
+     / \ 
+    a   b
+    """
+    a = Node(min_key + 0, leaves[0])
     a.black = True
-    b = Node(min_key + 2, 'b')
+
+    b = Node(min_key + 2, leaves[1])
     b.black = True
-    c = Node(min_key + 4, 'c')
-    c.black = True
-    d = Node(min_key + 6, 'd')
-    d.black = True
 
-    S = Node(min_key + 1, 'S')
-    S.set_left_child(a)
-    S.set_right_child(b)
+    P = Node(min_key + 1, value)
+    P.black = True
 
-    L = Node(min_key + 5, 'L')
-    L.set_left_child(c)
-    L.set_right_child(d)
+    P.set_left_child(a)
+    P.set_right_child(b)
 
-    M = Node(min_key + 3, 'M')
+    return P
+
+def four_node_with_leaves(min_key = 0, values = ['S', 'M', 'L'], leaves = ['a', 'b', 'c', 'd']):
+    """
+         M
+        . .
+       .   .
+      S     L
+     / \   / \ 
+    a   b c   d
+    """
+    S = two_node_with_leaves(min_key, 'S', leaves[0:2])
+    S.black = False
+
+    L = two_node_with_leaves(min_key + 4, 'L', leaves[2:4])
+    L.black = False
+
+    M = Node(min_key + 3, values[1])
     M.black = True
     M.set_left_child(S)
     M.set_right_child(L)
 
     return M
+
+def three_node_left_with_leaves(min_key = 0, values = ['S', 'L'], leaves = ['a', 'b', 'c']):
+    """
+        L
+       . \ 
+      S   c
+     / \ 
+    a   b
+    """
+    S = two_node_with_leaves(min_key, values[0], leaves[0:2])
+    S.black = False
+    pass
+
+def three_node_right_with_leaves(min_key = 0, values = ['S', 'L'], leaves = ['a', 'b', 'c']):
+    """
+      S
+     / .
+    a   L
+       / \ 
+      b   c
+    """
+    pass
 
 def four_node_with_two_node_parent_a():
     """
@@ -83,7 +125,7 @@ def four_node_with_two_node_parent_a():
 
     P.set_left_child(M)
 
-    return P, M
+    return M
 
 def four_node_with_two_node_parent_b():
     """
@@ -107,17 +149,7 @@ def four_node_with_two_node_parent_b():
 
     P.set_right_child(M)
 
-    return P, M
-
-    """
-         M
-        . .
-       .   .
-      S     L
-     / \   / \ 
-    a   b c   d
-    """
-
+    return M
 
 def four_node_with_three_node_parent_a_right():
     """
@@ -148,7 +180,7 @@ def four_node_with_three_node_parent_a_right():
     Q.set_left_child(e)
     Q.set_right_child(f)
 
-    return P, M
+    return M
 
 def four_node_with_three_node_parent_a_left():
     """
@@ -180,7 +212,7 @@ def four_node_with_three_node_parent_a_left():
     f.black = True
     Q.set_right_child(f)
 
-    return Q, M
+    return M
 
 def four_node_with_three_node_parent_b_right():
     """
@@ -213,7 +245,7 @@ def four_node_with_three_node_parent_b_right():
     f.black = True
     Q.set_right_child(f)
 
-    return P, M
+    return M
 
 def four_node_with_three_node_parent_b_left():
     """
@@ -246,7 +278,7 @@ def four_node_with_three_node_parent_b_left():
 
     P.set_right_child(M)
 
-    return Q, M
+    return M
 
 def four_node_with_three_node_parent_c_right():
     """
@@ -279,7 +311,7 @@ def four_node_with_three_node_parent_c_right():
 
     Q.set_right_child(M)
 
-    return P, M
+    return M
 
 def four_node_with_three_node_parent_c_left():
     """
@@ -311,7 +343,10 @@ def four_node_with_three_node_parent_c_left():
 
     Q.set_right_child(M)
 
-    return Q, M
+    return M
+
+def two_node_with_two_parent():
+    pass
 
 def get_preorder_sequence_and_red_nodes(tree):
     keys = [x[0] for x in tree.iter_preorder()]
@@ -347,8 +382,8 @@ class TestRbTree(TestCase):
         post_keys = [7, 3, 1, 0, 2, 5, 4, 6, 8]
         post_red = [3]
 
-        root, four_node = four_node_with_two_node_parent_a()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_two_node_parent_a()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_two_a')
 
     def test_split_two_node_parent_b(self):
         pre_keys = [1, 0, 5, 3, 2, 4, 7, 6, 8]
@@ -356,8 +391,8 @@ class TestRbTree(TestCase):
         post_keys = [1, 0, 5, 3, 2, 4, 7, 6, 8]
         post_red = [5]
 
-        root, four_node = four_node_with_two_node_parent_b()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_two_node_parent_b()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_two_b')
 
     def test_split_three_node_parent_a_right(self):
         pre_keys = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
@@ -365,8 +400,8 @@ class TestRbTree(TestCase):
         post_keys = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
         post_red = [3, 9]
 
-        root, four_node = four_node_with_three_node_parent_a_right()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_a_right()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_a_right')
 
     def test_split_three_node_parent_a_left(self):
         pre_keys = [9, 7, 3, 1, 0, 2, 5, 4, 6, 8, 10]
@@ -374,8 +409,8 @@ class TestRbTree(TestCase):
         post_keys = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
         post_red = [3, 9]
 
-        root, four_node = four_node_with_three_node_parent_a_left()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_a_left()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_a_left')
 
     def test_split_three_node_parent_b_right(self):
         pre_keys = [1, 0, 9, 5, 3, 2, 4, 7, 6, 8, 10]
@@ -383,8 +418,8 @@ class TestRbTree(TestCase):
         post_keys = [5, 1, 0, 3, 2, 4, 9, 7, 6, 8, 10]
         post_red = [1, 9]
 
-        root, four_node = four_node_with_three_node_parent_b_right()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_b_right()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_b_right')
 
     def test_split_three_node_parent_b_left(self):
         pre_keys = [9, 1, 0, 5, 3, 2, 4, 7, 6, 8, 10]
@@ -392,8 +427,8 @@ class TestRbTree(TestCase):
         post_keys = [5, 1, 0, 3, 2, 4, 9, 7, 6, 8, 10]
         post_red = [1, 9]
 
-        root, four_node = four_node_with_three_node_parent_b_left()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_b_left()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_b_left')
 
     def test_split_three_node_parent_c_right(self):
         pre_keys = [1, 0, 3, 2, 7, 5, 4, 6, 9, 8, 10]
@@ -401,8 +436,8 @@ class TestRbTree(TestCase):
         post_keys = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10] 
         post_red = [1, 7]
 
-        root, four_node = four_node_with_three_node_parent_c_right()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_c_right()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_c_right')
 
     def test_split_three_node_parent_c_left(self):
         pre_keys = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
@@ -410,12 +445,15 @@ class TestRbTree(TestCase):
         post_keys = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
         post_red = [1, 7]
 
-        root, four_node = four_node_with_three_node_parent_c_left()
-        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red)
+        four_node = four_node_with_three_node_parent_c_left()
+        self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_c_left')
 
-    def pre_post_split(self, four_node, pre_keys, pre_red, post_keys, post_red):
+    def pre_post_split(self, four_node, pre_keys, pre_red, post_keys, post_red, l = 'temp'):
         rb = AdtRedBlackTree()
         rb.root = four_node.find_root()
+
+        self.create_directory(l)
+        self.write_dot_and_execute(rb, '{}/pre'.format(l))
 
         keys, red_nodes = get_preorder_sequence_and_red_nodes(rb)
 
@@ -423,10 +461,65 @@ class TestRbTree(TestCase):
         self.assertEqual(red_nodes, pre_red)
 
         four_node.split()
-
         rb.root = four_node.find_root()
+
+        self.write_dot_and_execute(rb, l + '/post')
 
         keys, red_nodes = get_preorder_sequence_and_red_nodes(rb)
 
         self.assertEqual(keys, post_keys)
         self.assertEqual(red_nodes, post_red)
+
+    def write_dot_and_execute(self, rb, filename):
+        self.write_file(rb, filename + '.dot')
+
+        directory = 'tests/test_output/red_black_tree'
+        filename = directory + '/' + filename
+        os.system('dot -Tpng {} -o {}'.format(filename + '.dot', filename + '.png'))
+
+    def write_file(self, rb, filename):
+        directory = 'tests/test_output/red_black_tree'
+        with open(directory + '/' + filename, 'w') as of:
+            of.write('digraph rb {\n')
+            of.write('  node[shape = record];\n')
+            out = rb.__repr__()
+            of.write(out[0])
+            of.write('  labelloc="t";\n')
+            of.write('  label="{}";\n'.format('dd'))
+            of.write('}')
+
+    def create_directory(self, directory):
+        root = 'tests/test_output/red_black_tree'
+        if not os.path.exists(root + '/' + directory):
+            os.makedirs(root + '/' + directory)
+
+    @classmethod
+    def setUpClass(cls):
+        root = 'tests/test_output/red_black_tree'
+
+        if os.path.exists(root):
+            shutil.rmtree(root)
+
+        if not os.path.exists(root):
+            os.makedirs(root)
+
+    def test_4(self):
+        pre = [11, 3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10, 12]
+        rb = AdtRedBlackTree()
+        rb.from_deser(pre, [3, 5, 9])
+
+        self.create_directory('sdf')
+        self.write_dot_and_execute(rb, 'sdf/4')
+
+    def test_deser(self):
+        for i in range(0, 20):
+            rb = AdtRedBlackTree()
+
+            deserialize_keys = [x for x in range(1, 10)]
+            shuffle(deserialize_keys)
+
+            rb.from_deser(deserialize_keys, [])
+
+            keys, red_nodes = get_preorder_sequence_and_red_nodes(rb)
+
+            self.assertEqual(deserialize_keys, keys)
