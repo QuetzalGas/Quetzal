@@ -102,3 +102,11 @@ class TestDoublyLinkedList(TestCase):
         self.assertFalse(9 in lst)
         del lst[2]
         self.assertFalse(7 in lst)
+
+    def test_insert2(self):
+        lst = AdtDoublyLinkedList()
+        lst[0] = "test"
+        lst[1] = "test2"
+        self.assertTrue("test2" in lst)
+        self.assertTrue("test" in lst)
+        self.assertFalse("test3" in lst)
