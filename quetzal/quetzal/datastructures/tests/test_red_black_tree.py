@@ -334,7 +334,7 @@ class TestRbTree(TestCase):
             rb = AdtRedBlackTree()
 
             for j in i:
-                rb.insert(j)
+                rb[j] = j
 
             keys, red_nodes = get_preorder_sequence_and_red_nodes(rb)
 

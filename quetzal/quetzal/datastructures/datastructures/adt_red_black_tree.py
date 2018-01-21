@@ -377,6 +377,15 @@ class Node:
 
             # Three node
 
+    def _combine_parent_two_node(self):
+        pass
+
+    def _combine_parent_three_node(self):
+        pass
+
+    def _combine_parent_four_node(self):
+        pass
+
     def delete(self, key):
         self.combine()
 
@@ -489,19 +498,19 @@ class AdtRedBlackTree:
         self.root = Node(None, None)
         self.root.black = True
 
-    def insert(self, key, content=None):
-        if content is None:
-            self.root = self.root.insert(key, key)
-        else:
-            self.root = self.root.insert(key, content)
+    def __getitem__(self, key):
+        raise KeyError
 
+    def __setitem__(self, key, value):
+        self.root = self.root.insert(key, value)
         self.root.black = True
 
-    def delete(self, key):
+    def __delitem__(self, key):
         self.root.delete(key)
+        self.root = self.root.find_root()
 
-        while self.root.parent is not None:
-            self.root = self.root.parent
+    def __repr__(self):
+        return self.root.dot()
 
     def dot(self, filename, label):
         with open(filename, 'w') as of:
@@ -512,6 +521,9 @@ class AdtRedBlackTree:
             of.write('  labelloc="t";\n')
             of.write('  label="{}";\n'.format(label))
             of.write('}')
+
+    def __iter__(self):
+        return self.iter_inorder()
 
     def iter_inorder(self):
         return InorderIterator(self.root)
