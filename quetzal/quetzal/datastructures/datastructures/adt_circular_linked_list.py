@@ -31,7 +31,7 @@ class AdtCircularLinkedList:
         """
         return self.dummy_head.next == self.dummy_head
 
-    def get_length(self):
+    def __len__(self):
         """ Returns the amount of elements in the list.
 
         :return: The number of elements in the list.
@@ -49,51 +49,56 @@ class AdtCircularLinkedList:
 
         :param index: Position where the new element needs to be added.
         :param new_item: Element that needs to be added.
-        :raises: TypeError if new_item isn't the same type as the rest. KeyError if the given index is incorrect.
+        :raise TypeError if new_item is not the same type as the items in the list
+        :raise IndexError if index is out of range
         """
 
         if not self.is_empty():
             if not isinstance(new_item, type(self.head.next.item)):
-                raise TypeError("Item is not of same type as the rest!")
-        if (index >= 0) and (index <= (self.get_length())):
+                raise TypeError("")
+
+        if (index >= 0) and (index <= (len(self))):
             cur = self.head
             for i in range(index):
                 cur = cur.next
             cur.next = _Node(new_item, cur.next)
         else:
-            raise KeyError("Index is out of range!")
+            raise IndexError("")
 
     def __delitem__(self, index):
         """ Delete the element on position 'index'.
 
-        :param index: Position of the element that needs to be deleted.
-        :raise: KeyError if there is nothing on the given index.
+        :param index: positie van het element dat verwijderd moet worden.
+        :raise IndexError if index is out of range
         """
-        if 0 <= index < self.get_length():
+        if 0 <= index < len(self):
             cur = self.head
             prev = _Node(None, cur)
+
             # +1 because we take the dummy node as cur the first time
             for i in range(index+1):
                 cur = cur.next
                 prev = prev.next
             prev.next = cur.next
         else:
-            raise KeyError("Index out of range!")
+            raise IndexError("")
 
     def __getitem__(self, index):
-        """ Returns the element on position 'index'.
+        """ Returns the element on position 'index".
 
-        :param index: Position of the element.
-        :raise: KeyError if there is nothing on the given index.
-        :return The item on the given index.
+        :param index: positie van het element.
+        :raise IndexError if index is out of range
+        :return: element
         """
-        if 0 <= index < self.get_length():
+        if 0 <= index < len(self):
             cur = self.head
-            for i in range(index + 1):
+            
+            for i in range(index+1):
                 cur = cur.next
             return cur.item
         else:
-            raise KeyError("Index out of range!")
+            raise IndexError("")
+
 
     def __contains__(self, item):
         """ Searches for an item in the list.
@@ -107,3 +112,4 @@ class AdtCircularLinkedList:
             if cur.item == item:
                 return True
         return False
+
