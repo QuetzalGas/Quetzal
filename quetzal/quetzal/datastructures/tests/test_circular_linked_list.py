@@ -1,7 +1,6 @@
 from datastructures import *
 from unittest import TestCase
 
-
 class TestCircularLinkedList(TestCase):
     def test_init_and_delete(self):
         l = AdtCircularLinkedList()
@@ -136,7 +135,7 @@ class TestCircularLinkedList(TestCase):
         lst = AdtCircularLinkedList()
         self.assertEqual(lst.head, lst.dummy_head)
         self.assertEqual(lst.dummy_head.next, lst.dummy_head)
-        lst[1] = "abc"
+        lst[0] = "abc"
         lst.__del__()
         self.assertEqual(lst.head, lst.dummy_head)
         self.assertEqual(lst.dummy_head.next, lst.dummy_head)
@@ -154,14 +153,14 @@ class TestCircularLinkedList(TestCase):
 
     def testGetLength(self):
         lst = AdtCircularLinkedList()
-        self.assertEqual(lst.get_length(), 0)
+        self.assertEqual(len(lst), 0)
         lst[0] = "abc"
-        self.assertEqual(lst.get_length(), 1)
+        self.assertEqual(len(lst), 1)
         lst[1] = "def"
         lst[2] = "ghi"
-        self.assertEqual(lst.get_length(), 3)
+        self.assertEqual(len(lst), 3)
         lst.__del__()
-        self.assertEqual(lst.get_length(), 0)
+        self.assertEqual(len(lst), 0)
 
     def testInsert(self):
         lst = AdtCircularLinkedList()
@@ -171,10 +170,10 @@ class TestCircularLinkedList(TestCase):
         with self.assertRaises(TypeError):
             lst[3] = "abc"
         lst[3] = 7
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             lst[10] = 5
         lst[4] = -57
-        self.assertEqual(lst.get_length(), 5)
+        self.assertEqual(len(lst), 5)
 
     def testDelete(self):
         lst = AdtCircularLinkedList()
@@ -184,10 +183,10 @@ class TestCircularLinkedList(TestCase):
         lst[3] = 7
         del lst[2]
         del lst[1]
-        self.assertEqual(lst.get_length(), 2)
-        with self.assertRaises(KeyError):
+        self.assertEqual(len(lst), 2)
+        with self.assertRaises(IndexError):
             del lst[10]
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             del lst[3]
         del lst[1]
         del lst[0]
@@ -203,11 +202,11 @@ class TestCircularLinkedList(TestCase):
         self.assertEqual(lst[0], 10)
         self.assertEqual(lst[2], 5)
         self.assertEqual(lst[3], 7)
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             test = lst[4]
         del lst[2]
         self.assertEqual(lst[2], 7)
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             test1 = lst[3]
 
     def testContains(self):
