@@ -149,3 +149,28 @@ class AdtDoublyLinkedList:
             current_node = current_node.next
             i += 1
         return current_node
+
+    def __repr__(self):
+        """ Creates the dot-representation of the list
+
+        :return: string with dot-representation
+        """
+        string = "digraph dll {\ngraph [\nrankdir = \"LR\"\n];\n\n"
+        for i in range(len(self)):
+            string += str(i)
+            string += " [\nlabel = \""
+            string += str(i)
+            string += ": "
+            string += str(self[i])
+            string += "\"\nshape = \"record\"\n];\n\n"
+        for i in range(len(self)):
+            string += str(i)
+            string += " -> "
+        string = string.strip(" -> ")
+        string += "\n"
+        for i in range(len(self)-1,-1,-1):
+            string += str(i)
+            string += " -> "
+        string = string.strip(" -> ")
+        string += "\n}"
+        return string
