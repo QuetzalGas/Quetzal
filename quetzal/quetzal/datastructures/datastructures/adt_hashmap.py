@@ -22,7 +22,7 @@ class _DataNode:
 
 
 class AdtHashMap:
-    def __init__(self, length=10, collision_type=2):
+    def __init__(self, length=10, collision_type=2): #TODO default value list
         """ Initialises a new hashmap with a certain length and collision type.
 
         :param length: The length of the hashmap.
@@ -58,9 +58,9 @@ class AdtHashMap:
         # Creating map
         self.lijst = []
         for i in range(length):
-            self.lijst.append("")
+            self.lijst.append(None)
         # If linked lists are used, fill every position with an empty link
-        if collision_type == 2:
+        if collision_type == SEPARATE_CHAINING:
             for i in range(length):
                 new_link = AdtDoublyLinkedList()
                 self.lijst[i] = new_link
@@ -74,7 +74,7 @@ class AdtHashMap:
             if self.collision_type == SEPARATE_CHAINING:
                 if not item.is_empty():
                     return False
-            elif item != "":
+            elif item is not None:
                 return False
         return True
 
@@ -99,7 +99,7 @@ class AdtHashMap:
             self.lijst[adres][0] = new_node
         else:
             # Check if a collision occurs
-            if self.lijst[adres] != "":
+            if self.lijst[adres] is not None:
                 self._solve_collision(adres, new_node)
             else:
                 self.lijst[adres] = new_node
@@ -112,7 +112,7 @@ class AdtHashMap:
         """
         adres = 0
         if isinstance(search_key, str):
-            adres = len(search_key) % self.length
+            adres = len(search_key) % self.length #TODO __HASH__
         elif isinstance(search_key, int):
             adres = search_key % self.length
         return adres
@@ -154,7 +154,7 @@ class AdtHashMap:
         if pos is None:
             raise KeyError("Hashmap does not contain given search key!")
         else:
-            self.lijst[pos] = ""
+            self.lijst[pos] = None
 
     def __contains__(self, search_key):
         """ Finds data with a given searchkey in the map.
@@ -206,7 +206,7 @@ class AdtHashMap:
         count = 0
         while True:
             # Insert element
-            if self.lijst[current_adres] == "":
+            if self.lijst[current_adres] is None:
                 self.lijst[current_adres] = node
                 break
 
@@ -230,7 +230,7 @@ class AdtHashMap:
         count = 0
         while True:
             # Search through the list for the searchkey
-            if self.lijst[adres] != "":
+            if self.lijst[adres] is not None:
                 if self.lijst[adres].search_key == key:
                     return adres
             adres += 1
@@ -256,7 +256,7 @@ class AdtHashMap:
         count = 0
         while True:
             # Search through the list for the searchkey
-            if self.lijst[current_adres] == "":
+            if self.lijst[current_adres] is None:
                 self.lijst[current_adres] = node
                 break
             current_adres = (adres + i**2)
@@ -280,7 +280,7 @@ class AdtHashMap:
         i = 1
         counter = 0
         while True:
-            if self.lijst[current_address] != "":
+            if self.lijst[current_address] is not None:
                 if self.lijst[current_address].search_key == key:
                     return current_address
             current_address = (adres + i**2)
@@ -328,7 +328,7 @@ class AdtHashMap:
         if not self.is_empty():
             text += "disgraph hmp {\n"
             text += "node [shape = \"record\"];\n"
-            text += "struct [label=\""
+            text += "struct [label=\""   #TODO seperate chaining
             for i in range(len(self)):
                 if self.collision_type == SEPARATE_CHAINING and not self.lijst[i].is_empty():
                     current = self.lijst[i][0]
