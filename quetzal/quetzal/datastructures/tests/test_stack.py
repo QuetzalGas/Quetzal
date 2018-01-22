@@ -1,4 +1,5 @@
 from unittest import TestCase
+from datastructures import *
 
 class TestStack(TestCase):
     def test_init_and_delete(self):

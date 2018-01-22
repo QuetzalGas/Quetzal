@@ -448,6 +448,97 @@ class TestRbTree(TestCase):
         four_node = four_node_with_three_node_parent_c_left()
         self.pre_post_split(four_node, pre_keys, pre_red, post_keys, post_red, 'split_three_c_left')
 
+    def test_combine_2p_2s(self):
+        for i in [1, 5]:
+            rb = AdtRedBlackTree()
+            rb.from_deser([3, 1, 0, 2, 5, 4, 6], [])
+
+            rb.root[i].combine()
+            rb.root = rb.root.find_root()
+
+            keys, red = get_preorder_sequence_and_red_nodes(rb)
+
+            self.assertEqual(keys, [3, 1, 0, 2, 5, 4, 6])
+            self.assertEqual(red, [1, 5])
+
+    def test_combine_2p_3s(self):
+        rb = AdtRedBlackTree()
+
+        #       3
+        #     /   \ 
+        #   1       5
+        #  / \     / .
+        # 0   2   4   7
+        #            / \ 
+        #           6   8
+        left_right_leaning = [3, 1, 0, 2, 5, 4, 7, 6, 8]
+        rb.from_deser(left_right_leaning, [7])
+
+        rb.root[1].combine()
+        rb.root = rb.root.find_root()
+
+        keys, red = get_preorder_sequence_and_red_nodes(rb)
+                
+        #         5
+        #       /   \
+        #     3       7
+        #    . \     / \
+        #   1   4   6   8
+        #  / \
+        # 0   2
+        self.assertEqual(keys, [5, 3, 1, 0, 2, 4, 7, 6, 8])
+        self.assertEqual(red, [1])
+
+        rb.root[7].combine()
+        rb.root = rb.root.find_root()
+
+        keys, red = get_preorder_sequence_and_red_nodes(rb)
+
+        self.assertEqual(keys, left_right_leaning)
+        self.assertEqual(red, [7])
+
+        #       3
+        #     /   \
+        #   1       7
+        #  / \     . \
+        # 0   2   5   8
+        #        / \
+        #       4   6
+        rb.from_deser([3, 1, 0, 2, 7, 5, 4, 6, 8], [5])
+
+        rb.root[1].combine()
+        rb.root = rb.root.find_root()
+
+        keys, red = get_preorder_sequence_and_red_nodes(rb)
+        self.assertEqual(keys, [5, 3, 1, 0, 2, 4, 7, 6, 8])
+        self.assertEqual(red, [1])
+
+    def test_combine_2p_4s(self):
+        rb = AdtRedBlackTree()
+
+        left = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
+        right = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
+
+        rb.from_deser(left, [5, 9])
+
+        rb.root[1].combine()
+        rb.root = rb.root.find_root()
+
+        keys, red = get_preorder_sequence_and_red_nodes(rb)
+
+        self.assertEqual(keys, right)
+        self.assertEqual(red, [1, 5])
+
+        rb.from_deser(right, [1, 5])
+
+        rb.root[9].combine()
+        rb.root = rb.root.find_root()
+
+        keys, red = get_preorder_sequence_and_red_nodes(rb)
+
+        self.assertEqual(keys, left)
+        self.assertEqual(red, [5, 9])
+
     def pre_post_split(self, four_node, pre_keys, pre_red, post_keys, post_red, l = 'temp'):
         rb = AdtRedBlackTree()
         rb.root = four_node.find_root()
