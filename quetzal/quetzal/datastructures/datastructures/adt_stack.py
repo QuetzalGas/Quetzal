@@ -60,8 +60,8 @@ class AdtStack:
         return old_top
 
     def peek(self):
-        """
-        Indicates what the last added element is.
+        """ Indicates what the last added element is.
+
         :return: The last added element
         """
         if not self.is_empty():
@@ -70,7 +70,11 @@ class AdtStack:
             return None
 
     def __repr__(self):
-        string = "digraph G {\ngraph [\nrankdir = \"LR\"\n];"
+        """ Creates the dot-representation of the stack
+
+        :return: string with dot-representation
+        """
+        string = "digraph s {\ngraph [\nrankdir = \"LR\"\n];"
         if not self.is_empty():
             string += "\n\n\"node\" [\nlabel = \""
             cur = self.top

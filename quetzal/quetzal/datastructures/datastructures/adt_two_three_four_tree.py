@@ -17,7 +17,7 @@ class _TreeNode:
 
         for item in self.items:
             if item is not None:
-                max_ = item.search_key
+                max_ = item[0].search_key
 
         return max_
 
@@ -26,23 +26,28 @@ class _TreeNode:
             return False
 
         for item in self.items:
-            if (item is not None) and (item.search_key == new_item.search_key):
-                return False
+            if item is not None and not isinstance(new_item, type([])):
+                if item[0].search_key == new_item.search_key:
+                    item.append(new_item)
+                    return True
+
+        if not isinstance(new_item, type([])):
+            new_item = [new_item]
 
         if self.amount == 0:
             self.items[0] = new_item
         elif self.amount == 1:
-            if new_item.search_key < self.items[0].search_key:
+            if new_item[0].search_key < self.items[0][0].search_key:
                 self.items[1] = self.items[0]
                 self.items[0] = new_item
             else:
                 self.items[1] = new_item
         elif self.amount == 2:
-            if new_item.search_key < self.items[0].search_key:
+            if new_item[0].search_key < self.items[0][0].search_key:
                 self.items[2] = self.items[1]
                 self.items[1] = self.items[0]
                 self.items[0] = new_item
-            elif new_item.search_key > self.items[1].search_key:
+            elif new_item[0].search_key > self.items[1][0].search_key:
                 self.items[2] = new_item
             else:
                 self.items[2] = self.items[1]
@@ -142,15 +147,15 @@ class _TreeNode:
             else:
                 return 1, self.parent.children[2]
 
-    def all_siblings_1_nodes(self):
+    def all_siblings_2_nodes(self):
         siblings = self.get_siblings()
 
         if siblings[0] == 0:
             return False
         elif siblings[0] == 1:
-            return (siblings[1].amount == 1)
+            return siblings[1].amount == 1
         else:
-            return ((siblings[1].amount == 1) and (siblings[2].amount == 1))
+            return (siblings[1].amount == 1) and (siblings[2].amount == 1)
 
     def which_child(self):
         if self.parent is None:
@@ -164,7 +169,7 @@ class _TreeNode:
             if item is None:
                 continue
             else:
-                print(item.item, end=" ")
+                print(item[0].item, end=" ")
         print()
         if not self.is_leaf():
             for child in self.children:
@@ -180,39 +185,40 @@ class TreeItem:
 
 class AdtTwoThreeFourTree:
     """
-    TableItemType is het type van de elementen die in de 2-3-4 boom worden opgeslagen.
-    Een element heeft een search_key van het type KeyType.
+    TableItemType is the type of the elements that are stored in the 2-3-4 tree.
+    An element has a search_key of the type KeyType.
     """
 
     def __init__(self):
-        """
-        Creates an empty 2-3-4 tree.
-        Pre: none.
-        Post: an empty tree has been created.
+        """ Creates an empty 2-3-4 tree.
+
+        PRE: None.
+        POST: An empty tree has been created.
         """
         self.root = None
 
     def __del__(self):
-        """
-        Deletes a 2-3-4 tree.
-        Pre: none.
-        Post: the tree is empty.
+        """ Deletes a 2-3-4 tree.
+
+        PRE: None.
+        POST: The tree is empty.
         """
         self.root = None
 
-    def table_is_empty(self):
-        """
-        Determines if the 2-3-4 tree is empty.
-        Pre: none.
-        Post: returns True if tree is empty.
+    def is_empty(self):
+        """ Determines if the 2-3-4 tree is empty.
+
+        PRE: None.
+        POST: Returns True if tree is empty.
         :return: True if empty, False if not.
         """
         return self.root is None
 
-    def split_node(self, node):
-        """
-        Splits given node if the node is full (3 items). Transfers one item to parent and creates another sibling. If node is root, a new root is created.
-        :param node: Node that needs to be slpit.
+    def _split_node(self, node):
+        """ Splits given node if the node is full (3 items).
+        Transfers one item to parent and creates another sibling. If node is root, a new root is created.
+
+        :param node: Node that needs to be split.
         :return: True if node was split, False if not.
         """
         if node.amount != 3:
@@ -241,52 +247,53 @@ class AdtTwoThreeFourTree:
         node.amount -= 2
         return True
 
-    def table_insert(self, key, item):
-        """
-        Inserts 'newItem' in the 2-3-4 tree
-        with items with different search_keys than the search_key of 'newItem'.
-        Pre: 'newItem' is of type TableItemType
-        Post: tree is a valid 2-3-4 tree and returns True if insertion worked.
+    def __setitem__(self, key, item):
+        """ Inserts 'item' in the 2-3-4 tree.
+
         :param newItem: item to be added in the tree.
-        :return: True if insert worked, False if not.
+
+        PRE: 'newItem' is of type TableItemType
+        POST: Tree is a valid 2-3-4 tree and returns True if insertion worked.
         """
+        if not self.is_empty():
+            if not isinstance(item, type(self.root.items[0][0].item)):
+                raise TypeError("")
         newItem = TreeItem(key, item)
         if self.root is None:
             self.root = _TreeNode()
             self.root.insert_item(newItem)
         else:
-            self.insert(self.root, newItem)
+            self._insert(self.root, newItem)
 
-    def insert(self, node, newTreeItem):
-        """
-        Searches the right leaf to insert newTreeItem, and inserts it immediately.
+    def _insert(self, node, newTreeItem):
+        """ Searches the right leaf to insert newTreeItem, and inserts it immediately.
+
         :param node: starting point to insert
         :param newTreeItem: item to be inserted
         """
         if node.amount == 3:
-            self.split_node(node)
-            # split_node reorganised the tree, so current has to be reset to the
-            # parent
+            self._split_node(node)
+            # split_node reorganised the tree, so current has to be reset to the parent
             current = node.parent
         else:
             current = node
         if current.is_leaf():
             current.insert_item(newTreeItem)
         else:
-            if newTreeItem.search_key < current.items[0].search_key:
-                self.insert(current.children[0], newTreeItem)
+            if newTreeItem.search_key < current.items[0][0].search_key:
+                self._insert(current.children[0], newTreeItem)
             elif current.items[1] is not None:
-                if newTreeItem.search_key < current.items[1].search_key:
-                    self.insert(current.children[1], newTreeItem)
+                if newTreeItem.search_key < current.items[1][0].search_key:
+                    self._insert(current.children[1], newTreeItem)
                 elif current.items[2] is not None:
-                    if newTreeItem.search_key < current.items[2].search_key:
-                        self.insert(current.children[2], newTreeItem)
+                    if newTreeItem.search_key < current.items[2][0].search_key:
+                        self._insert(current.children[2], newTreeItem)
                     else:
-                        self.insert(current.children[3], newTreeItem)
+                        self._insert(current.children[3], newTreeItem)
                 else:
-                    self.insert(current.children[2], newTreeItem)
+                    self._insert(current.children[2], newTreeItem)
             else:
-                self.insert(current.children[1], newTreeItem)
+                self._insert(current.children[1], newTreeItem)
 
     def inorder_traverse_table(self, visit):
         """
@@ -295,9 +302,9 @@ class AdtTwoThreeFourTree:
         Post: visit was called for every item in inorder.
         :param visit: function to be called for every item
         """
-        self.inorder(self.root, visit)
+        self._inorder(self.root, visit)
 
-    def inorder(self, node, visit):
+    def _inorder(self, node, visit):
         """
         Traverses 2-3-4 tree in inorder, starting at node, and calls function visit for each item.
         Pre: 'visit' is a function.
@@ -308,26 +315,27 @@ class AdtTwoThreeFourTree:
         """
         if node is None:
             return False
-        self.inorder(node.children[0], visit)
-        visit(node.items[0].item)
-        self.inorder(node.children[1], visit)
+        self._inorder(node.children[0], visit)
+        visit(node.items[0][0].item)
+        self._inorder(node.children[1], visit)
         if node.items[1] is not None:
-            visit(node.items[1].item)
-            self.inorder(node.children[2], visit)
+            visit(node.items[1][0].item)
+            self._inorder(node.children[2], visit)
             if node.items[2] is not None:
-                visit(node.items[2].item)
-                self.inorder(node.children[3], visit)
+                visit(node.items[2][0].item)
+                self._inorder(node.children[3], visit)
         return True
 
-    def dot(self, node, rootnr, filetext):
-        """
-        Creates the body of a dot file for the 2-3-4 tree, in the form of a string, starting at node.
-        Pre: 'rootnr' is an integer different from 0, 'filetext' is a string, 'node' is a part of the tree
-        Post: representation of every node at a level lower than 'node' has been added to the string
+    def _dot(self, node, rootnr, filetext):
+        """ Creates the body of a dot file for the 2-3-4 tree, in the form of a string, starting at node.
+
         :param node: starting point
         :param rootnr: number to identify starting point 'node'
         :param filetext: string
         :return: adjusted string filetext
+
+        PRE: 'rootnr' is an integer different from 0, 'filetext' is a string, 'node' is a part of the tree
+        POST: representation of every node at a level lower than 'node' has been added to the string
         """
         if node is None:
             return filetext
@@ -336,7 +344,12 @@ class AdtTwoThreeFourTree:
         filetext += "\" [\nlabel=\""
         for item in node.items:
             if item is not None:
-                filetext += str(item.item)
+                filetext += str(item[0].search_key)
+                filetext += ": "
+                for x in item:
+                    filetext += str(x.item)
+                    filetext += ", "
+                filetext = filetext.strip(", ")
                 filetext += "|"
         filetext = filetext.strip("|")
         filetext += "\"\nshape=\"record\"\n];\n"
@@ -349,58 +362,62 @@ class AdtTwoThreeFourTree:
             filetext += "\" -> \"node"
             filetext += str(rootnr * 4 + k)
             filetext += "\"\n"
-            filetext = self.dot(node.children[i], rootnr * 4 + k, filetext)
+            filetext = self._dot(node.children[i], rootnr * 4 + k, filetext)
             k += 1
         return filetext
 
-    def table_retrieve(self, search_key):
-        """
-        Searches an item with 'search_key' as its searchkey in the 2-3-4 tree and returns this item.
-        Pre: 'search_key' is of the type KeyType
-        Post: if there is an item with 'search_key' as searchkey in the tree, it gets
-        returned, else None is returned
-        :param search_key: searchkey of the item to be found.
-        :return: item with 'search_key' as searchkey and True if item exists, None and False if not.
-        """
-        return self.retrieve(self.root, search_key)
+    def __getitem__(self, search_key):
+        """ Searches an item with 'search_key' as its searchkey in the 2-3-4 tree and returns this item.
 
-    def retrieve(self, node, search_key):
+        :param search_key: searchkey of the item to be found.
+        :raise KeyError if there is no item with given search_key in the tree
+        :return: item with 'search_key' as searchkey
+
+        PRE: 'search_key' is of the type KeyType
+        POST: item with 'search_key' as searchkey gets returned
         """
-        Searches an item with 'search_key' as its searchkey in the 2-3-4 tree, starting at node, and returns this item.
-        Pre: 'search_key' is of the type KeyType
-        Post: if there is an item with 'search_key' as searchkey in the tree, it gets
-        returned, else None is returned
+        return self._retrieve(self.root, search_key)
+
+    def _retrieve(self, node, search_key):
+        """ Searches an item with 'search_key' as its searchkey in the 2-3-4 tree,
+        starting at node, and returns this item.
+
         :param node: starting point for search
         :param search_key: searchkey of the item to be found.
-        :return: item with 'search_key' as searchkey and True if item exists, None and False if not.
+        :raise KeyError if starting point is None
+        :return: item with 'search_key' as searchkey
+
+        PRE: 'search_key' is of the type KeyType
+        POST: item with 'search_key' as searchkey gets returned
         """
         if node is None:
-            return None, False
+            raise KeyError
 
         for item in node.items:
-            if (item is not None) and (item.search_key == search_key):
-                return item, True
+            if item is not None:
+                if item[0].search_key == search_key:
+                    return item[0].item
 
         for x in range(node.amount, 0, -1):
-            if node.items[x - 1].search_key < search_key:
-                return self.retrieve(node.children[x], search_key)
+            if node.items[x - 1][0].search_key < search_key:
+                return self._retrieve(node.children[x], search_key)
 
-        return self.retrieve(node.children[0], search_key)
+        return self._retrieve(node.children[0], search_key)
 
-    def merge(self, node):
-        """
-        Makes a 1-node into a 2-node or a 3-node.
-        Pre: 'node' is a node from the tree
-        Post: 'node' is no longer a 1-node and the tree is still a valid 2-3-4 tree.
+    def _merge(self, node):
+        """ Makes a 2-node into a 3-node or a 4-node.
+
         :param node: node that needs to be merged.
         :return: True if node was merged, False if not.
+
+        PRE: 'node' is a node from the tree
+        POST: 'node' is no longer a 2-node and the tree is still a valid 2-3-4 tree.
         """
         if node.parent is None or node.amount > 1:
             return False
 
-        if node.all_siblings_1_nodes() and (node.parent.amount == 1):
-            # parent and sibling are 1-nodes so they are merged together to
-            # form a 3-node
+        if node.all_siblings_2_nodes() and (node.parent.amount == 1):
+            # parent and sibling are 2-nodes so they are merged together to form a 4-node
             sibling = node.get_siblings()[1]
             if not node.is_leaf():
                 sibling.children[0].parent = node
@@ -413,26 +430,22 @@ class AdtTwoThreeFourTree:
             if node.parent is None:
                 self.root = node
             return True
-        elif node.all_siblings_1_nodes():
+        elif node.all_siblings_2_nodes():
             childNr = node.which_child()
-            if childNr == 0:          # node is uiterst linkse kind
-                # rechtse, eerste sibling is enige sibling die we kunnen
-                # gebruiken
+            if childNr == 0:          # node is leftmost child
+                # right (first) sibling is only sibling we can use
                 sibling = node.get_siblings()[1]
-                # we nemen uiterst linkse item van parent (tussen sibling en
-                # node)
+                # we take the leftmost item from parent (between sibling and node)
                 parentNr = childNr
-            # node is een kind in het midden
+            # node is a child in the middle
             elif (childNr == 1) or (childNr == 2 and node.parent.amount == 3):
-                # we nemen rechtse sibling, dus de tweede
+                # we take the right sibling, so the second one
                 sibling = node.get_siblings()[2]
-                parentNr = childNr      # we nemen parent item tussen node en sibling
-            else:                     # node is uiterst rechtse kind
-                # linkse, eerste sibling is enige sibling die we kunnen
-                # gebruiken
+                parentNr = childNr      # we take the parent item between node and sibling
+            else:                     # node is rightmost child
+                # left (first) sibling is only sibling we can use
                 sibling = node.get_siblings()[1]
-                # we nemen uiterst rechtse item van parent (tussen sibling en
-                # node)
+                # we take the rightmost item from parent (between sibling and node)
                 parentNr = childNr - 1
             node.insert_item(sibling.items[0])
             if not node.is_leaf():
@@ -448,9 +461,8 @@ class AdtTwoThreeFourTree:
         else:
             if node.get_siblings()[0] == 1:
                 sibling = node.get_siblings()[1]
-                if node.get_max_search_key() < node.get_siblings()[
-                        1].get_max_search_key():
-                    # sibling is rechts van node (node is uiterst links)
+                if node.get_max_search_key() < node.get_siblings()[1].get_max_search_key():
+                    # sibling is right from node (node is leftmost)
                     if not node.is_leaf():
                         sibling.children[0].parent = node
                         node.insert_child(
@@ -465,7 +477,7 @@ class AdtTwoThreeFourTree:
 
                     return True
                 else:
-                    # sibling is links van node (node is uiterst rechts)
+                    # sibling is left from node (node is rightmost)
                     if not node.is_leaf():
                         sibling.children[sibling.amount].parent = node
                         node.insert_child(sibling.delete_child(
@@ -476,21 +488,20 @@ class AdtTwoThreeFourTree:
                         sibling.items[sibling.amount - 1])[0])
                     return True
             elif node.get_siblings()[2].amount == 1:
-                # rechtse sibling heeft maar 1 item, dus we moeten een item
-                # nemen uit de linkse sibling
+                # right sibling has only 1 item, so we have to take an item from left sibling
                 sibling = node.get_siblings()[1]
                 if not node.is_leaf():  # delete child in sibling and add the child in node, change child's parent to node
                     sibling.children[sibling.amount].parent = node
                     node.insert_child(sibling.delete_child(
                         sibling.children[sibling.amount])[0])
-                node.insert_item(node.parent.delete_item(node.parent.items[sibling.which_child()])[
-                                0])  # insert the item from parent between sibling and node in node
+                # insert the item from parent between sibling and node in node
+                node.insert_item(node.parent.delete_item(node.parent.items[sibling.which_child()])[0])
                 node.parent.insert_item(sibling.delete_item(
                     sibling.items[sibling.amount - 1])[0])
 
                 return True
             else:
-                # we nemen een item uit de rechtse sibling
+                # we take an item from the right sibling
                 sibling = node.get_siblings()[2]
 
                 if not node.is_leaf():
@@ -501,71 +512,120 @@ class AdtTwoThreeFourTree:
                 node.parent.insert_item(sibling.delete_item(sibling.items[0])[0])
                 return True
 
-    def table_delete(self, search_key):
-        """
-        Deletes the item with 'search_key' as search key from the 2-3-4 tree, if such item exists.
-        Pre: 'search_key' is of the type KeyType.
-        Post: there is no item with 'search_key' as search key in the 2-3-4 tree and the tree is a valid 2-3-4 tree.
+    def __delitem__(self, search_key):
+        """ Deletes an item with 'search_key' as search key from the 2-3-4 tree, if such item exists.
+
         :param search_key: search key of the element that needs to be deleted.
-        :return: True if deleting was successful, False if not.
+        :raise KeyError if search_key is not in tree
+
+        PRE: 'search_key' is of the type KeyType.
+        POST: there is one less item with 'search_key' as search key in the 2-3-4 tree
+        and the tree is a valid 2-3-4 tree.
         """
-        if self.table_is_empty() or not self.table_retrieve(search_key)[1]:
-            return False
-        searching = True
-        current = self.root
-        while searching:
-            # merge is only applied when necessary, no need to check here
-            self.merge(current)
-            k = 0
-            for item in current.items:
-                if item is not None:
-                    if item.search_key == search_key:
-                        searching = False
-                        if current.is_leaf():
+        if not self._delete_without_merge(self.root, search_key):
+            if self.is_empty():
+                return
+            try:
+                self[search_key]
+            except KeyError:
+                return
+            searching = True
+            current = self.root
+            while searching:
+                # merge is only applied when necessary, no need to check here
+                self._merge(current)
+                k = 0
+                for item in current.items:
+                    if item is not None:
+                        if item[0].search_key == search_key:
+                            searching = False
+                            if current.is_leaf():
+                                current.delete_item(item)
+                                if current.parent is None and current.amount == 0:
+                                    self.root = None
+                                return
+                            else:
+                                next = current.children[k + 1]
+                    k += 1
+                if searching:
+                    if search_key > current.get_max_search_key():
+                        current = current.children[current.amount]
+                    else:
+                        k = 0
+                        for item in current.items:
+                            if item[0].search_key > search_key:
+                                current = current.children[k]
+                                break
+                            k += 1
+            # searching for inorder successor
+            while not next.is_leaf():
+                self._merge(next)
+                next = next.children[0]
+            self._merge(next)
+
+            searching = True
+            current = self.root
+            while searching:
+                k = 0
+                for item in current.items:
+                    if item is not None:
+                        if item[0].search_key == search_key:
                             current.delete_item(item)
-                            if current.parent is None and current.amount == 0:
+                            current.insert_item(next.delete_item(next.items[0])[0])
+
+                            if next.parent is None and next.amount == 0:
                                 self.root = None
-                            return True
-                        else:
-                            next = current.children[k + 1]
-                k += 1
-            if searching:
-                if search_key > current.get_max_search_key():
-                    current = current.children[current.amount]
-                else:
-                    k = 0
-                    for item in current.items:
-                        if item.search_key > search_key:
-                            current = current.children[k]
-                            break
-                        k += 1
-        # searching for inorder successor
-        while not next.is_leaf():
-            self.merge(next)
-            next = next.children[0]
-        self.merge(next)
+                            return
+                    k += 1
+                if searching:
+                    if search_key > current.get_max_search_key():
+                        current = current.children[current.amount]
+                    else:
+                        k = 0
+                        for item in current.items:
+                            if item[0].search_key > search_key:
+                                current = current.children[k]
+                                break
+                            k += 1
 
-        searching = True
-        current = self.root
-        while searching:
-            k = 0
-            for item in current.items:
-                if item is not None:
-                    if item.search_key == search_key:
-                        current.delete_item(item)
-                        current.insert_item(next.delete_item(next.items[0])[0])
+    def _delete_without_merge(self, node, search_key):
+        """ Deletes an item with 'search_key' as search key from the 2-3-4 tree
+        if there are multiple items with that search key in the tree.
 
-                        if next.parent is None and next.amount == 0:
-                            self.root = None
+        :param node: starting point
+        :param search_key: search key of the element that needs to be deleted.
+        :raise KeyError if search_key is not in tree
+        :return: True if an item was deleted, False if not
+        """
+        if node is None:
+            raise KeyError
+
+        for item in node.items:
+            if item is not None:
+                if item[0].search_key == search_key:
+                    if len(item) > 1:
+                        help = item[:-1]
+                        node.delete_item(item)
+                        node.insert_item(help)
                         return True
-                k += 1
-            if searching:
-                if search_key > current.get_max_search_key():
-                    current = current.children[current.amount]
-                else:
-                    k = 0
-                    for item in current.items:
-                        if item.search_key > search_key:
-                            current = current.children[k]
-                            break
-                        k += 1
+                    else:
+                        return False
+
+        for x in range(node.amount, 0, -1):
+            if node.items[x - 1][0].search_key < search_key:
+                return self._delete_without_merge(node.children[x], search_key)
+
+        return self._delete_without_merge(node.children[0], search_key)
+
+    def __repr__(self):
+        """ Creates the dot-representation of the tree
+
+        :return: string with dot-representation
+        """
+        string = "digraph 234 {\ngraph [\nrankdir = \"RR\"\n];\n\n"
+        string += self._dot(self.root, 1, "")
+        string += "}"
+        return string
+
+    def __contains__(self, item):
+        pass

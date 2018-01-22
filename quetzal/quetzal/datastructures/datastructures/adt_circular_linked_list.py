@@ -99,7 +99,6 @@ class AdtCircularLinkedList:
         else:
             raise IndexError("")
 
-
     def __contains__(self, item):
         """ Searches for an item in the list.
 
@@ -114,7 +113,11 @@ class AdtCircularLinkedList:
         return False
 
     def __repr__(self):
-        string = "digraph G {\ngraph [\nrankdir = \"LR\"\n];\n\n"
+        """ Creates the dot-representation of the list
+
+        :return: string with dot-representation
+        """
+        string = "digraph cll {\ngraph [\nrankdir = \"LR\"\n];\n\n"
         for i in range(len(self)):
             string += str(i)
             string += " [\nlabel = \""
