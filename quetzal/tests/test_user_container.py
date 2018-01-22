@@ -1,5 +1,4 @@
 from unittest import TestCase
-from quetzal.user import UserContainer
 from quetzal import *
 
 class TestUserContainer(TestCase):
@@ -77,9 +76,7 @@ class TestUserContainer(TestCase):
         self.assertFalse(container.is_empty())
 
     def test_wrong_type(self):
-        raised = False
-        try:
-            UserContainer("hey")
-        except:
-            raised = True
-        self.assertTrue(raised)
+        with self.assertRaises(TypeError):
+            UserContainer("Wrong type")
+            UserContainer(123)
+            UserContainer(2.0)
