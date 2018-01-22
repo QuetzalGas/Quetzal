@@ -58,9 +58,6 @@ class UserContainer:
         self.idcounter += 1
         return id_
 
-    def get_graph(self):
-        return repr(self.table)
-
 class User:
     """
     A customer of the chocolade bar.
