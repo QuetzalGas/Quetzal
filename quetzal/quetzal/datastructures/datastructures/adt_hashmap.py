@@ -78,6 +78,13 @@ class AdtHashMap:
                 return False
         return True
 
+    def __len__(self):
+        """ Gets the length of the hashmap.
+
+        :return: Length of the hashmap
+        """
+        return self.length
+
     def __setitem__(self, search_key, data):
         """ Inserts a new element in the table.
 
@@ -313,3 +320,28 @@ class AdtHashMap:
                 return double_list[i]
         return None
 
+    def __repr__(self):
+        """
+        Generates a string for dot file and visual representation.
+        """
+        text = ""
+        if not self.is_empty():
+            text += "disgraph hmp {\n"
+            text += "node [shape = \"record\"];\n"
+            text += "struct [label=\""
+            for i in range(len(self)):
+                if self.collision_type == SEPARATE_CHAINING and not self.lijst[i].is_empty():
+                    current = self.lijst[i][0]
+                    text += str(current.item.data)
+                    text += "|"
+                    while current.next is not None:
+                        current = current.next
+                        text += str(current.item.data)
+                        text += "|"
+                else:
+                    text += str(self.lijst[i].data)
+                    text += "|"
+            text.strip("|")
+            text += "\"];\n"
+            text += "}"
+        return text
