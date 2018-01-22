@@ -5,98 +5,35 @@ class UserContainer:
     """
     Contains all users (customers) and their orders. The initializing of a user starts here.
     When a user gives their firstname, lastname and email-address the ID is calculated, the email is used to
-    check whether the user is new or not. If it's a new customer, then this customer will be added to the
-    users. (stored in BS, 23, 234 or RB tree)
-    PRE :   'type' decides whether the users will be stored in a BS, 23, 234 or RB-tree or Hashmap
-    POST:   Depending on 'type', the UserContainer now contains a table that is a BS, 23, 234 or RB-tree or a Hashmap.
+    check whether the user is new or not. A new customer will be added to the table. (stored in BS, 23, 234 or RB tree)
     """
 
-    def __init__(self, type):
+    def __init__(self, table):
+        """
+        :param table: The table of type: AdtBinarySearchTree, AdtTwoThreeTree, AdtTwoThreeFourTree, AdtRedBlacktree
+                      or Hashmap.
+        :raise: If the table is of incorrect type, an exception is raised.
+        """
         self.idcounter = 0
-
-        # # How it should be:
-        # self.table = type
-
-        if type == 'bs' or type == 'BS':
-            self.type = 'bs'
-            self.table = AdtBinarySearchTree()
-        elif type == '23':
-            self.type = '23'
-            self.table = AdtTwoThreeTree()
-        elif type == '234':
-            self.type = '234'
-            self.table = AdtTwoThreeFourTree()
-        elif type == 'rb' or type == 'RB':
-            self.type = 'rb'
-            self.table = AdtRedBlackTree()
-        elif type == 'h' or type == 'H':
-            self.type = 'h'
-            # 254 is the max length of a valid email-address
-            self.table = AdtHashMap(254, 2)
-        else:
-            raise ValueError("Unvalid type.")
+        self.table = table
+        if not (isinstance(table, AdtBinarySearchTree) or isinstance(table, AdtTwoThreeTree) or
+                isinstance(table, AdtHashMap) or isinstance(table, AdtTwoThreeFourTree) or
+                isinstance(table, AdtRedBlackTree)):
+            raise TypeError("Unvalid table type for the UserContainer.")
 
     def add_if_unknown_user(self, firstname, lastname, email):
         """ Checks whether a user with the given 'email' is already present in the table, if not a new User is added
-        to the table with the given 'firstname', 'lastname', 'email' and 'order'.
+        to the table with the given 'firstname', 'lastname' and 'email'.
 
-        :param :   'order' is of type Order; 'firstname', 'lastname' and 'email' are strings.
+        :param :   'firstname', 'lastname' and 'email' are strings.
         :return:   True if a new user was added, False otherwise.
         """
-        # # How it should be:
-        # if self.table.__contains__(email):
-        #     return False
-        # else:
-        #     new_user = User(self.calculate_id(), firstname, lastname, email)
-        #     self.table.__setitem__(email, new_user)
-        #     return True
-
-        if self.type == 'bs':
-            result = self.table.__getitem__(email)
-            resultRetrieve = result[0]
-            if resultRetrieve is not False:
-                retrievedItem = result[1].item
-        elif self.type == '23':
-            result = self.table.__getitem__(email)
-            resultRetrieve = result[1]
-            retrievedItem = result[0]
-        elif self.type == '234':
-            result = self.table.table_retrieve(email)
-            resultRetrieve = result[1]
-            if result[0] is not None:
-                retrievedItem = result[0].item
-        # elif self.type == 'rb':
-        #     resultRetrieve =
-        else:  # hashmap
-            resultRetrieve = self.table.table_retrieve(email)
-            retrievedItem = resultRetrieve  # Hashmap return False or Node, zo not a tuple
-
-        if(resultRetrieve is not False):
+        if email in self.table:
             return False
         else:
-            user = User(self.calculate_id(), firstname, lastname, email)
-            self._add_new_user(user)
+            new_user = User(self.calculate_id(), firstname, lastname, email)
+            self.table[email] = new_user
             return True
-
-    def _add_new_user(self, user):
-        """ Adds a new user to the container. This method is not supposed to be used by an outsider, it's used
-        inside the check_user method.
-
-        :param user :   'user' is of type User. This will be added to the table.
-        """
-        ## How it should be:
-        # This method wouldn't be needed anymore.
-
-        if self.type == 'bs':
-            self.table.__setitem__(user.email, user)
-        elif self.type == '23':
-            self.table.__setitem__(user.email, user)
-        elif self.type == '234':
-            self.table.table_insert(user.email, user)
-        elif self.type == 'rb':
-            self.table.insert(user.email, user)
-        elif self.type == 'h':
-            self.table.__setitem__(user.email, user)
 
     def retrieve_user(self, email):
         """ Searches for a user by the given 'email'.
@@ -105,55 +42,21 @@ class UserContainer:
         :return:   If there was a user with email adress 'email' in the table, True and the User is returned.
                    If not, False and None is returned.
         """
-        # How it should be:
-        # (boolean, user) = self.table.__getitem__(email)
-        # if boolean:
-        #     return True, user
-        # else:
-        #     return False, None
-        # ####
-
-        if self.type == 'bs':
-            user = self.table.__getitem__(email)[1]
-            if user is not None:
-                user = user.item
-        elif self.type == '23':
-            user = self.table.__getitem__(email)[1]
-        elif self.type == '234':
-            user = self.table.table_retrieve(email)[0]
-            if user is not None:
-                user = user.item
-        # elif self.type == 'rb':
-        #     resultRetrieve =
-        else:  # hashmap
-            user = self.table.__getitem__(email)
-        if (user is False or user is None):
+        if not email in self.table:
             return False, None
-        else:
-            if self.type == "h":
-                user = user.data
-            return True, user
+        return True, self.table[email]
 
     def is_empty(self):
         """ Checks whether the table is empty or not.
 
         :return:   True if the table is empty, False otherwise.
         """
-        ## How it should be:
-        # return self.table.is_empty()
-
-        if self.type == 'bs' or self.type == '23':
-            return self.table.is_empty()
-        if self.type == '234':
-            return self.table.table_is_empty()
-        if self.type == 'h':
-            return self.is_empty()
+        return self.table.is_empty()
 
     def calculate_id(self):
         id_ = self.idcounter
         self.idcounter += 1
         return id_
-
 
 class User:
     """
@@ -193,3 +96,6 @@ class User:
         :return :   Returns the email adress of the user.
         """
         return self.email
+
+    def __str__(self):
+        return self.firstname + " " +self.lastname

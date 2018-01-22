@@ -86,18 +86,15 @@ class TestBsTree(TestCase):
             randomInLijst = random.randint(0, len(lijst) - 1)
             key = lijst[randomInLijst]
             self.assertTrue(key in tree)
+            self.assertTrue(str(key) == tree[key])
             del tree[key]
             self.assertFalse(key in tree)
             del lijst[randomInLijst]
 
-        raised = False
-        try:
-            tree2 = AdtBinarySearchTree()
-            genereer(tree2, 200)
-            removing(tree2, 200)
-        except:
-            raised = True
-        self.assertFalse(raised)
+        tree2 = AdtBinarySearchTree()
+        genereer(tree2, 200)
+        removing(tree2, 200)
+
 
 
 def genereer(tree, N):

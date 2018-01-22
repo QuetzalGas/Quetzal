@@ -16,7 +16,7 @@ class TestTwoThreeTree(TestCase):
         self.assertFalse(tree.is_empty())
 
     def test_retrieve(self):
-        tree = AdtTwoThreeTree()
+        tree = AdtTwoThreeTree()	
         tree[3] = "3"
         tree[9] = "9"
         tree[3] = "3"
@@ -81,7 +81,7 @@ class TestTwoThreeTree(TestCase):
         self.assertEqual(tree[2], "2.1")
         del tree[2]
 
-    def test_fuzzing(self, aantal=200):
+    def test_fuzzing(self, aantal=100):
         tree = AdtTwoThreeTree()
         lijst = genereer(tree, aantal)
         for i in range(int(aantal/4)):
@@ -89,18 +89,14 @@ class TestTwoThreeTree(TestCase):
             randomInLijst = random.randint(0, len(lijst) - 1)
             item = lijst[randomInLijst]
             self.assertTrue(item in tree)
+            self.assertTrue(str(item) == tree[item])
             del tree[item]
             self.assertFalse(item in tree)
             del lijst[randomInLijst]
 
-        raised = False
-        try:
-            tree2 = AdtTwoThreeTree()
-            genereer(tree2, 200)
-            removing(tree2, 200)
-        except:
-            raised = True
-        self.assertFalse(raised)
+        tree2 = AdtTwoThreeTree()
+        genereer(tree2, 200)
+        removing(tree2, 200)
 
 def genereer(tree, N):
     """ Inserts 90% of numbers from zero to N in the given tree.
