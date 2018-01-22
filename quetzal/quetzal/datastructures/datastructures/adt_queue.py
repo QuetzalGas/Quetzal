@@ -1,22 +1,23 @@
 from . import AdtDoublyLinkedList
 
+
 class AdtQueue:
     def __init__(self):
         self.storage = AdtDoublyLinkedList()
 
     def is_empty(self):
-        return self.storage.get_length() == 0
+        return len(self.storage) == 0
 
     def enqueue(self, item):
-        self.storage.insert_end(item)
+        self.storage[len(self.storage)] = item
 
     def dequeue(self):
-        node = self.storage.search_node(1)
-
+        node = self.storage[0]
         if node is not None:
-            return self.storage.retrieve(1)[0]
+            del self.storage[0]
+            return node
         else:
             return False
 
     def get_front(self):
-        return self.storage.search_node(0)
+        return self.storage[0]

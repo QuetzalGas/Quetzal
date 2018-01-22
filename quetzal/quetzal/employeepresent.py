@@ -1,5 +1,4 @@
 from .datastructures import *
-from .employee import Employee
 
 
 class EmployeePresent:
@@ -10,7 +9,7 @@ class EmployeePresent:
         POST: A new system is initialised.
         """
         self.employees_working = []
-        self.stack = AdtStack()
+        self.stack = StackQueue(0)
         self.handled_orders = []
         self.employees_present = []
         self.order_queue = None
@@ -21,7 +20,7 @@ class EmployeePresent:
         PRE: None
         POST: The object will be destroyed.
         """
-        self.stack.destroy_stack()
+        del self.stack
 
     def add_employee(self, employee):
         """ Registers an employee for the work day.
@@ -31,7 +30,7 @@ class EmployeePresent:
         PRE: Employee has to be of the employee class.
         POST: Employee will be on the stack and available to handle orders.
         """
-        self.stack.push(employee)
+        self.stack.insert(employee)
         self.employees_present.append(employee)
 
     def start(self, queue):
@@ -66,8 +65,7 @@ class EmployeePresent:
         PRE: None
         POST: The employee that was added last on the stack now has an order to process.
         """
-        employee_node = self.stack.pop_and_return()[0]
-        employee = employee_node.item
+        employee = self.stack.delete()
         employee.set_order_load(order)
         self.employees_working.append(employee)
 
@@ -83,9 +81,10 @@ class EmployeePresent:
             order = i.get_order()
             i.process()
             if i.get_credits_still_to_do() == 0:
-                self.stack.push(i)
+                self.stack.insert(i)
                 self.handled_orders.append(order)
                 index_to_delete.append(j)
+
         index_to_delete.reverse()
         for index in index_to_delete:
             del self.employees_working[index]
@@ -100,12 +99,11 @@ class EmployeePresent:
         """
         stack_list = []
         while not self.stack.is_empty():
-            employee_node = self.stack.pop_and_return()[0]
-            employee = employee_node.item
+            employee = self.stack.delete()
             stack_list.append(employee)
         stack_list.reverse()
         for i in stack_list:
-            self.stack.push(i)
+            self.stack.insert(i)
         return stack_list
 
     def get_remaining_workload(self, id_):
