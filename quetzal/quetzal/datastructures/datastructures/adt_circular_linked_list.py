@@ -10,17 +10,13 @@ class _Node:
 
 class AdtCircularLinkedList:
     def __init__(self):
-        """
-        Creates a new circular linked list with a dummy head node.
-        """
+        """ Creates a new circular linked list with a dummy head node. """
         self.dummy_head = _Node(None, None)
         self.dummy_head.next = self.dummy_head
         self.head = self.dummy_head
 
     def __del__(self):
-        """
-        Deletes the list.
-        """
+        """ Deletes the list. """
         self.dummy_head.next = self.dummy_head
         self.head = self.dummy_head
 
@@ -68,25 +64,21 @@ class AdtCircularLinkedList:
     def __delitem__(self, index):
         """ Delete the element on position 'index'.
 
-        :param index: positie van het element dat verwijderd moet worden.
+        :param index: position of the element that needs to be deleted.
         :raise IndexError if index is out of range
         """
         if 0 <= index < len(self):
-            cur = self.head
-            prev = _Node(None, cur)
-
-            # +1 because we take the dummy node as cur the first time
-            for i in range(index+1):
-                cur = cur.next
-                prev = prev.next
-            prev.next = cur.next
+            current = self.head
+            for i in range(index): # we move current to the node right before the one we want to delete
+                current = current.next
+            current.next = current.next.next
         else:
             raise IndexError("")
 
     def __getitem__(self, index):
         """ Returns the element on position 'index".
 
-        :param index: positie van het element.
+        :param index: position of the element.
         :raise IndexError if index is out of range
         :return: element
         """

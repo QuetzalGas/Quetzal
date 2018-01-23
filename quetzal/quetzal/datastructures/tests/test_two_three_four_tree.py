@@ -31,6 +31,57 @@ class TestTwoThreeFourTree(TestCase):
         self.assertEqual(t.root.children[2].amount, 2)
         self.assertEqual(t.root.children[3], None)
 
+    def test_insert_2(self):
+        t = AdtTwoThreeFourTree()
+        keys = [60, 30, 10, 20, 50, 40, 70, 80, 15, 90, 100]
+        for k in keys:
+            t[k] = k
+        filename = "test2.dot"
+        with open(filename, "w") as file:
+            file.write(repr(t))
+        for k in keys:
+            self.assertTrue(k in t)
+
+    def test_insert_and_delete(self):
+        t = AdtTwoThreeFourTree()
+        keys = [60, 30, 10, 20, 50, 40, 70, 80, 15, 90, 100]
+        for k in keys:
+            t[k] = k
+        to_delete = keys[4:]
+        for k in to_delete:
+            del t[k]
+            keys.remove(k)
+            filename = "test2_" + str(k) + ".dot"
+            with open(filename, "w") as file:
+                file.write(repr(t))
+        for k in keys:
+            self.assertTrue(k in t)
+        for k in to_delete:
+            self.assertFalse(k in t)
+
+    def test_delete(self):
+        t = AdtTwoThreeFourTree()
+        k1 = [10, 100, 30, 80, 50]
+        k2 = [60, 70, 40]
+        k3 = [90, 20]
+        keys = [100, 50, 60, 40, 90, 20]
+        for k in k1:
+            t[k] = k
+        del t[10]
+        for k in k2:
+            t[k] = k
+        del t[80]
+        for k in k3:
+            t[k] = k
+        del t[30]
+        del t[70]
+        for k in keys:
+            self.assertTrue(k in t)
+        for k in [10, 80, 30, 70, 4]:
+            self.assertFalse(k in t)
+
+
+
     def test_mega_fuzz(self):
         rounds = 20
         unique_insertions = 10
@@ -53,7 +104,6 @@ class TestTwoThreeFourTree(TestCase):
             for i in range(0, 3):
                 keys.extend(duplicates)
             shuffle(keys)
-
             tree = AdtTwoThreeFourTree()
             # Insert all keys.
             for i in keys:

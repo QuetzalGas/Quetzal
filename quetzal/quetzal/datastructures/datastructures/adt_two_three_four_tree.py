@@ -25,6 +25,12 @@ class _TreeNode:
         if new_item is None:
             return False
 
+        # new_item can either be a list of treenode(s) (in case of a swap in the tree)
+        # or new_item is just a treenode (when a new item is inserted in the tree).
+        # In the last case we have to check if there are already items in the tree
+        # with the same search key as new_item, and if so append it to the list.
+        # If not, we create a new list with new_item.
+
         for item in self.items:
             if item is not None and not isinstance(new_item, type([])):
                 if item[0].search_key == new_item.search_key:
@@ -127,6 +133,10 @@ class _TreeNode:
                 return to_delete, True
 
     def get_siblings(self):
+        """ Looks for nearest (direct) siblings of a treenode
+
+        :return: amount of direct siblings, siblings
+        """
         if self.parent is None:
             return 0, None
         if self.parent.amount == 1:
@@ -164,17 +174,14 @@ class _TreeNode:
             if self.parent.children[i] is self:
                 return i
 
-    def print(self):
+    def get_keys(self):
+        keys = []
         for item in self.items:
-            if item is None:
-                continue
-            else:
-                print(item[0].item, end=" ")
-        print()
-        if not self.is_leaf():
-            for child in self.children:
-                if child is not None:
-                    child.print()
+            if item is not None:
+                keys.append(item[0].search_key)
+        return keys
+
+
 
 
 class TreeItem:
@@ -251,13 +258,14 @@ class AdtTwoThreeFourTree:
         """ Inserts 'item' in the 2-3-4 tree.
 
         :param newItem: item to be added in the tree.
+        :raise TypeError if key or item are not of the right type
 
-        PRE: 'newItem' is of type TableItemType
+        PRE: 'newItem' is of type TableItemType, key is of KeyType
         POST: Tree is a valid 2-3-4 tree and returns True if insertion worked.
         """
         if not self.is_empty():
-            if not isinstance(item, type(self.root.items[0][0].item)):
-                raise TypeError("")
+            if not isinstance(item, type(self.root.items[0][0].item)) or not isinstance(key, type(self.root.items[0][0].search_key)):
+                raise TypeError
         newItem = TreeItem(key, item)
         if self.root is None:
             self.root = _TreeNode()
@@ -279,6 +287,8 @@ class AdtTwoThreeFourTree:
             current = node
         if current.is_leaf():
             current.insert_item(newTreeItem)
+        elif newTreeItem.search_key in current.get_keys():
+            current.insert_item(newTreeItem)
         else:
             if newTreeItem.search_key < current.items[0][0].search_key:
                 self._insert(current.children[0], newTreeItem)
@@ -296,22 +306,24 @@ class AdtTwoThreeFourTree:
                 self._insert(current.children[1], newTreeItem)
 
     def inorder_traverse_table(self, visit):
-        """
-        Traverses the complete 2-3-4 tree in inorder, and calls function visit for each item.
-        Pre: 'visit' is a function.
-        Post: visit was called for every item in inorder.
+        """ Traverses the complete 2-3-4 tree in inorder, and calls function visit for each item.
+
         :param visit: function to be called for every item
+
+        PRE: 'visit' is a function.
+        POST: visit was called for every item in inorder.
         """
         self._inorder(self.root, visit)
 
     def _inorder(self, node, visit):
-        """
-        Traverses 2-3-4 tree in inorder, starting at node, and calls function visit for each item.
-        Pre: 'visit' is a function.
-        Post: visit was called for every item in inorder.
+        """ Traverses 2-3-4 tree in inorder, starting at node, and calls function visit for each item.
+
         :param visit: function to be called for every item
         :param node: starting point for traversal.
         :return: False if node is empty, True if not.
+
+        PRE: 'visit' is a function.
+        POST: visit was called for every item in inorder.
         """
         if node is None:
             return False
@@ -371,11 +383,15 @@ class AdtTwoThreeFourTree:
 
         :param search_key: searchkey of the item to be found.
         :raise KeyError if there is no item with given search_key in the tree
+        :raise TypeError if the search_key is of the wrong type
         :return: item with 'search_key' as searchkey
 
         PRE: 'search_key' is of the type KeyType
         POST: item with 'search_key' as searchkey gets returned
         """
+        if not self.is_empty():
+            if not isinstance(search_key, type(self.root.items[0][0].search_key)):
+                raise TypeError
         return self._retrieve(self.root, search_key)
 
     def _retrieve(self, node, search_key):
@@ -398,11 +414,11 @@ class AdtTwoThreeFourTree:
                 if item[0].search_key == search_key:
                     return item[0].item
 
-        for x in range(node.amount, 0, -1):
-            if node.items[x - 1][0].search_key < search_key:
-                return self._retrieve(node.children[x], search_key)
-
-        return self._retrieve(node.children[0], search_key)
+        for i in range(node.amount):
+            if node.items[i] is not None:
+                if search_key < node.items[i][0].search_key:
+                    return self._retrieve(node.children[i], search_key)
+        return self._retrieve(node.children[node.amount], search_key)
 
     def _merge(self, node):
         """ Makes a 2-node into a 3-node or a 4-node.
@@ -459,7 +475,7 @@ class AdtTwoThreeFourTree:
                     node.parent.items[parentNr])[0])
             return True
         else:
-            if node.get_siblings()[0] == 1:
+            if node.get_siblings()[0] == 1: # amount of siblings
                 sibling = node.get_siblings()[1]
                 if node.get_max_search_key() < node.get_siblings()[1].get_max_search_key():
                     # sibling is right from node (node is leftmost)
@@ -517,11 +533,15 @@ class AdtTwoThreeFourTree:
 
         :param search_key: search key of the element that needs to be deleted.
         :raise KeyError if search_key is not in tree
+        :raise TypeError if key is the wrong type.
 
         PRE: 'search_key' is of the type KeyType.
         POST: there is one less item with 'search_key' as search key in the 2-3-4 tree
         and the tree is a valid 2-3-4 tree.
         """
+        if not self.is_empty():
+            if not isinstance(search_key, type(self.root.items[0][0].search_key)):
+                raise TypeError
         if not self._delete_without_merge(self.root, search_key):
             if self.is_empty():
                 return
@@ -546,6 +566,7 @@ class AdtTwoThreeFourTree:
                                 return
                             else:
                                 next = current.children[k + 1]
+                                # TODO: break?
                     k += 1
                 if searching:
                     if search_key > current.get_max_search_key():
@@ -560,7 +581,11 @@ class AdtTwoThreeFourTree:
             # searching for inorder successor
             while not next.is_leaf():
                 self._merge(next)
-                next = next.children[0]
+                for i in range(next.amount-1, -1, -1):
+                    if next.items[i] is not None:
+                        if search_key < next.items[i][0].search_key:
+                            next = next.children[i]
+                            break
             self._merge(next)
 
             searching = True
@@ -604,18 +629,18 @@ class AdtTwoThreeFourTree:
             if item is not None:
                 if item[0].search_key == search_key:
                     if len(item) > 1:
-                        help = item[:-1]
+                        help = item[1:]
                         node.delete_item(item)
                         node.insert_item(help)
                         return True
                     else:
                         return False
 
-        for x in range(node.amount, 0, -1):
-            if node.items[x - 1][0].search_key < search_key:
-                return self._delete_without_merge(node.children[x], search_key)
-
-        return self._delete_without_merge(node.children[0], search_key)
+        for i in range(node.amount):
+            if node.items[i] is not None:
+                if search_key < node.items[i][0].search_key:
+                    return self._delete_without_merge(node.children[i], search_key)
+        return self._delete_without_merge(node.children[node.amount], search_key)
 
     def __repr__(self):
         """ Creates the dot-representation of the tree
@@ -627,5 +652,14 @@ class AdtTwoThreeFourTree:
         string += "}"
         return string
 
-    def __contains__(self, item):
-        pass
+    def __contains__(self, key):
+        """ Checks if there is an item with 'key' as search key.
+
+        :param key: The searchkey of which a node is searched.
+        :return: True if there is a node with searchkey == 'key', false otherwise.
+        """
+        try:
+            self._retrieve(self.root, key)
+        except:
+            return False
+        return True
