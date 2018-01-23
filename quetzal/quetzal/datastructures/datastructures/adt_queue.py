@@ -21,3 +21,17 @@ class AdtQueue:
 
     def get_front(self):
         return self.storage[0]
+
+    def __repr__(self):
+        output = 'digraph queue {\n node [shape=record];\n'
+        output += '  node1 [label="'
+
+        for i in range(len(self.storage)):
+            value = self.storage[i]
+            output += str(value)
+            if i != len(self.storage) - 1:
+                output += '|'
+        output += '"];\n  node1;\n'
+
+        output += '}'
+        return output

@@ -915,7 +915,11 @@ class AdtRedBlackTree:
             stack.push(child)
 
     def __repr__(self):
-        return self.root.dot()
+        output = 'digraph rb{\n  node[shape = record];\n'
+        output += self.root.dot()
+        output += '}'
+
+        return output
 
     def dot(self, filename, label):
         with open(filename, 'w') as of:

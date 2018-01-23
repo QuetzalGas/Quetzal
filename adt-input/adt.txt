@@ -1,0 +1,52 @@
+# lijnen die beginnen met # worden genegeerd
+# het type is stack, queue, bst, ll, 23, 234, rb, hlin, hquad, hsep, heap
+# print geeft een grafische weergave in dot formaat: 
+# https://en.wikipedia.org/wiki/DOT_(graph_description_language),http://www.graphviz.org/content/dot-language
+type=bst
+insert 10
+insert 5
+insert 9
+# dit maakt een bestand bst-1.dot
+print
+insert 12
+delete 10
+# dit maakt een bestand bst-2.dot
+print
+
+# in 1 script kan je meerdere adts zetten
+type=23
+insert 5
+insert 6
+delete 5
+# dit maakt een bestand 23-1.dot
+print
+
+type=stack
+insert 5
+insert 6
+#delete
+# dit maakt een bestand stack-1.dot
+print
+
+type=queue
+insert 1
+insert 2
+insert 3
+insert 4
+print
+insert 5
+delete
+print
+delete
+delete
+insert 6
+print
+
+type=cll
+insert 1
+insert 2
+insert 4
+insert 5
+print
+
+# test
