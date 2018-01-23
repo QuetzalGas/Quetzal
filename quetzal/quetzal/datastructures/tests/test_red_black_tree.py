@@ -513,31 +513,290 @@ class TestRbTree(TestCase):
         self.assertEqual(keys, [5, 3, 1, 0, 2, 4, 7, 6, 8])
         self.assertEqual(red, [1])
 
-    def test_combine_2p_4s(self):
+    def test_combine_2p_x1(self):
+        # right sibling is 4 node.
+        pre = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
+        pre_red = [5, 9]
+
+        expected = [5, 3, 1, 0, 2, 4, 7, 6, 9, 8, 10]
+        expected_red = [1, 9]
+
+        self.pre_post_combine(1, pre, pre_red, expected, expected_red, 'combine_2p_x1')
+
+    def test_combine_2p_x(self):
+        # left sibling is 4 node.
+        pre = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
+        pre_red = [1, 5]
+
+        expected = [5, 3, 1, 0, 2, 4, 7, 6, 9, 8, 10]
+        expected_red = [1, 9]
+
+        self.pre_post_combine(9, pre, pre_red, expected, expected_red, 'combine_2p_x')
+
+    def test_combine_3p_merge(self):
+        case_1 = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
+        case_1_red = [3]
+
+        case_2 = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
+        case_2_red = [7]
+
+        self.pre_post_combine(1, case_1, case_1_red, case_1, [1, 5], 'combine_3p_merge_1')
+        self.pre_post_combine(1, case_2, case_2_red, case_1, [1, 5], 'combine_3p_merge_2')
+
+        self.pre_post_combine(5, case_1, case_1_red, case_1, [1, 5], 'combine_3p_merge_3')
+        self.pre_post_combine(5, case_2, case_2_red, case_1, [1, 5], 'combine_3p_merge_4')
+        
+        self.pre_post_combine(9, case_1, case_1_red, case_2, [5, 9], 'combine_3p_merge_5')
+        self.pre_post_combine(9, case_2, case_2_red, case_2, [5, 9], 'combine_3p_merge_6')
+
+    def test_combine_3p_1(self):
+        case_1 = [7, 1, 0, 3, 2, 5, 4, 6, 9, 8, 10]
+        case_1_red = [1, 5]
+
+        case_2 = [1, 0, 7, 3, 2, 5, 4, 6, 9, 8, 10]
+        case_2_red = [7, 5]
+
+        case_3 = [7, 1, 0, 5, 3, 2, 4, 6, 9, 8, 10]
+        case_3_red = [1, 3]
+
+        case_4 = [1, 0, 7, 5, 3, 2, 4, 6, 9, 8, 10]
+        case_4_red = [7, 3]
+
+        expected = [5, 1, 0, 3, 2, 4, 7, 6, 9, 8, 10]
+        expected_red = [1, 9]
+
+        self.pre_post_combine(9, case_1, case_1_red, expected, expected_red, 'combine_3p_1_1')
+        self.pre_post_combine(9, case_2, case_2_red, expected, expected_red, 'combine_3p_1_2')
+        self.pre_post_combine(9, case_3, case_3_red, expected, expected_red, 'combine_3p_1_3')
+        self.pre_post_combine(9, case_4, case_4_red, expected, expected_red, 'combine_3p_1_4')
+
+    def test_combine_3p_2(self):
+        case_1 = [1, 0, 9, 5, 3, 2, 4, 7, 6, 8, 11, 10, 12]
+        case_1_red = [9, 3, 7]
+
+        case_2 = [9, 1, 0, 5, 3, 2, 4, 7, 6, 8, 11, 10, 12]
+        case_2_red = [1, 3, 7]
+
+        expected = [7, 1, 0, 5, 3, 2, 4, 6, 9, 8, 11, 10, 12]
+        expected_red = [1, 3, 11]
+
+        self.pre_post_combine(11, case_1, case_1_red, expected, expected_red, 'combine_3p_2_1')
+        self.pre_post_combine(11, case_2, case_2_red, expected, expected_red, 'combine_3p_2_2')
+
+    def test_combine_3p_3(self):
+        case_1 = [5, 1, 0, 3, 2, 4, 9, 7, 6, 8, 10]
+        case_1_red = [3, 9]
+
+        case_2 = [5, 3, 1, 0, 2, 4, 9, 7, 6, 8, 10]
+        case_2_red = [1, 9]
+
+        case_3 = [9, 5, 1, 0, 3, 2, 4, 7, 6, 8, 10]
+        case_3_red = [5, 3]
+
+        case_4 = [9, 5, 3, 1, 0, 2, 4, 7, 6, 8, 10]
+        case_4_red = [5, 1]
+
+        expected = [3, 1, 0, 2, 9, 5, 4, 7, 6, 8, 10]
+        expected_red = [9, 7]
+
+        self.pre_post_combine(7, case_1, case_1_red, expected, expected_red, 'combine_3p_3_1')
+        self.pre_post_combine(7, case_2, case_2_red, expected, expected_red, 'combine_3p_3_2')
+        self.pre_post_combine(7, case_3, case_3_red, expected, expected_red, 'combine_3p_3_3')
+        self.pre_post_combine(7, case_4, case_4_red, expected, expected_red, 'combine_3p_3_4')
+
+    def test_combine_3p_4(self):
+        case_1 = [11, 7,3, 1, 0, 2, 5, 4, 6, 9, 8, 10, 12]
+        case_1_red = [7, 1, 5]
+
+        case_2 = [7, 3, 1, 0, 2, 5, 4, 6, 11, 9, 8, 10, 12]
+        case_2_red = [1, 5, 11]
+
+        expected = [5, 3, 1, 0, 2, 4, 11, 7, 6, 9,8, 10, 12]
+        expected_red = [1, 11, 9]
+
+        self.pre_post_combine(9, case_1, case_1_red, expected, expected_red, 'combine_3p_4_1')
+        self.pre_post_combine(9, case_2, case_2_red, expected, expected_red, 'combine_3p_4_2')
+
+    def test_combine_3p_5(self):
+        case_1 = [9, 3, 1, 0, 2, 5, 4, 7, 6, 8, 10]
+        case_1_red = [3, 7]
+
+        case_2 = [9, 3, 1, 0, 2, 7, 5, 4, 6, 8, 10]
+        case_2_red = [3, 5]
+
+        case_3 = [3, 1, 0, 2, 9, 5, 4, 7, 6, 8, 10]
+        case_3_red = [9, 7]
+
+        case_4 = [3, 1, 0, 2, 9, 7, 5, 4, 6, 8, 10]
+        case_4_red = [9, 5]
+
+        expected = [5, 3, 1, 0, 2, 4, 9, 7, 6, 8, 10]
+        expected_red = [1, 9]
+
+        self.pre_post_combine(1, case_1, case_1_red, expected, expected_red, 'combine_3p_5_1')
+        self.pre_post_combine(1, case_2, case_2_red, expected, expected_red, 'combine_3p_5_2')
+        self.pre_post_combine(1, case_3, case_3_red, expected, expected_red, 'combine_3p_5_3')
+        self.pre_post_combine(1, case_4, case_4_red, expected, expected_red, 'combine_3p_5_4')
+
+    def test_combine_3p_6(self):
+        case_1 = [11, 3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10, 12]
+        case_1_red = [3, 5, 9]
+
+        case_2 = [3, 1, 0, 2, 11, 7, 5, 4, 6, 9, 8, 10, 12]
+        case_2_red = [11, 5, 9]
+
+        expected = [5, 3, 1, 0, 2, 4, 11, 7, 6, 9, 8, 10, 12]
+        expected_red = [1, 11, 9]
+
+        self.pre_post_combine(1, case_1, case_1_red, expected, expected_red, 'combine_3p_6_1')
+        self.pre_post_combine(1, case_2, case_2_red, expected, expected_red, 'combine_3p_6_2')
+
+    def test_combine_4p_1(self):
+        case_1 = [3, 1, 0, 2, 9, 7, 5, 4, 6, 8, 11, 10, 12]
+        case_1_red = [1, 9, 5]
+
+        case_2 = [3, 1, 0, 2, 9, 5, 4, 7, 6, 8, 11, 10, 12]
+        case_2_red = [1, 9, 7]
+
+        expected = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 11, 10, 12]
+        expected_red = [1, 7, 11]
+
+        self.pre_post_combine(11, case_1, case_1_red, expected, expected_red, 'combine_4p_1_1')
+        self.pre_post_combine(11, case_2, case_2_red, expected, expected_red, 'combine_4p_1_2')
+
+    def test_combine_4p_2(self):
+        pre = [3, 1, 0, 2, 11, 7, 5, 4, 6, 9, 8, 10, 13, 12, 14]
+        pre_red = [1, 11, 5, 9]
+
+        expected = [3, 1, 0, 2, 9, 7, 5, 4, 6, 8, 11, 10, 13, 12, 14]
+        expected_red = [1, 9, 5, 13]
+
+        self.pre_post_combine(13, pre, pre_red, expected, expected_red, 'combine_4p_2')
+
+    def test_combine_4p_3(self):
+        case_1 = [7, 1, 0, 5, 3, 2, 4, 6, 11, 9, 8, 10, 12]
+        case_1_red = [1, 3, 11]
+
+        case_2 = [7, 1, 0, 3, 2, 5, 4, 6, 11, 9, 8, 10, 12]
+        case_2_red = [1, 5, 11]
+
+        expected = [5, 1, 0, 3, 2, 4, 11, 9, 7, 6, 8, 10, 12]
+        expected_red = [1, 11, 7]
+
+        self.pre_post_combine(9, case_1, case_1_red, expected, expected_red, 'combine_4p_3_1')
+        self.pre_post_combine(9, case_2, case_2_red, expected, expected_red, 'combine_4p_3_2')
+
+    def test_combine_4p_4(self):
+        pre = [9, 1, 0, 5, 3, 2,4, 7, 6, 8, 13, 11, 10, 12, 14]
+        pre_red = [1, 3, 7, 13]
+
+        expected = [7, 1, 0, 5, 3, 2, 4, 6, 13, 11, 9,8, 10, 12, 14]
+        expected_red = [1, 3, 13, 9]
+
+        self.pre_post_combine(11, pre, pre_red, expected, expected_red, 'combine_4p_4')
+
+    def test_combine_4p_5(self):
+        case_a = [9, 5, 3, 1, 0, 2, 4, 7, 6, 8, 11, 10, 12]
+        case_a_red = [5, 1, 11]
+
+        case_b = [9, 5, 1, 0, 3, 2, 4, 7, 6, 8, 11, 10, 12]
+        case_b_red = [5, 3, 11]
+
+        expected = [9, 3, 1, 0, 2, 5, 4, 7, 6, 8, 11, 10, 12]
+        expected_red = [3, 7, 11]
+
+        self.pre_post_combine(7, case_a, case_a_red, expected, expected_red, 'combine_4p_5a')
+        self.pre_post_combine(7, case_b, case_b_red, expected, expected_red, 'combine_4p_5b')
+
+    def test_combine_4p_6(self):
+        pre = [11, 7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10, 13, 12, 14]
+        pre_red = [7, 1, 5, 13]
+
+        expected = [11, 5, 3, 1, 0, 2, 4, 7, 6, 9, 8, 10, 13, 12, 14]
+        expected_red = [5, 1, 9,13]
+
+        self.pre_post_combine(9, pre, pre_red, expected, expected_red, 'combine_4p_6')
+
+    def test_combine_4p_7(self):
+        case_a = [9, 3, 1, 0, 2, 5, 4, 7, 6, 8, 11, 10, 12]
+        case_a_red = [3, 7, 11]
+
+        case_b = [9, 3, 1, 0, 2, 7, 5, 4, 6, 8, 11, 10, 12]
+        case_b_red = [3, 5, 11]
+
+        expected = [9, 5, 3, 1, 0, 2, 4, 7, 6, 8, 11, 10, 12]
+        expected_red = [5, 1, 11]
+
+        self.pre_post_combine(1, case_a, case_a_red, expected, expected_red, 'combine_4p_7a')
+        self.pre_post_combine(1, case_b, case_b_red, expected, expected_red, 'combine_4p_7b')
+
+    def test_combine_4p_8(self):
+        pre = [11, 3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10, 13, 12, 14]
+        pre_red = [3, 5, 9, 13]
+
+        expected = [11, 5, 3, 1, 0, 2, 4, 7, 6, 9, 8, 10, 13, 12, 14]
+        expected_red = [5, 1, 9, 13]
+
+        self.pre_post_combine(1, pre, pre_red, expected, expected_red, 'combine_4p_8')
+
+    def test_combine_4p_m1(self):
+        pre = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
+        pre_red = [1, 7]
+
+        expected = pre
+        expected_red = [1, 5, 9]
+
+        self.pre_post_combine(9, pre, pre_red, expected, expected_red, 'combine_4p_m1')
+
+    def test_combine_4p_m2(self):
+        pre = [5, 1, 0, 3, 2, 4, 9, 7,6, 8, 10]
+        pre_red = [1, 9]
+
+        expected = [1, 0, 9, 5, 3, 2, 4, 7, 6, 8, 10]
+        expected_red = [9, 3, 7]
+
+        self.pre_post_combine(7, pre, pre_red, expected, expected_red, 'combine_4p_m2')
+
+    def test_combine_4p_m3(self):
+        pre = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
+        pre_red = [3, 9]
+
+        expected = pre
+        expected_red = [1, 5, 9]
+
+        self.pre_post_combine(5, pre, pre_red, expected, expected_red, 'combine_4p_m3')
+
+    def test_combine_4p_m4(self):
+        pre = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
+        pre_red = [3, 9]
+
+        expected = pre
+        expected_red = [1, 5, 9]
+
+        self.pre_post_combine(1, pre, pre_red, expected, expected_red, 'combine_4p_m4')
+
+    def pre_post_combine(self, two_node, pre_keys, pre_red, post_keys, post_red, name):
         rb = AdtRedBlackTree()
+        rb.from_deser(pre_keys, pre_red)
 
-        left = [3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10]
-        right = [7, 3, 1, 0, 2, 5, 4, 6, 9, 8, 10]
-
-        rb.from_deser(left, [5, 9])
-
-        rb.root[1].combine()
-        rb.root = rb.root.find_root()
+        self.create_directory(name)
+        self.write_dot_and_execute(rb, '{}/pre'.format(name))
 
         keys, red = get_preorder_sequence_and_red_nodes(rb)
 
-        self.assertEqual(keys, right)
-        self.assertEqual(red, [1, 5])
+        self.assertEqual(keys, pre_keys)
+        self.assertEqual(red, pre_red)
 
-        rb.from_deser(right, [1, 5])
+        two_node = rb.root[two_node]
+        two_node.combine()
+        rb.root = two_node.find_root()
 
-        rb.root[9].combine()
-        rb.root = rb.root.find_root()
+        self.write_dot_and_execute(rb, name + '/post')
 
         keys, red = get_preorder_sequence_and_red_nodes(rb)
 
-        self.assertEqual(keys, left)
-        self.assertEqual(red, [5, 9])
+        self.assertEqual(keys, post_keys)
+        self.assertEqual(red, post_red)
 
     def pre_post_split(self, four_node, pre_keys, pre_red, post_keys, post_red, l = 'temp'):
         rb = AdtRedBlackTree()
@@ -570,6 +829,7 @@ class TestRbTree(TestCase):
 
     def write_file(self, rb, filename):
         directory = 'tests/test_output/red_black_tree'
+
         with open(directory + '/' + filename, 'w') as of:
             of.write('digraph rb {\n')
             of.write('  node[shape = record];\n')
@@ -593,14 +853,6 @@ class TestRbTree(TestCase):
 
         if not os.path.exists(root):
             os.makedirs(root)
-
-    def test_4(self):
-        pre = [11, 3, 1, 0, 2, 7, 5, 4, 6, 9, 8, 10, 12]
-        rb = AdtRedBlackTree()
-        rb.from_deser(pre, [3, 5, 9])
-
-        self.create_directory('sdf')
-        self.write_dot_and_execute(rb, 'sdf/4')
 
     def test_deser(self):
         for i in range(0, 20):

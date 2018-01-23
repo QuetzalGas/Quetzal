@@ -88,18 +88,37 @@ class Node:
         unless the node is the left-most child, in which case the nearest
         sibling is to the right.
         """
-        if not self.black:
-            raise RuntimeError('No')
-
         children = self.parent.get_children()
 
-        if self.parent.is_two_node():
-            (l, r) = self.parent.get_children()
+        if len(children) == 2:
+            (l, r) = children
 
             if self == l:
                 return r
             else:
                 return l
+
+        if len(children) == 3:
+            (s, m, l) = children
+
+            if self == l:
+                return m
+            if self == m:
+                return s
+            if self == s:
+                return m
+
+        if len(children) == 4:
+            (xs, s, l, xl) = children
+
+            if self == xl:
+                return l
+            elif self == l:
+                return s
+            elif self == s:
+                return xs
+            elif self == xs:
+                return s
 
     def is_node_valid(self):
         return self.is_color_valid() and self.is_child_relation_valid()
@@ -153,11 +172,23 @@ class Node:
 
         return self.parent.is_root_of_three_node() and (not self.black)
 
+    def is_three_node(self):
+        return (self.is_tail_of_three_node() or self.is_root_of_three_node())
+
     def is_root_of_four_node(self):
         l_ok = (self.left is not None) and (not self.left.black)
         r_ok = (self.right is not None) and (not self.right.black)
 
         return (self.black and l_ok and r_ok)
+
+    def is_tail_of_four_node(self):
+        if self.parent is None:
+            return False
+
+        return self.parent.is_root_of_four_node() and (not self.black)
+
+    def is_four_node(self):
+        return (self.is_tail_of_four_node() or self.is_root_of_four_node())
 
     def flip_color(self):
         self.black = not self.black
@@ -432,6 +463,10 @@ class Node:
 
         if self.parent.is_two_node():
             self._combine_parent_two_node()
+        elif self.parent.is_three_node():
+            self._combine_parent_three_node()
+        elif self.parent.is_four_node():
+            self._combine_parent_four_node()
 
     def _combine_parent_two_node(self):
         is_left = self.is_left_child()
@@ -451,22 +486,16 @@ class Node:
             self.parent.black = True
         elif sibling.is_root_of_four_node():
             if is_left:
-                sibling.right.black = True
                 sibling.rotate_right()
                 sibling.black = True
-                sibling.parent.black = False
-                p = self.parent.rotate_left()
-                p.rotate_left()
-                p.rotate_right()
+
+                self.parent.rotate_left()
                 self.black = False
             else:
-                sibling.left.black = True
                 sibling.rotate_left()
                 sibling.black = True
-                sibling.parent.black = False
-                p = self.parent.rotate_right()
-                p.rotate_right()
-                p.rotate_left()
+
+                self.parent.rotate_right()
                 self.black = False
         elif sibling.is_root_of_three_node():
             # Three node
@@ -475,30 +504,157 @@ class Node:
                 sibling.right.black = True
                 self.parent.rotate_left()
             else:
-#                if not sibling.is_left_leaning():
-#                    sibling = sibling.rotate_left()
                 sibling = sibling.make_left_leaning()
                 sibling.left.black = True
                 self.parent.rotate_right()
-                #raise RuntimeError
 
             self.black = False
         else:
             raise RuntimeError('dd')
 
     def _combine_parent_three_node(self):
-        (s, m, l) = self.get_children()
+        (s, m, l) = self.parent.get_children()
         nearest_sibling = self.get_nearest_sibling()
 
         if self == l:
-            pass
-        if self == m:
-            pass
-        if self == s:
-            pass
+            if nearest_sibling.is_two_node():
+                # Merge
+                self.parent.make_right_leaning()
+                self.parent.flip_color()
+            elif nearest_sibling.is_root_of_three_node():
+                # Redistribute
+                self.parent.make_right_leaning()
+
+                sibling = nearest_sibling.make_left_leaning()
+                sibling.left.black = True
+
+                self.parent.rotate_right()
+                self.black = False
+                # This balances the tree, and is optional
+                self.parent.parent.make_left_leaning()
+            elif nearest_sibling.is_root_of_four_node():
+                # Redistribute
+                self.parent.make_right_leaning()
+                nearest_sibling.rotate_left()
+                nearest_sibling.black = True
+
+                self.parent.rotate_right()
+                self.black = False
+
+                self.parent.parent.make_left_leaning()
+        elif self == m:
+            if nearest_sibling.is_two_node():
+                # Merge
+                self.parent.make_left_leaning()
+                self.parent.flip_color()
+            elif nearest_sibling.is_root_of_three_node():
+                self.parent.make_left_leaning()
+
+                sibling = nearest_sibling.make_left_leaning()
+                sibling.left.black = True
+
+                self.parent.rotate_right()
+                self.black = False
+
+                self.parent.parent.make_right_leaning()
+            elif nearest_sibling.is_root_of_four_node():
+                self.parent.make_left_leaning()
+
+                nearest_sibling.rotate_left()
+                nearest_sibling.black = True
+
+                self.parent.rotate_right()
+                self.black = False
+
+                self.parent.parent.make_right_leaning()
+        elif self == s:
+            if nearest_sibling.is_two_node():
+                # Merge
+                self.parent.make_left_leaning()
+                self.parent.flip_color()
+            elif nearest_sibling.is_root_of_three_node():
+                self.parent.make_left_leaning()
+
+                sibling = nearest_sibling.make_right_leaning()
+                sibling.right.black = True
+
+                self.parent.rotate_left()
+                self.black = False
+                
+                self.parent.parent.make_right_leaning()
+            elif nearest_sibling.is_root_of_four_node():
+                self.parent.make_left_leaning()
+
+                nearest_sibling.rotate_right()
+                nearest_sibling.black = True
+
+                self.parent.rotate_left()
+                self.black  = False
+
+                self.parent.parent.make_right_leaning()
 
     def _combine_parent_four_node(self):
-        pass
+        (xs, s, l, xl) = self.parent.get_children()
+        nearest_sibling = self.get_nearest_sibling()
+
+        if self == xl:
+            if nearest_sibling.is_two_node():
+                # Merge case 1
+                self.parent.flip_color()
+            else:
+                # Cases 1 and 2
+                self._combine_parent_two_node()
+        elif self == l:
+            if nearest_sibling.is_two_node():
+                # Merge case 2
+                # Reverse from split
+                self.parent.parent.rotate_right()
+                self.parent.parent.rotate_left()
+                self.parent.flip_color()
+            elif nearest_sibling.is_root_of_three_node():
+                # Case 3
+                sibling = nearest_sibling.make_right_leaning()
+                sibling.right.black = True
+                sibling.parent.rotate_left()
+                sibling = sibling.rotate_left()
+                sibling.left.rotate_right()
+
+                sibling.left.black = False
+
+                # We are done with the left subtree.
+                sibling.parent.right.rotate_right()
+
+                # Now we are at the root
+                root = sibling.parent.rotate_right()
+
+                # We only need to rotate the right subtree twice.
+                root.right.rotate_left()
+                root.right.rotate_left()
+            elif nearest_sibling.is_root_of_four_node():
+                # Case 4
+                sibling = nearest_sibling.rotate_left()
+                sibling.left.black = True
+                sibling.parent.rotate_left()
+                sibling.left.black = False
+
+                self.parent.rotate_right()
+                root = sibling.parent.rotate_right()
+                root.right.rotate_left()
+                root.right.rotate_left()
+        elif self == s:
+            if nearest_sibling.is_two_node():
+                # Merge case 3
+                self.parent.flip_color()
+            else:
+                # Cases 5 and 6
+                self._combine_parent_two_node()
+        elif self == xs:
+            if nearest_sibling.is_two_node():
+                # Merge case 4
+                self.parent.flip_color()
+            else:
+                # Cases 7 and 8
+                self._combine_parent_two_node()
 
     def delete(self, key):
         self.combine()
@@ -622,6 +778,7 @@ class AdtRedBlackTree:
     def __delitem__(self, key):
         self.root.delete(key)
         self.root = self.root.find_root()
+        self.root.black = True
 
     def from_deser(self, preorder, red_nodes):
         stack = AdtStack()
