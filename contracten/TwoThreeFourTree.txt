@@ -1,0 +1,38 @@
+class TwoThreeFourTree
+// TableItemType is the type of the elements that are stored in the 2-3-4 tree.
+// An element has a search_key of the type KeyType.
++__init__()
+// Creates an empty 2-3-4 tree.
+// PRE: None.
+// POST: An empty tree has been created.
+        
++__del__()
+// Deletes a 2-3-4 tree.
+// PRE: None.
+// POST: The tree is empty.
+
++is_empty():boolean
+// Determines if the 2-3-4 tree is empty.
+// PRE: None.
+// POST: Returns True if tree is empty.
+
++__setitem__(in key: KeyType, in newItem:TableItemType)
+// Inserts 'item' in the 2-3-4 tree.
+// PRE: 'newItem' is of type TableItemType, key is of KeyType
+// POST: Tree is a valid 2-3-4 tree and returns True if insertion worked.
+        
++__delitem__(in searchKey:KeyType, out success:boolean)
+// Deletes an item with 'search_key' as search key from the 2-3-4 tree, if such item exists.
+// PRE: 'search_key' is of the type KeyType and is a key in the tree
+// POST: there is one less item with 'search_key' as search key in the 2-3-4 tree
+// and the tree is a valid 2-3-4 tree.
+
++__getitem__(in searchKey:KeyType, out tableItem:TableItemType)
+// Searches an item with 'search_key' as its searchkey in the 2-3-4 tree and returns this item.
+// PRE: 'search_key' is of the type KeyType and is a key in the tree
+// POST: item with 'search_key' as searchkey gets returned
+
++inorder_traverse_table(in visit: FunctionType)
+// Traverses the complete 2-3-4 tree in inorder, and calls function visit for each item.
+// PRE: 'visit' is a function.
+// POST: visit was called for every item in inorder.

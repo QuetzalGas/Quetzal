@@ -389,7 +389,7 @@ class AdtTwoThreeFourTree:
         :raise TypeError if the search_key is of the wrong type
         :return: item with 'search_key' as searchkey
 
-        PRE: 'search_key' is of the type KeyType
+        PRE: 'search_key' is of the type KeyType and is a key in the tree
         POST: item with 'search_key' as searchkey gets returned
         """
         if not self.is_empty():
@@ -540,7 +540,7 @@ class AdtTwoThreeFourTree:
         :raise KeyError if search_key is not in tree
         :raise TypeError if key is the wrong type.
 
-        PRE: 'search_key' is of the type KeyType.
+        PRE: 'search_key' is of the type KeyType and is a key in the tree
         POST: there is one less item with 'search_key' as search key in the 2-3-4 tree
         and the tree is a valid 2-3-4 tree.
         """
