@@ -1,0 +1,49 @@
+class CircularLinkedList
+// ListItemType is the type of the elements that are saved in the list.
+// Elements have a search key of the type KeyType.
+
++__init__()
+// Creates a new circular linked list with a dummy head node.
+// PRE: None.
+// POST: An empty list was created.
+
++__del__()
+// Deletes the list.
+// PRE: None.
+// POST: The list is empty.
+
++is_empty():boolean
+// Checks if the list is empty.
+// PRE: None.
+// POST: Returns True if the list is empty.
+
++__len__():integer
+// Returns the amount of elements in the list.
+// PRE: None.
+// POST: returns the number of elements in the list.
+
++__setitem__(in index:integer, in newItem:ListItemType)
+// Adds a new element at a given location.
+// PRE: 0 <= 'index' <= len().
+// POST: the element 'newItem' is added after the element on position 'index'-1
+// and before the element onposition 'index'.
+
++__delitem__(in index:integer)
+// Deletes the element on position 'index'.
+// PRE: 0 <= 'index' < len().
+// POST: The elemenent on position 'index' is deleted from the list.
+
++__getitem__(in index:integer)
+// Returns the element on position 'index'.
+// PRE: 0 <= index <= len().
+// POST: the element on position 'index' is returned.
+
++__contains__(in item: ListItemType):boolean
+// Searches for an item in the list.
+// PRE: 'item' is of type ListItemType
+// POST: Returns True if item is in the list
+
++__repr__():string
+// Creates the dot-representation of the list
+// PRE: None.
+// POST: Correct dot-representation is created.
