@@ -1,6 +1,9 @@
 from .adt_iterators import FusedIterator, InorderIterator, PreorderIterator
 from .adt_stack import AdtStack
 
+# These are the private parts. Don't judge.
+# The majority of the cases in the insertion/deletion algorithm are better
+# demonstrated in the test cases/regression tests.
 class Node:
     def __init__(self, key, content):
         self.key = key
@@ -863,15 +866,29 @@ class Node:
         return (output, c + 1)
 
 class AdtRedBlackTree:
+    """ Global precondition for use of the RB-tree: the keys must form a partial order.
+
+    This means no floating point values. Duplicate keys are OK.
+    """
     def __init__(self):
+        """ Create a new red-black tree with no elements """
         self.root = Node(None, None)
         self.root.black = True
 
     def __getitem__(self, key):
-        raise KeyError
+        """ Return the first element with the given key.
+        :param key: The search key of the element to find.
+        :return: The first element with the given key.
+        :raise: KeyError if the search key is not found in the tree.
+        """
         return self.root[key].content[0]
     
     def __contains__(self, key):
+        """ Test is a search key is present in the tree.
+
+        :param key: The search key to test for.
+        :return: True if the tree contains the search key, False otherwise.
+        """
         try:
             self.root[key]
 
@@ -880,15 +897,34 @@ class AdtRedBlackTree:
             return False
 
     def __setitem__(self, key, value):
+        """ Insert an item with a certain search key in the tree.
+
+        :param key: The search key to insert.
+        :param value: The value to insert.
+        """
         self.root = self.root.insert(key, value)
         self.root.black = True
 
     def __delitem__(self, key):
+        """ Delete the first item with the given search key.
+
+        :param key: The key with which to delete the first item.
+        :raise: KeyError if the key wasn't found.
+        """
         root = self.root.delete(key)
         self.root = root.find_root()
         self.root.black = True
 
     def from_deser(self, preorder, red_nodes):
+        """ Internal function to deserialize a red black tree using the
+        preorder sequence of the search keys.
+
+        Used for regression testing. An invalid combination of preorder values,
+        and red_nodes might produce an invalid tree, so use at own risk.
+
+        :param preorder: A list of search keys in preorder sequence.
+        :param red_nodes: a collection with the nodes that must be red.
+        """
         stack = AdtStack()
 
         self.root = Node(preorder[0], preorder[0])
@@ -915,6 +951,10 @@ class AdtRedBlackTree:
             stack.push(child)
 
     def __repr__(self):
+        """ Output the dot graphics representation of the red black tree.
+        Precondition: the tree musn't be empty.
+        :return: a complete string in dot graphics representation of the red black tree.
+        """
         output = 'digraph rb{\n  node[shape = record];\n'
         output += self.root.dot()[0]
         output += '}'
@@ -922,6 +962,7 @@ class AdtRedBlackTree:
         return output
 
     def dot(self, filename, label):
+        """ Duplicate functionality of __repr__, used in regressions tests """
         with open(filename, 'w') as of:
             of.write('digraph rb {\n')
             of.write('  node[shape = record];\n')
@@ -932,10 +973,17 @@ class AdtRedBlackTree:
             of.write('}')
 
     def __iter__(self):
+        """ Traverse the keys in order.
+        Warning: returns the complete nodes instead of only the values. This is
+        because of significant refactoring needed in the regression tests.
+        """
         return self.iter_inorder()
 
     def iter_inorder(self):
         return InorderIterator(self.root)
 
     def iter_preorder(self):
+        """ Traverse the keys preorder.
+        Same warning as above.
+        """
         return PreorderIterator(self.root)

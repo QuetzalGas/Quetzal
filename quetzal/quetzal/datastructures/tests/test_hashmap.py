@@ -1,7 +1,6 @@
-from quetzal import *
 from unittest import TestCase
 from random import shuffle
-
+from datastructures import *
 
 class TestHashmap(TestCase):
     # General
@@ -202,7 +201,7 @@ class TestHashmap(TestCase):
 
     def test_mega_fuzz(self):
         rounds = 20
-        unique_insertions = 500
+        unique_insertions = 50
 
         print()
         for k in range(1, rounds):
