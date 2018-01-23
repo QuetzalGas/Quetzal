@@ -204,8 +204,8 @@ class Node:
         if (self.left is None) and (self.right is None):
             return True
 
-        return (self.left is not None and self.left.black) and\
-               (self.right is not None and self.right.black)
+        return (self.left and self.left.black) and\
+               (self.right and self.right.black)
 
     def is_left_child(self):
         return (self.parent is not None) and (self.parent.left == self)
@@ -452,7 +452,7 @@ class Node:
             else:
                 left._insert(key, content)
 
-    def combine(self):
+    def combine_if_necessary(self):
         # Root nodes can not be combined.
         if self.parent is None:
             return
@@ -656,18 +656,114 @@ class Node:
                 # Cases 7 and 8
                 self._combine_parent_two_node()
 
+    def combine_towards_inorder_successor(self):
+        if not (self.right and self.left):
+            # This can only happen if we start in a three node that doesn't
+            # have any children, so we also don't have an inorder successor
+            # to find.
+            return None
+
+        if self.right:
+            # Where we start is subtle: we need to consider three nodes.
+            if self.right.black:
+                start = self.right
+            else:
+                start = self.right.left
+
+            if start:
+                # We have a right subtree, so let's keep going to the left.
+                current = start
+
+                future_left = current.left
+                current.combine_if_necessary()
+
+                while future_left:
+                    current = future_left
+                    future_left = current.left
+                    current.combine_if_necessary()
+
+                if current.is_two_node():
+                    raise RuntimeError('should not be possible')
+
+                # This will make it easy to delete the node if the inorder
+                # successor is a three node.
+                if current.is_three_node():
+                    current.make_left_leaning()
+
+                return current
+            else:
+                # This happens when we try to search from a three-node leaf.
+                return None
+
     def delete(self, key):
-        self.combine()
+        self.combine_if_necessary()
 
         if self.key == key:
-            return True
+            if len(self.content) > 1:
+                # If we store multiple items with the same key, we only
+                # remove the first one in the list
+                self.content.pop(0)
+                return self
+            else:
+                successor = self.combine_towards_inorder_successor()
+                
+                if successor:
+                    # We do not explicitly swap, but we only copy the
+                    # content and the key from the successor.
+                    self.key, self.content = successor.key, successor.content
 
-        if (self.left is not None) and (key < self.key):
+                    return successor.delete_non_empty_leaf()
+                else:
+                    self.key = None
+                    self.content = None
+
+                    return self.delete_non_empty_leaf()
+        elif self.left and (key < self.key):
             return self.left.delete(key)
-        elif (self.right is not None) and (key > self.key):
+        elif self.right and (key > self.key):
             return self.right.delete(key)
+        else:
+            raise KeyError
 
-        return False
+    def delete_non_empty_leaf(self):
+        if self.is_two_node():
+            # Nothing to do if we are a two node.
+            return self
+
+        if not self.black:
+            if self.left or self.right:
+                raise RuntimeError('not deleting from a leaf')
+
+        new_root = self.parent
+
+        if self.is_tail_of_four_node():
+            if self.is_left_child():
+                self.parent.left = None
+            else:
+                self.parent.right = None
+
+            self.parent = None
+        else:
+            if self.is_root_of_three_node():
+                # This will make `self` a tail of a three node.
+                if self.is_left_leaning():
+                    self.rotate_right()
+                else:
+                    self.rotate_left()
+
+            elif self.is_root_of_four_node():
+                self.rotate_right()
+                self.rotate_left()
+
+            new_root = self.parent
+
+            # We don't actually care which one we are, because both need to
+            # be None in a leaf.
+            self.parent.left = None
+            self.parent.right = None
+            self.parent = None
+
+        return new_root
 
     def print(self, filename):
         with open(filename, 'w') as of:
@@ -694,7 +790,7 @@ class Node:
 
         return tag
 
-    def height_234(self, h):
+    def height_234(self, h = 0):
         left_height = h
         right_height = h
 
@@ -714,7 +810,10 @@ class Node:
 
             right_height = self.right.height_234(h + k)
 
-        return max(left_height, right_height)
+        if left_height != right_height:
+            raise RuntimeError('Unequal heights')
+
+        return left_height
 
     def dot(self, c=0):
         if self.content is None:
@@ -770,14 +869,23 @@ class AdtRedBlackTree:
 
     def __getitem__(self, key):
         raise KeyError
+        return self.root[key].content[0]
+    
+    def __contains__(self, key):
+        try:
+            self.root[key]
+
+            return True
+        except KeyError:
+            return False
 
     def __setitem__(self, key, value):
         self.root = self.root.insert(key, value)
         self.root.black = True
 
     def __delitem__(self, key):
-        self.root.delete(key)
-        self.root = self.root.find_root()
+        root = self.root.delete(key)
+        self.root = root.find_root()
         self.root.black = True
 
     def from_deser(self, preorder, red_nodes):

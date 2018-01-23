@@ -453,7 +453,7 @@ class TestRbTree(TestCase):
             rb = AdtRedBlackTree()
             rb.from_deser([3, 1, 0, 2, 5, 4, 6], [])
 
-            rb.root[i].combine()
+            rb.root[i].combine_if_necessary()
             rb.root = rb.root.find_root()
 
             keys, red = get_preorder_sequence_and_red_nodes(rb)
@@ -474,7 +474,7 @@ class TestRbTree(TestCase):
         left_right_leaning = [3, 1, 0, 2, 5, 4, 7, 6, 8]
         rb.from_deser(left_right_leaning, [7])
 
-        rb.root[1].combine()
+        rb.root[1].combine_if_necessary()
         rb.root = rb.root.find_root()
 
         keys, red = get_preorder_sequence_and_red_nodes(rb)
@@ -489,7 +489,7 @@ class TestRbTree(TestCase):
         self.assertEqual(keys, [5, 3, 1, 0, 2, 4, 7, 6, 8])
         self.assertEqual(red, [1])
 
-        rb.root[7].combine()
+        rb.root[7].combine_if_necessary()
         rb.root = rb.root.find_root()
 
         keys, red = get_preorder_sequence_and_red_nodes(rb)
@@ -506,7 +506,7 @@ class TestRbTree(TestCase):
         #       4   6
         rb.from_deser([3, 1, 0, 2, 7, 5, 4, 6, 8], [5])
 
-        rb.root[1].combine()
+        rb.root[1].combine_if_necessary()
         rb.root = rb.root.find_root()
 
         keys, red = get_preorder_sequence_and_red_nodes(rb)
@@ -775,6 +775,78 @@ class TestRbTree(TestCase):
 
         self.pre_post_combine(1, pre, pre_red, expected, expected_red, 'combine_4p_m4')
 
+    def test_delete_1(self):
+        return
+        rb = AdtRedBlackTree()
+        rb.from_deser([9, 5, 3, 1, 0, 2, 4, 7, 6, 8, 13, 11, 10, 12, 15, 14, 16], [5, 1, 13])
+
+        self.create_directory('delete_1')
+        self.write_dot_and_execute(rb, 'delete_1/pre')
+
+        self.write_dot_and_execute(rb, 'delete_1/post{}'.format(0))
+        self.write_dot_and_execute(rb, 'delete_1/post{}'.format('c'))
+
+    def test_fuzz(self):
+        rounds = 20
+        unique_insertions = 100
+
+        print()
+        for k in range(1, rounds):
+            print('Fuzz round', k)
+
+            keys = [x for x in range(1, unique_insertions)]
+            shuffle(keys)
+
+            for i in range(0, 4):
+                # Duplicate the last N elements for insertion
+                duplicates = keys[-10:]
+                keys.extend(duplicates)
+                shuffle(keys)
+
+            # Explicitly creates duplicates of a higher multiplicity.
+            duplicates = keys[-3:]
+            for i in range(0, 3):
+                keys.extend(duplicates)
+            shuffle(keys)
+
+            rb = AdtRedBlackTree()
+            # Insert all keys.
+            for i in keys:
+                rb[i] = i
+
+            # Check for validity.
+            inorder_list_of_keys = [x[0] for x in rb]
+            self.assertEqual(sorted(inorder_list_of_keys), inorder_list_of_keys)
+            rb.root.height_234()
+
+            # Check if everything can be found.
+            for i in keys:
+                self.assertTrue(i in rb)
+
+            copy_of_ = list(keys)
+            original = list(keys)
+            shuffle(keys)
+
+            removed = []
+
+            for i in keys:
+                del rb[i]
+                original.remove(i)
+                removed.append(i)
+
+                inorder_list_of_keys = [x[0] for x in rb]
+                self.assertEqual(sorted(inorder_list_of_keys), inorder_list_of_keys)
+                rb.root.height_234()
+
+                for j in original:
+                    self.assertTrue(j in rb)
+
+                for j in removed:
+                    if j in original:
+                        self.assertTrue(j in rb)
+                    else:
+                        self.assertFalse(j in rb)
+
     def pre_post_combine(self, two_node, pre_keys, pre_red, post_keys, post_red, name):
         rb = AdtRedBlackTree()
         rb.from_deser(pre_keys, pre_red)
@@ -788,7 +860,7 @@ class TestRbTree(TestCase):
         self.assertEqual(red, pre_red)
 
         two_node = rb.root[two_node]
-        two_node.combine()
+        two_node.combine_if_necessary()
         rb.root = two_node.find_root()
 
         self.write_dot_and_execute(rb, name + '/post')
