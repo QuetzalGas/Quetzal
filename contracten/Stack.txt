@@ -1,0 +1,57 @@
+class _Node:
+
+    *item
+    \\Tha data form the node
+    *next:Node
+    \\The next node.
+
++__init__(in item:Anything, in next_:Node)
+\\Initialises a new node.
+\\PRE next has to be a node.
+\\POST A new node will exist.
+
+
+class ADTStack:
+
+    *top:Node
+    \\The top of the stack
+
++__init__()
+\\Creates a new stack.
+\\PRE None
+\\POST A new stack will exist.
+
++__del__()
+\\Destroys a stack.
+\\PRE None
+\\POST Top will be None.
+
++is_empty(out empty:Boolean)
+\\Indicates whether a stack is empty.
+\\PRE None
+\\POST Empty will be true if stack is empty, false otherwise.
+
++push(in item:Anything)
+\\Pushes a new item onto the stack.
+\\PRE Item has to be of the same type as the rest on the stack.
+\\POST The item will be on the stack or error will be raised.
+
++pop(out bool:Boolean)
+\\Removes the last added element.
+\\PRE None
+\\POST Bool will be true if pop was successful, false otherwise.
+
++pop_and_return(out item:Anything)
+\\Removes the last added element and returns it.
+\\PRE None
+\\POST Item will be the item that was popped. None if the pop failed.
+
++peek(out item:Anything)
+\\Indicates what the last added element is.
+\\PRE None
+\\POST Item will be the item on the top of the stack or None.
+
++__repr__(out string:String)
+\\Creates the dot-representation of the stack.
+\\PRE None
+\\POST String will contain all the info from the stack.
