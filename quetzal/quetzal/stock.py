@@ -3,7 +3,7 @@ from .product import *
 from .date import *
 
 class Stock:
-    def __init__(self, products, type):
+    def __init__(self, products, type_):
         """ Creates empty lists for the given products.
 
         :param products list of the different products that need a stock
@@ -14,7 +14,7 @@ class Stock:
         """
         self.stocks = []
         for product in products:
-            new_stock = type()
+            new_stock = type_()
             new_stock[0] = Product(product, 0, 0, Date(0,0,0))
             self.stocks.append(new_stock)
 
