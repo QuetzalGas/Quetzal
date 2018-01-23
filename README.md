@@ -8,6 +8,12 @@ To execute the system, use:
 
 This will execute the system and print all log files in the same directory. With `systems/1.txt` we (almost) recreate the given log file in `log4.html`.
 
+To test the ADT's, run:
+
+    python3 adt.py <adt-input.txt>
+
+This will create an output directory with all printed (and rendered) dot graphics. A sample is found in the `adt-input` directory.
+
 ## Testing
 
 Unit tests are implemented using the `unittest` package of Python. Both `quetzal` and `datastructures` have their own unit tests in their respective `tests` directory.
