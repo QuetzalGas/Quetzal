@@ -3,7 +3,7 @@ from quetzal import *
 
 class TestUserContainer(TestCase):
     def setUp(self):
-        self.type = AdtTwoThreeTree()
+        self.type = AdtTwoThreeTree
     def testadd_if_unknown_user(self):
         container = UserContainer(self.type)
         container.add_if_unknown_user(

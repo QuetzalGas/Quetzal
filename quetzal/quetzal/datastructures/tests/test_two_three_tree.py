@@ -70,18 +70,19 @@ class TestTwoThreeTree(TestCase):
         tree[2] = "2.1"
         tree[2] = "2.2"
 
-        self.assertEqual(tree[5], "5.3")
+        self.assertEqual(tree[5], "5.1")
         self.assertEqual(tree[6], "6.1")
         del tree[5]
         self.assertEqual(tree[5], "5.2")
         del tree[5]
-        self.assertEqual(tree[5], "5.1")
-        self.assertEqual(tree[2], "2.2")
-        del tree[2]
+        self.assertEqual(tree[5], "5.3")
         self.assertEqual(tree[2], "2.1")
         del tree[2]
+        self.assertEqual(tree[2], "2.2")
+        del tree[2]
 
-    def test_fuzzing(self, aantal=100):
+
+    def test_fuzzing(self, aantal=200):
         tree = AdtTwoThreeTree()
         lijst = genereer(tree, aantal)
         for i in range(int(aantal/4)):

@@ -8,18 +8,20 @@ class UserContainer:
     check whether the user is new or not. A new customer will be added to the table. (stored in BS, 23, 234 or RB tree)
     """
 
-    def __init__(self, table):
+    def __init__(self, type_):
         """
         :param table: The table of type: AdtBinarySearchTree, AdtTwoThreeTree, AdtTwoThreeFourTree, AdtRedBlacktree
                       or Hashmap.
         :raise: If the table is of incorrect type, an exception is raised.
         """
         self.idcounter = 0
-        self.table = table
-        if not (isinstance(table, AdtBinarySearchTree) or isinstance(table, AdtTwoThreeTree) or
-                isinstance(table, AdtHashMap) or isinstance(table, AdtTwoThreeFourTree) or
-                isinstance(table, AdtRedBlackTree)):
+        # if not (isinstance(type_, AdtBinarySearchTree) or isinstance(type_, AdtTwoThreeTree) or
+        #         isinstance(type_, AdtHashMap) or isinstance(type_, AdtTwoThreeFourTree) or
+        #         isinstance(type_, AdtRedBlackTree)):
+        if not( type_ == AdtTwoThreeTree or type_ == AdtBinarySearchTree or type_ == AdtHashMap
+                or type_ == AdtRedBlackTree or type_ == AdtTwoThreeFourTree):
             raise TypeError("Unvalid table type for the UserContainer.")
+        self.table = type_()
 
     def add_if_unknown_user(self, firstname, lastname, email):
         """ Checks whether a user with the given 'email' is already present in the table, if not a new User is added
