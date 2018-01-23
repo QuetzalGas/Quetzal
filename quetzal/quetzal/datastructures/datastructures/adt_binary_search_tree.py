@@ -126,9 +126,6 @@ class AdtBinarySearchTree:
         else:
             return (False, None)
 
-    def iter_inorder(self):
-        return
-
     def inorder_traversal(self, visit_function):
         """ Visits the tree's keys in inorder traversal.
 
