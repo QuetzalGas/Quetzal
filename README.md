@@ -14,6 +14,8 @@ To test the ADT's, run:
 
 This will create an output directory with all printed (and rendered) dot graphics. A sample is found in the `adt-input` directory.
 
+The complete history of the project can be found at `https://github.com/QuetzalGas/Quetzal`.
+
 ## Testing
 
 Unit tests are implemented using the `unittest` package of Python. Both `quetzal` and `datastructures` have their own unit tests in their respective `tests` directory.
