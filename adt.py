@@ -47,11 +47,11 @@ with open(sys.argv[1]) as commands:
             elif line == 'rb':
                 current_adt = AdtRedBlackTree()
             elif line == 'hlin':
-                current_adt = AdtHashMap()
+                current_adt = AdtHashMap(30, LINEAR_PROBING)
             elif line == 'hquad':
-                current_adt = AdtHashMap()
+                current_adt = AdtHashMap(30, QUADRATIC_PROBING)
             elif line == 'hsep':
-                current_adt = AdtHashMap()
+                current_adt = AdtHashMap(30, SEPARATE_CHAINING)
             else:
                 print('Unknown type:', line)
                 exit()
@@ -103,7 +103,16 @@ with open(sys.argv[1]) as commands:
             elif isinstance(current_adt, AdtRedBlackTree):
                 name = 'rb'
             elif isinstance(current_adt, AdtHashMap):
-                name = 'hlin'
+                col_type = current_adt.get_collision_type()
+                if col_type == LINEAR_PROBING:
+                    name = 'hlin'
+                elif col_type == QUADRATIC_PROBING:
+                    name = 'hquad'
+                elif col_type == SEPARATE_CHAINING:
+                    name = 'hsep'
+                else:
+                    print('Unknown collision type in hashmap', col_type)
+                    exit()
             else:
                 print('No ADT to print')
                 exit()

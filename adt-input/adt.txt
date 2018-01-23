@@ -49,4 +49,77 @@ insert 4
 insert 5
 print
 
-# test
+type=hlin
+insert 1
+insert 2
+print
+insert 4
+insert 2
+print
+delete 4
+delete 1
+print
+
+type=hquad
+insert 1
+insert 5
+print
+insert 4
+insert 2
+print
+delete 4
+insert 6
+insert 5
+delete 1
+print
+
+type=hsep
+insert 1
+insert 2
+print
+insert 4
+insert 2
+print
+delete 4
+delete 1
+print
+
+type=rb
+insert 4
+insert 17
+insert 25
+insert 27
+insert 10
+insert 11
+insert 23
+insert 14
+insert 26
+insert 1
+insert 5
+insert 18
+insert 28
+insert 24
+insert 6
+insert 29
+insert 22
+insert 9
+insert 2
+insert 3
+insert 19
+insert 8
+insert 13
+insert 15
+insert 12
+insert 7
+insert 16
+insert 21
+insert 20
+insert 17
+print
+delete 22
+delete 24
+delete 26
+delete 9
+delete 12
+delete 7
+print

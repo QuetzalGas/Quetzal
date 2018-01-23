@@ -1,7 +1,7 @@
 from .adt_binary_search_tree import AdtBinarySearchTree
 from .adt_circular_linked_list import AdtCircularLinkedList
 from .adt_doubly_linked_list import AdtDoublyLinkedList
-from .adt_hashmap import AdtHashMap
+from .adt_hashmap import AdtHashMap, LINEAR_PROBING, QUADRATIC_PROBING, SEPARATE_CHAINING
 from .adt_queue import AdtQueue
 from .adt_red_black_tree import AdtRedBlackTree
 from .adt_stack import AdtStack

@@ -916,7 +916,7 @@ class AdtRedBlackTree:
 
     def __repr__(self):
         output = 'digraph rb{\n  node[shape = record];\n'
-        output += self.root.dot()
+        output += self.root.dot()[0]
         output += '}'
 
         return output
