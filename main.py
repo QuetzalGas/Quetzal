@@ -12,19 +12,6 @@ if len(sys.argv) != 2:
 def to_date(year, month, day):
     return Date(int(year), int(month), int(day))
 
-def parse_ingredient(stgl):
-    if stg[0] == 'shot':
-        pass
-    elif stg[0] == 'honing':
-        pass
-    elif stg[0] == 'marshmallow':
-        pass
-    elif stg[0] == 'chili':
-        pass
-    else:
-        return None
-
-
 with open(sys.argv[1]) as system:
     started = False
     for line in system:
@@ -44,33 +31,10 @@ with open(sys.argv[1]) as system:
             elif cmd == 'init':
                 # Initialize a new Quetzal object
                 quetzal = Quetzal()
-            elif cmd == 'shot':
-                type_ = splits[1]
-                amount = int(splits[2])
-                exp_date = to_date(splits[3],splits[4],splits[5])
-
-                for i in range(amount):
-                    shot = Chocolateshot(exp_date, type_)
-                    quetzal.add_to_stock(shot)
-
-            elif cmd == 'honing':
+            elif cmd == 'stock':
                 amount = int(splits[1])
-                exp_date = to_date(splits[2], splits[3], splits[4])
-                for i in range(amount):
-                    honey = Honey(exp_date)
-                    quetzal.add_to_stock(honey)
-            elif cmd == 'marshmallow':
-                amount = int(splits[1])
-                exp_date = to_date(splits[2], splits[3], splits[4])
-                for i in range(amount):
-                    marshmallow = Marshmallow(exp_date)
-                    quetzal.add_to_stock(marshmallow)
-            elif cmd == 'chili':
-                amount = int(splits[1])
-                exp_date = to_date(splits[2], splits[3], splits[4])
-                for i in range(amount):
-                    chili = Chilipepper(exp_date)
-                    quetzal.add_to_stock(chili)
+                exp_date = to_date(splits[2],splits[3],splits[4])
+                quetzal.add_stock_from_string(exp_date, amount, ' '.join(splits[5:]))
             elif cmd == 'gebruiker':
                 first_name = splits[1]
                 last_name = splits[2]
@@ -115,34 +79,8 @@ with open(sys.argv[1]) as system:
                 quetzal.place_order(email, splits[3:dt_index], datetime)
 
             elif cmd == 'stock':
-                prod = splits[2]
-
-                if prod == 'shot':
-                    type_ = splits[3]
-                    amount = int(splits[4])
-                    exp_date = to_date(splits[5],splits[6],splits[7])
-
-                    for i in range(amount):
-                        shot = Chocolateshot(exp_date, type_)
-                        quetzal.add_to_stock(shot)
-
-                elif prod == 'honing':
-                    amount = int(splits[3])
-                    exp_date = to_date(splits[4], splits[5], splits[6])
-                    for i in range(amount):
-                        honey = Honey(exp_date)
-                        quetzal.add_to_stock(honey)
-                elif prod == 'marshmallow':
-                    amount = int(splits[3])
-                    exp_date = to_date(splits[4], splits[5], splits[6])
-                    for i in range(amount):
-                        marshmallow = Marshmallow(exp_date)
-                        quetzal.add_to_stock(marshmallow)
-                elif prod == 'chili':
-                    amount = int(splits[3])
-                    exp_date = to_date(splits[4], splits[5], splits[6])
-                    for i in range(amount):
-                        chili = Chilipepper(exp_date)
-                        quetzal.add_to_stock(chili)
+                amount = int(splits[2])
+                exp_date = to_date(splits[3],splits[4],splits[5])
+                quetzal.add_stock_from_string(exp_date, amount, ' '.join(splits[6:]))
             elif cmd == 'log':
                 quetzal.log()

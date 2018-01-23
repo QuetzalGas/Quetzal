@@ -53,23 +53,23 @@ class Product:
 
 class Chilipepper(Product):
     def __init__(self, expiration_date):
-        super().__init__("chilipeper", 0.25, 1, expiration_date)
+        super().__init__("chili", 25, 1, expiration_date)
 
 
 class Honey(Product):
     def __init__(self, expiration_date):
-        super().__init__("honing", 0.5, 1, expiration_date)
+        super().__init__("honing", 50, 1, expiration_date)
 
 
 class Marshmallow(Product):
     def __init__(self, expiration_date):
-        super().__init__("marshmallow", 0.75, 1, expiration_date)
+        super().__init__("marshmallow", 75, 1, expiration_date)
 
 
 class Chocolateshot(Product):
     def __init__(self, expiration_date, taste):
         allowed_tastes = ["melk", "zwart", "wit", "bruin"]
         if taste in allowed_tastes:
-            super().__init__(taste, 1, 1, expiration_date)
+            super().__init__('shot ' + taste, 100, 1, expiration_date)
         else:
-            raise ValueError("")
+            raise ValueError('Invalid taste')

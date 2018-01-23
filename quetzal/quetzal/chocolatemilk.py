@@ -46,6 +46,6 @@ class ChocolateMilk:
         :param product: The product to be added.
         PRE: Procuct has of the Product class and can't be empty.
         """
-        self.contains.insert_beginning(product)
+        self.contains[0] = (product,)
         self.workload += 1
         self.price += product.get_price()

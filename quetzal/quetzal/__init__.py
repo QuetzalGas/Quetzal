@@ -10,8 +10,6 @@ from .employee import Employee
 from .chocolatemilk import ChocolateMilk
 from .order import Order
 
-import inspect
-
 class Quetzal:
     """
     +init()
@@ -25,12 +23,34 @@ class Quetzal:
     def __init__(self):
         self.now = 1
         self.started = False
-        self.stock = Stock('dll')
-        self.users = UserContainer('bs')
+
+        self.construct_map = {
+                'shot wit': lambda d: Chocolateshot(d, 'wit'),
+                'shot melk': lambda d: Chocolateshot(d, 'melk'),
+                'shot bruin': lambda d: Chocolateshot(d, 'bruin'),
+                'shot zwart': lambda d: Chocolateshot(d, 'zwart'),
+                'honing': lambda d: Honey(d),
+                'marshmallow': lambda d: Marshmallow(d),
+                'chili': lambda d: Chilipepper(d)
+        }
+
+        stock_list = self.construct_map.keys()
+        self.stock = Stock(stock_list, AdtDoublyLinkedList)
+
+        self.users = UserContainer(AdtRedBlackTree)
         self.employees = EmployeePresent()
         self.last_employee_id = 1
+        self.last_chocolade_id = 1
         self.history = []
         self.employee_ids = []
+        self.finished_orders = AdtBinarySearchTree()
+
+    def add_stock_from_string(self, exp_date, amount, type_str):
+        if type_str in self.construct_map:
+            for i in range(amount):
+                item = self.construct_map[type_str](exp_date)
+
+                self.stock.add_item(item)
 
     """
     +add_to_stock(in item: Ingredient, in count = 1: integer)
@@ -117,11 +137,27 @@ class Quetzal:
         if not self.is_started():
             raise RuntimeError("Must be started")
 
-        cm = ChocolateMilk(4)
+        needed_products = []
 
         for i in products:
-            k = self.stock.pop_item(i, datetime.get_date())[0]
-            cm.add_product(k)
+            k = self.stock.pop_item(i, datetime.get_date())
+            if k is None:
+                k = self.stock.pop_item('shot ' + i, datetime.get_date())
+
+            if k is None:
+                print('Not enough products for order.')
+
+                for j in needed_products:
+                    self.stock.add_item(j)
+                return
+            else:
+                needed_products.append(k)
+
+        cm = ChocolateMilk(self.last_chocolade_id)
+        self.last_chocolade_id += 1
+
+        for i in needed_products:
+            cm.add_product(i)
 
         order = Order(email, datetime, cm)
 
@@ -135,7 +171,6 @@ class Quetzal:
     Postconditie: de simulatie zal stappen nemen totdat `datetime` is bereikt.
     Dit heeft dus ook alle postcondities van de `step` methode.
     """
-
     def run_until(self, timestep):
         # What if datetime < self.now? We get an infinite loop.
         while self.timestep < timestep:
@@ -182,13 +217,8 @@ class Quetzal:
                 waiting_orders += format(i)
         state.append(waiting_orders)
 
-        state.append(self.stock.get_size('wit'))
-        state.append(self.stock.get_size('melk'))
-        state.append(self.stock.get_size('bruin'))
-        state.append(self.stock.get_size('zwart'))
-        state.append(self.stock.get_size('honing'))
-        state.append(self.stock.get_size('marshmallow'))
-        state.append(self.stock.get_size('chilipeper'))
+        for i in self.stock.get_product_list():
+            state.append(self.stock.get_size(i))
 
         return state
 
@@ -206,12 +236,17 @@ class Quetzal:
         for i in self.new_orders:
             self.order_queue.enqueue(i)
 
-        self.order_queue = self.employees.start(self.order_queue)[0]
+        self.order_queue, finished_orders = self.employees.start(self.order_queue)
         state = self.get_state()
         self.history.append(state)
         self.timestep += 1
 
         self.new_orders = []
+
+        for i in finished_orders:
+            i.set_collected()
+            self.finished_orders[i.get_time()] = i
+
         return state
 
     """
@@ -260,14 +295,7 @@ class Quetzal:
         html += "				<td>Nieuwe bestellingen</td>\n\
 				<td>Wachtende bestellingen</td>\n"
 
-        stock = [
-            "wit",
-            "melk",
-            "bruin",
-            "zwart",
-            "honing",
-            "marshmallow",
-            "chili"]
+        stock = self.stock.get_product_list()
 
         for i in stock:
             html += "				<td>{}</td>\n".format(i)
