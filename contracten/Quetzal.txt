@@ -1,89 +1,70 @@
-Implementeren: Ivo
-Testen:
+class Quetzal
+\\Represents the chocolatebar.
 
-ADT Quetzal:
-    +init()
-    Initialiseer de winkel.
+    *now: Integer
+    *started: Boolean
+    *stock: Stock
+    *users: UserContainer
+    *employees: EmployeePresent
+    *last_employee_id: Integer
+    *history: List
+    *employee_ids: List
 
-    Preconditie: geen.
-    Postconditie: een lege winkel (zonder stock, gebruikers, of werknemers) is
-    aangemaakt.
++__init__()
+\\Initialises an empty chocolatebar.
+\\PRE None
+\\POST An empty chocolatebar (not yet users, stock or employees).
 
-    +add_to_stock(in item: Ingredient, in count = 1: integer)
-    Voeg een ingredient toe aan de stock.
++add_to_stock(in item:Product)
+\\Adds an item to the stock.
+\\PRE 'item' is of type Product.
+\\POST 'item' is added to the corresponding stock.
 
-    Preconditie: count moet strikt groter dan nul zijn.
-    Postconditie: het object zal toegevoegd worden aan de stock.
++add_user(in firstname:String, in lastname:String, in email:String)
+\\Adds a new user to the users with the given firstname, lastname and email.
+\\PRE 'firstname', 'lastname' and 'email' are Strings.
+\\POST A new user is added to the chocolatebar's users.
 
++add_employee(in firstname:String, in lastname:String, in workload:Integer)
+\\Adds a new employee to the employees with the given firstname, lastname and workload.
+\\PRE 'firstname' and 'lastname' are Strings. 'workload' is an Integer.
+\\POST A new employee is added to the chocolatebar's employees.
 
-    +add_user(in user: Gebruiker)
-    Voeg een gebruiker `user` toe aan de winkel.
++start_system()
+\\Starts the simulation logic.
+\\PRE The simulation must not yet have been started.
+\\POST The simulation is started. The current timestep is zero.
 
-    Preconditie: de simulatie mag niet gestart zijn.
-    Postconditie: een nieuwe gebruiker is toegevoegd.
++is_started(out bool:Boolean) {query}
+\\Returns a boolean stating whether the simulation has already started ot not.
+\\PRE None
+\\POST 'bool' is true if the simulation has already started, false otherwise.
 
++place_order(in email:String, in products:List, in datetime:DateTime)
+\\Places an order on the given 'datetime'.
+\\PRE   The simulation must have started. 'email' is a String, 'products' is a
+\\      List and 'datetime' is a DateTime. 'datetime' must not be of the past.
+\\POST The order is added to the simulation logic.
 
-    +add_employee(in employee: Werknemer)
-    Voeg een werknemer `employee` toe aan de winkel.
++run_until(in timestep:Integer)
+\\Performs the simulation up to the 'timestep'.
+\\PRE The simulation must have started. 'timestep' is an Integer.
+\\POST  The simulation will  step until it reaches the 'timestep'.
 
-    Preconditie: de simulatie mag niet gestart zijn.
-    Postconditie: een nieuwe werknemer is toegevoegd. Deze werknemer mag niet
-    in een andere winkel worden toegevoegd.
++step()
+\\Takes a step in the simulation.
+\\PRE The simulation must have started.
+\\POST  As many orders as possible will be processed by the employees. All
+\\      relevant information will be saved in the logbook.
 
++get_datetime(out datetime:DateTime) {query}
+\\Returns the current datetime of the simulation.
+\\PRE The simulation must have started.
+\\POST 'datetime' is the current datetime.
 
-    +start_system()
-    Start de simulatie logica. Nadat de simulatie draait zal het systeem een
-    aantal veronderstellingen maken in verband met het aantal werknemers. Alle
-    methoden die deze veronderstellingen breken zullen dit aangeduid hebben in
-    hun precondities, en mogen dus niet meer gebruikt worden.
-
-    Preconditie: de simulatie mag niet gestart zijn.
-    Postconditie: de simulatie is gestart. De huidige tijdstap zal nul zijn.
-
-
-    +is_started(): bool {query}
-    Geeft terug of de simulatie gestart is.
-
-    Preconditie: geen.
-    Postconditie: geeft True als de simulatie gestart is, of anders False.
-
-
-    +place_order(in order: Bestelling, in datetime: DateTime)
-    Plaats een bestelling `order` op tijdstip `datetime`.
-
-    Preconditie: de simulatie moet gestart zijn. `datetime` mag niet in het
-    verleden liggen.
-    Postconditie: de bestelling is toegevoegd aan de simulatie logica.
-
-
-    +run_until(in datetime: DateTime)
-    Loop de simulatie tot het tijdstip `datetime`.
-
-    Preconditie: de simulatie moet gestart zijn.
-    Postconditie: de simulatie zal stappen nemen totdat `datetime` is bereikt.
-    Dit heeft dus ook alle postcondities van de `step` methode.
-
-
-    +step()
-    Neem een stap in de simulatie.
-
-    Preconditie: de simulatie moet gestart zijn.
-    Postconditie: zoveel mogelijk bestellingen worden verwerkt door de
-    werknemers. Alle relevante informatie zal opgeslagen zijn om een logboek
-    te presenteren.
-
-
-    +get_datetime(): DateTime {query}
-    Geeft de huidige tijdstap van de simulatie.
-
-    Preconditie: de simulatie moet gestart zijn.
-    Postconditie: de huidige tijdstap van de simulatie wordt teruggegeven.
-
-
-    +log()
-    Exporteer alle relevante informatie voor de toestand van de winkel in een
-    menselijk leesbare html bestand.
-
-    Preconditie: de simulatie moet gestart zijn.
-    Postconditie: een logboek in het formaat "logx.html" zal geschreven worden,
-    met x de tijdstap van de simulatie op het huidig moment.
++log()
+\\Exports all relevant information for the state of the chocolatebar into
+\\a html file.
+\\PRE The simulation must have started.
+\\POST A logbook in the format 'logx.html' will be created. 'x' represents the
+\\timestep of the current moment.

@@ -1,0 +1,8 @@
+class Marshmallow
+\\A product of the chocoladebar.
+
++__init__(in expiration_date:Date)
+\\Initialises a new marshmallow with the its 'expiration_date', name and standard
+\\price of 0.75 euro.
+\\PRE 'expiration_date' is of type Date.
+\\POST the marshmallow has an expiration date, name and price.

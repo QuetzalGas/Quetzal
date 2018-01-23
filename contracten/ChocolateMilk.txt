@@ -1,0 +1,38 @@
+class ChocolateMilk
+\\Represents the chocolatemilk.
+
+    *id: Integer
+    *price: Integer
+    *contains: AdtDoublyLinkedList
+    *workload: Integer
+
++__init__(in id:Integer)
+\\Initialises a new chocolatemilk with the given 'id', standard price of
+\\2 euros, standard workload of 5 and container to hold the products.
+\\PRE 'id' is an Integer.
+\\POST The chocolatemilk has an id, price, workload and container.
+
++add_product(in product:Product)
+\\Adds a product to the chocolatemilk.
+\\PRE 'product' is of type Product.
+\\POST None
+
++get_id(out id:Integer) {query}
+\\Returns the id of the chocolatemilk.
+\\PRE None
+\\POST 'id' is the id of the chocolatemilk.
+
++get_ingredients(out container:AdtDoublyLinkedList) {query}
+\\Returns the ingredients of the chocolatemilk.
+\\PRE None
+\\ 'container' contains the ingredients of the chocolatemilk.
+
++get_workload(out workload:Integer) {query}
+\\Returns the workload of the chocolatemilk.
+\\PRE None
+\\'workload' is the workload of the chocolatemilk.
+
++get_total_price(out price:Integer) {query}
+\\Returns the total price of the chocolatemilk.
+\\PRE None
+\\'price' is the total price of the chocolatemilk.

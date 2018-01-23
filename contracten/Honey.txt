@@ -1,0 +1,8 @@
+class Honey
+\\A product of the chocoladebar.
+
++__init__(in expiration_date:Date)
+\\Initialises a new honey with the its 'expiration_date', name and standard
+\\price of 0.5 euro.
+\\PRE 'expiration_date' is of type Date.
+\\POST the honey has an expiration date, name and price.

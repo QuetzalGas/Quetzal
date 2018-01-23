@@ -1,31 +1,39 @@
 class Product
-\\Super class van alle klassen, chocoladeshot,chiliperer, marshmellow en honing
+\\Defines a product and its properties.
 
-*prijs
-*naam
-*workload
-*vervaldatum
+    *name:String
+    *price:Integer
+    *workload:Integer
+    *expiration_date:Date
 
-+init
++__init__(in name:String, in price:Price, in workload:Integer, in expiration_date:Date)
+\\Initialises a new product with the given 'name', 'price', 'workload' and
+\\'expiration_date'.
+\\PRE   'name' is a String, 'price' and 'workload' are Integers. 'expiration_date'
+\\      is of type Date.
+\\POST The product has a name, price, workload and expiration date.
 
-+del
++get_price(out price:Integer) {query}
+\\Returns the price of the product.
+\\PRE None
+\\POST 'price' is the price of the product.
 
-+getVervaldatum(out vervaldatum: Datum) {query}
-\\Geeft de vervaldatum van een product terug.
-\\PRE geen
-\\POST 'vervaldatum' is de vervaldatum van het product.
++get_workload(out workload:Integer) {query}
+\\Returns the workload of the product.
+\\PRE None
+\\POST 'workload' is the workload of the product.
 
-+getPrijs(out prijs: Integer)   {query}
-\\Geeft de prijs van een product terug.
-\\PRE geen
-\\POST 'prijs' is de prijs van het product.
++get_name(out name:String) {query}
+\\Returns the name of the product.
+\\PRE None
+\\POST 'name' is the name of the product.
 
-+getNaam(out naam: String)  {query}
-\\Geeft de naam van een product terug.
-\\PRE geen
-\\POST 'naam' is de naam van het product.
++get_date(out date:Date) {query}
+\\Returns the date of the product.
+\\PRE None
+\\POST 'date' is the date of the product.
 
-+getWorkload(out workload: Integer)   {query}
-\\Geeft de workload van een product terug.
-\\PRE geen
-\\POST 'workload' is de workload van het product.
++get_searchkey(out key:Date) {query}
+\\Returns the searchkey of the product, which is the expiration date.
+\\PRE None
+\\POST 'key' is the expiration date of the product.

@@ -1,0 +1,65 @@
+class Employee
+\\Represents an employee of the chocolate bar
+
+	*id:Integer
+	\\ID of the employee
+	*firstName:String
+	\\First name of employee
+	*lastName:String
+	\\Last name of employee
+	*workload:Integer
+	\\Workload of the employee
+	*credits_still_to_do:Integer
+	\\Credits still to process by this employee
+	*order_handeling:Order
+	\\The order that the employee is working on
+	
++_init_(in id:Integer, in firstName:String, in lastName:String, in workload:Integer)
+\\Initialises a new employee
+\\PRE FirstName en lastName have to be a string. Load has to be an integer and can't be too large.
+\\POST The employee now has it's basic data and workload.
+
++_del_(out success:Boolean)
+\\Deletes and employee.
+\\PRE None
+\\POST Success will return true if everything was deleted successfully.
+
++ get_id(out id:Integer)  {query}
+\\Gets the id of the employee.
+\\PRE None
+\\POST Id will be the id of the employee.
+
++get_name(out name:String)  {query}
+\\Merges the first and last name and returns it.
+\\PRE None
+\\POST Name will be a string with both first and last name.
+
++get_workload(out workload:Integer)	{query}
+\\Gets the workload of the employee.
+\\PRE None
+\\POST Workload will be the workload of the employee.
+
++get_credits_still_to_do(out credits:Integer)  {query}
+\\Gets the credits that the employee still has to do.
+\\PRE None
+\\POST Credits will be the credits the employee still has to handle.
+
++get_order(out order:Order)
+\\Returns the order the employee is working on.
+\\PRE:None
+\\POST: Order handling will be the order that the employee is working on.
+
++set_load(in workload:Integer)
+\\Sets the workload of the employee to the new value.
+\\PRE Workload has to be an integer and can't be too large.
+\\POST The employee now has a new workload.
+
++set_order_load(in order:Order)
+\\Sets the order that the employee has to process.
+\\PRE The order has to be from the order class and it has to have valid data. Order_handeling has to be empty.
+\\POST The employee now has the data to process an order.
+
++process(out order:Order)
+\\Handles an order with a certain workload.
+\\PRE None
+\\POST The order will partially or fully be processed. Order will be None if the employee still has to work on the order. Else order will be the order he has finished.

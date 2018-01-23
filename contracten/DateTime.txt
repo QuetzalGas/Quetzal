@@ -1,36 +1,38 @@
 class DateTime
-\\Bevat zowel tijd als datum
+\\Contains a date and a time.
 
-	*datum: Datum
-	*uur: Integer
+	*date: Date
+	*hour: Integer
+	*minute: Integer
 
-+vergelijk(in andereDateTime: DateTime, out result:Boolean)	{query}
-\\Vergelijkt de dateTime met 'andereDateTime'. Als dateTime vroeger is dan 'andereDateTime' geeft result true terug.
-\\PRE 'andereDateTime' is van de klasse DateTime.
-\\POST result is true als de dateTime vroeger is dan 'andereDateTime'. 
-\\Result is false als 'andereDateTime' vroeger is dan dateTime.
++__init__(in date:Date, in hour:Integer, in minute:Integer)
+\\Initialises a new date.
+\\PRE 'date' is of type Date. 'hour' and 'minute' are Strings.
+\\POST The datetime has a date, hour and minute.
 
-+print()	{query}
-\\Geeft volledige string van een datum.
-\\PRE geen
-\\POST De volledige datum wordt geprint.
++get_date(out date:Date) {query}
+\\Returns the date of the datetime.
+\\PRE None
+\\POST 'date' is the date of the datetime.
 
-+getUur(out uur: Integer)	{query}
-\\Geeft het uur van een datum terug.
-\\PRE geen
-\\POST 'uur' is het bepaalde uur van een datum.
++get_hour(out hour:Integer) {query}
+\\Returns the hour of the datetime.
+\\PRE None
+\\POST 'hour' is the hour of the datetime.
 
-+getDag(out dag: Integer)	{query}
-\\Geeft de dag van een datum terug.
-\\PRE geen
-\\POST 'dag' is de bepaalde dag van een datum.
++get_minute(out minute:Integer) {query}
+\\Returns the minute of the datetime.
+\\PRE None
+\\POST 'minute' is the minute of the datetime.
 
-+getMaand(out maand: Integer) 	{query}
-\\Geeft de maand van een datum terug.
-\\PRE geen
-\\POST 'maand' is de bepaalde maand van een datum.
++__lt__(in other:DateTime, out bool:Boolean) {query}
+\\Compares this datetime with 'other'.
+\\PRE 'other' is of type DateTime.
+\\POST  'bool' is true if this datetime is earlier in time then
+\\      'other', false otherwise.
 
-+getJaar(out jaar: Integer)	{query}
-\\Geeft het jaar van een datum terug.
-\\PRE geen
-\\Post 'jaar' is het bepaalde jaar van een datum.
++__gt__(in other:DateTime, out bool:Boolean) {query}
+\\Compares this datetime with 'other'.
+\\PRE 'other' is of type DateTime.
+\\POST  'bool' is true if this datetime is later in time then
+\\      'other', false otherwise.

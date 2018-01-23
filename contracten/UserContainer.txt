@@ -1,4 +1,4 @@
-Note:   TableType is used to refer to either a AdtBinarySearchTree,
+\\Note:   TableType is used to refer to either a AdtBinarySearchTree,
 \\AdtTwoThreeTree, AdtTwoThreeFourTree, AdtRedBlacktree or Hashmap.
 
 Class UserContainer

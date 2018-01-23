@@ -1,47 +1,51 @@
-class Stock
-\\Bevat een collectie van tabellen met telkens stock-entiteiten.
-	
-	*chocolademelk:List
-	*chocoladeshots:List
-	*honing:List
-	*chilipeper:List
-	*marshmellows:List
-	
-	
-+_init_()
-\\Alle verschillende tabellen worden geïnitialiseerd. Een tabel voor alle chocoladeshots, honingporties, marshmellows
-\\en chilipeperporties. 
-\\PRE Geen
-\\POST De stock bevat nu 4 lege tabellen voor alle ingrediënten.
+Class Stock
+\\Contains all the stocks of the different products.
 
-+addItem(in item:Object, out success:boolean)
-\\Kijkt eerst naar het Object zelf en van welke klasse het is. Vervolgens wordt het item bijgevoegd aan de bijhorende
-\\tabel. 
-\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
-\\POST Item wordt in de juiste tabel gezet met zijn vervaldatum als key. Success geeft weer of alles gelukt is.
+    *stocks:List
 
-+popItem(in item:Object)
-\\Verwijderd het oudste, niet vervallen item uit een van de tabellen
-\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
-\\POST Dat item staat nu niet meer in de bijhorende lijst.
++__init__(in products:List of Strings, in type:ListType)
+\\Initialises a new stock for each of the given products in 'products'.
+\\PRE   'type' is a circular linked list (CLL) or a doubly linked list (DLL).
+\\      Type decides the kind of implementation of the stocks. 'products' is
+\\      a list of Strings representing the product's name.
+\\POST Each product has now an empty stock of type 'type'.
 
-+containsItem(in item:Object, out contains:Boolean)
-\\Checks if the tables contain that item or not.
-\\PRE Item is een object van een bepaalde klasse.
-\\POST Contains geeft weer of dat item in de stock zit.
++add_item(in item:Product)
+\\Adds a 'item' to the corresponding stock.
+\\PRE 'item' is of type Product.
+\\POST 'item' is added to the stock in which it belongs.
 
-+findType(in item:Object, out type:Type)
-\\Vindt de klasse van een bepaald object.
-\\PRE Item is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
-\\POST Type wordt teruggegeven en is de klasse van het ingegeven item
++is_empty(in product_type:String, out bool:Boolean) {query}
+\\Returns a boolean stating whether the stock of with type-name 'product_type'
+\\is empty or not.
+\\PRE 'product' is a String with the name of a product.
+\\POST  'bool' is true if the stock of with type-name 'product_type' is empty,
+\\      false otherwise.
 
-+isEmpty(in type:Object, out empty:Boolean)
-\\Checkt of de tabel van een bepaald type leeg is.
-\\PRE Type is een object van de klasse Chocolademelk, Chocoladeshot, Marshmellow, Chilipeper of Honing.
-\\POST Empty is True als de tabel van de klasse leeg is.
++get_size(in product_type:String, out size:Integer) {query}
+\\Returns the size of the stock with type-name 'product_type'.
+\\PRE product' is a String with the name of a product.
+\\POST 'size' is the size of the stock with type-name 'product_type'.
 
-+cleanstock(out vervallen:List)
-\\Gaat alle tabellen na of er een item vervallen is.
-\\PRE Geen
-\\POST Vervallen geeft een lijst van vervallen items terug.
++clean_stock(in date:Date)
+\\Cleans out expired products from the stock, all products with expiration dates
+\\earlier in time then 'date' are removed.
+\\PRE 'date' is of type Date.
+\\POST  The stock does not contain products with expiration dates earlier in time
+\\      then 'date'.
 
++pop_item(in product_type:String, in date:Date)
+\\Removes the product (of type 'product_type') with the most urgent expiration date
+\\from te corresponding stock-list. Products with expiration dates that have already
+\\passed will be ignored.
+\\PRE   'product_type' is a string corresponding to the item-type of a list in the stock.
+\\      'date' is of type Date.
+\\POST  If 'product_type corresponds to a type of the lists in the stock and this
+\\      particular list contains an item with an expiration date "higher or equal to" the
+\\      given date, then the item with the most urgent expiration date is removed from
+\\      that list and returned.
+
++get_product_list(out products:List) {query}
+\\Makes a list of every product-type for which a separate stock-list exists.
+\\PRE None
+\\POST 'products' is a list with each different product-type as a string.

@@ -1,13 +1,13 @@
 Class User
 \\A customer of the chocolade bar.
 
-    *firstname:string
+    *firstname:String
     \\The user's firstname.
-    *lastname:string
+    *lastname:String
     \\The user's lastname.
-    *email:string
+    *email:String
     \\The user's email.
-    *id:integer
+    *id:Integer
     \\The user's id.
 
 +__init__(in id:Integer, in firstname:String, in lastname:String, in email:String)

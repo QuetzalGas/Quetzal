@@ -1,0 +1,44 @@
+class Order
+\\The order of a customer.
+
+    *userID: Integer
+    *time: DateTime
+    *chocolatemilk: ChocolateMilk
+    *collected: Boolean
+
++__init__(in userID:Integer, in time:DateTime, in chocolatemilk:ChocolateMilk)
+\\Initialises a new order with the given 'userID', 'time' and 'chocolatemilk'.
+\\PRE   'userID' is an Integer, 'time' is of type DateTime and 'chocolatemilk' is
+\\      of type ChocolateMilk.
+\\POST The order has a userID, chocolatemilk, time and a boolean 'collected' which
+\\      is initially false.
+
++is_collected(out bool:Boolean) {query}
+\\Returns a bool stating if the chocolatemilk has yet been collected or not.
+\\PRE None
+\\POST 'bool' is true if it has been collected, false otherwise.
+
++set_collected()
+\\Puts the status of the order to collected.
+\\PRE None
+\\POST The collected-boolean has been set to true.
+
++get_user_id(out id:Integer)
+\\Returns the user-id.
+\\PRE None
+\\POST 'id' is the user-id.
+
++get_time(out time:DateTime)
+\\Return the timestamp.
+\\PRE None
+\\POST 'time' is the timestamp of the Order.
+
++get_chocolatemilk(out chocolatemilk:ChocolateMilk)
+\\Returns the chocolatemilk.
+\\PRE None
+\\POST 'chocolatemilk' is the chocolatemilk of the order.
+
++get_searchkey(out key:Integer)
+\\Returns the searchkey of the order, which is the timestamp.
+\\PRE None
+\\POST 'key' is the timestamp of the order.
