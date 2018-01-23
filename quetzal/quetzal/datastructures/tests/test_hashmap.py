@@ -179,3 +179,22 @@ class TestHashmap(TestCase):
         self.assertTrue(1 in hashmap)
         del hashmap[15]
         self.assertFalse(15 in hashmap)
+
+    # def testDot(self):
+    #     hashmap = AdtHashMap(5, 2)
+    #     hashmap[0] = "test"
+    #     hashmap[1] = "test"
+    #     hashmap[2] = "test"
+    #     hashmap[3] = "test"
+    #     hashmap[4] = "test"
+    #     hashmap[5] = "test"
+    #     hashmap[6] = "test"
+    #     hashmap[0] = "test0"
+    #     hashmap[1] = "test1"
+    #     hashmap[5] = "test2"
+    #     hashmap[15] = "test3"
+    #     hashmap[25] = "test4"
+    #     text = hashmap.__repr__()
+    #     file = open("test1.dot", "w")
+    #     file.write(text)
+    #     file.close()
