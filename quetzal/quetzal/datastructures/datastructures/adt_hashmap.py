@@ -326,22 +326,43 @@ class AdtHashMap:
         """
         text = ""
         if not self.is_empty():
-            text += "disgraph hmp {\n"
-            text += "node [shape = \"record\"];\n"
-            text += "struct [label=\""   #TODO seperate chaining
-            for i in range(len(self)):
-                if self.collision_type == SEPARATE_CHAINING and not self.lijst[i].is_empty():
-                    current = self.lijst[i][0]
-                    text += str(current.item.data)
+            text += "digraph hmp {\n"
+            text += "node [shape = record];\n"
+            if self.collision_type == SEPARATE_CHAINING:
+                # Make table
+                text += "struct [label=\"{"
+                for k in range(len(self)-1):
+                    text += "<f" + str(k) + ">"
+                    text += ""
                     text += "|"
-                    while current.next is not None:
-                        current = current.next
-                        text += str(current.item.data)
-                        text += "|"
-                else:
-                    text += str(self.lijst[i].data)
+                text.strip("|")
+                text += "}\"];\n"
+
+                # Make nodes
+                for i in range(len(self)):
+                    if not self.lijst[i].is_empty():
+                        for j in range(len(self.lijst[i])):
+                            text += "node" + str(i) + str(j) + " [label=\""
+                            key = self.lijst[i][j].search_key
+                            data = self.lijst[i][j].data
+                            text += str(key) + ": " + str(data)
+                            text += "\"];\n"
+                # Add links
+                for i in range(len(self)):
+                    if not self.lijst[i].is_empty():
+                        text += "struct:f" + str(i) + " -> " + "node" + str(i) + "0;\n"
+                        for j in range(1, len(self.lijst[i])):
+                            text += "node" + str(i) + str(j-1) + " -> " + "node" + str(i) + str(j) + ";\n"
+
+            else:
+                text += "struct [label=\"{"
+                for i in range(len(self)):
+                    if self.lijst[i] is None:
+                        text += ""
+                    else:
+                        text += str(self.lijst[i].search_key) + ": " + str(self.lijst[i].data)
                     text += "|"
-            text.strip("|")
-            text += "\"];\n"
+                text.strip("|")
+                text += "}\"];\n"
             text += "}"
         return text
