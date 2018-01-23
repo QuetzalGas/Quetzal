@@ -47,7 +47,7 @@ class TestDoublyLinkedList(TestCase):
         lst = AdtDoublyLinkedList()
         lst[0] = 3
         lst[1] = 5
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             lst[3] = 7
         self.assertEqual(lst.head.item, 3)
         self.assertEqual(lst.tail.item, 5)
@@ -73,7 +73,7 @@ class TestDoublyLinkedList(TestCase):
         del lst[2]
         self.assertEqual(lst.tail.item, 7)
         self.assertEqual(len(lst), 2)
-        with self.assertRaises(KeyError):
+        with self.assertRaises(IndexError):
             del lst[3]
 
     def test_get(self):
