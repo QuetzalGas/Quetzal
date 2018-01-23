@@ -366,3 +366,10 @@ class AdtHashMap:
                 text += "}\"];\n"
             text += "}"
         return text
+
+    def get_collision_type(self):
+        """ Gets the collision type of the hashmap.
+
+        :return: The collision type. Linear probing(0), Quadratic probing(1) and Separate Chaining(2)
+        """
+        return self.collision_type
