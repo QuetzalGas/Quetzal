@@ -566,7 +566,8 @@ class AdtTwoThreeFourTree:
                                 return
                             else:
                                 next = current.children[k + 1]
-                                # TODO: break?
+                                
+
                     k += 1
                 if searching:
                     if search_key > current.get_max_search_key():
@@ -581,9 +582,9 @@ class AdtTwoThreeFourTree:
             # searching for inorder successor
             while not next.is_leaf():
                 self._merge(next)
-                for i in range(next.amount-1, -1, -1):
-                    if next.items[i] is not None:
-                        if search_key < next.items[i][0].search_key:
+                for i in range(next.amount+1):
+                    if next.children[i] is not None:
+                        if search_key < next.children[i].get_max_search_key():
                             next = next.children[i]
                             break
             self._merge(next)

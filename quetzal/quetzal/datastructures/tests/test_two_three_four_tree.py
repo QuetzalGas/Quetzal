@@ -80,6 +80,53 @@ class TestTwoThreeFourTree(TestCase):
         for k in [10, 80, 30, 70, 4]:
             self.assertFalse(k in t)
 
+    def test_duplicate(self):
+        t = AdtTwoThreeFourTree()
+        t[10] = "10a"
+        t[10] = "10b"
+        t[10] = "10c"
+        t[30] = "30a"
+        t[90] = "90a"
+        t[90] = "90b"
+        t[80] = "80a"
+        self.assertEqual(t[10], "10a")
+        del t[10]
+        self.assertEqual(t[10], "10b")
+        t[50] = "50a"
+        del t[10]
+        self.assertEqual(t[10], "10c")
+        del t[10]
+        self.assertFalse(10 in t)
+        with self.assertRaises(KeyError):
+            x = t[10]
+        self.assertTrue(30 in t)
+        self.assertTrue(90 in t)
+        self.assertTrue(80 in t)
+        self.assertTrue(50 in t)
+        self.assertEqual(t[30], "30a")
+        self.assertEqual(t[90], "90a")
+        self.assertEqual(t[80], "80a")
+        self.assertEqual(t[50], "50a")
+        del t[90]
+        self.assertEqual(t[90], "90b")
+        del t[90]
+        self.assertFalse(90 in t)
+        with self.assertRaises(KeyError):
+            x = t[90]
+        del t[30]
+        del t[80]
+        del t[50]
+        self.assertFalse(30 in t)
+        self.assertFalse(80 in t)
+        self.assertFalse(50 in t)
+        with self.assertRaises(KeyError):
+            x = t[30]
+        with self.assertRaises(KeyError):
+            x = t[80]
+        with self.assertRaises(KeyError):
+            x = t[50]
+        self.assertTrue(t.is_empty())
+
 
 
     def test_mega_fuzz(self):
@@ -124,6 +171,10 @@ class TestTwoThreeFourTree(TestCase):
             removed = []
 
             for i in keys:
+                # if i == 3:
+                #     filename = "fuz_234_" + str(k) + ".dot"
+                #     with open(filename, "w") as file:
+                #         file.write(repr(tree))
                 del tree[i]
                 original.remove(i)
                 removed.append(i)
