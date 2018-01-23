@@ -49,12 +49,15 @@ class AdtDoublyLinkedList:
         :param new_item: The item to insert
         :raise: KeyError if the index is not correct.
         """
+        if not self.is_empty():
+            if not isinstance(new_item, type(self.head.item)):
+                raise TypeError
         if self.head is None or index == 0:
             self._insert_beginning(new_item)
         elif index == self.length:
             self._insert_end(new_item)
         elif not 0 <= index <= self.length:
-            raise KeyError("Index out of range!")
+            raise IndexError("Index out of range!")
         else:
             current_node = self._search_node(index - 1)
             new_node = _Node(new_item, current_node, current_node.next)
@@ -95,7 +98,7 @@ class AdtDoublyLinkedList:
         :raise: KeyError if the index is incorrect.
         """
         if not 0 <= index < self.length:
-            raise KeyError("Index out of range!")
+            raise IndexError("Index out of range!")
 
         deleted_node = self._search_node(index)
         before_node = deleted_node.prev

@@ -9,9 +9,9 @@ class TestEmployeePresent(TestCase):
         present = EmployeePresent()
         present.add_employee(employee1)
         present.add_employee(employee2)
-        self.assertEqual(present.stack.get_top(), employee2)
-        present.stack.pop()
-        self.assertEqual(present.stack.get_top(), employee1)
+        self.assertEqual(present.stack.peek(), employee2)
+        present.stack.delete()
+        self.assertEqual(present.stack.peek(), employee1)
 
     def testAssignOrder(self):
         employee1 = Employee(1, "testvoornaam1", "testachternaam1", 10)
@@ -23,7 +23,7 @@ class TestEmployeePresent(TestCase):
         choco.workload = 5
         order = Order(1, "time", choco)
         present._assign_order(order)
-        self.assertEqual(present.stack.get_top(), employee1)
+        self.assertEqual(present.stack.peek(), employee1)
         present._assign_order(order)
         self.assertEqual(employee1.order_handeling, order)
         self.assertEqual(employee1.credits_still_to_do, 5)
@@ -48,7 +48,7 @@ class TestEmployeePresent(TestCase):
         self.assertEqual(employee2.order_handeling, order1)
         self.assertEqual(employee2.credits_still_to_do, 2)
         self.assertEqual(present.handled_orders[0], order2)
-        self.assertEqual(present.stack.get_top(), employee1)
+        self.assertEqual(present.stack.peek(), employee1)
         self.assertEqual(present.employees_working[0], employee2)
 
     def testStart(self):

@@ -7,4 +7,5 @@ from .adt_red_black_tree import AdtRedBlackTree
 from .adt_stack import AdtStack
 from .adt_two_three_four_tree import AdtTwoThreeFourTree
 from .adt_two_three_tree import AdtTwoThreeTree
+from .adt_wrapper_stack_queue import StackQueue
 from .adt_iterators import *
