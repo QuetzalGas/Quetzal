@@ -328,13 +328,16 @@ class AdtTwoThreeFourTree:
         if node is None:
             return False
         self._inorder(node.children[0], visit)
-        visit(node.items[0][0].item)
+        for x in node.items[0]:
+            visit(x.item)
         self._inorder(node.children[1], visit)
         if node.items[1] is not None:
-            visit(node.items[1][0].item)
+            for x in node.items[1]:
+                visit(x.item)
             self._inorder(node.children[2], visit)
             if node.items[2] is not None:
-                visit(node.items[2][0].item)
+                for x in node.items[2]:
+                    visit(x.item)
                 self._inorder(node.children[3], visit)
         return True
 
@@ -422,6 +425,8 @@ class AdtTwoThreeFourTree:
 
     def _merge(self, node):
         """ Makes a 2-node into a 3-node or a 4-node.
+
+        Note: the nearest sibling is considered the right sibling, unless this sibling is useless or doesn't exist.
 
         :param node: node that needs to be merged.
         :return: True if node was merged, False if not.
@@ -566,7 +571,7 @@ class AdtTwoThreeFourTree:
                                 return
                             else:
                                 next = current.children[k + 1]
-                                
+
 
                     k += 1
                 if searching:

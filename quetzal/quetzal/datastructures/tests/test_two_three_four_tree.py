@@ -36,9 +36,9 @@ class TestTwoThreeFourTree(TestCase):
         keys = [60, 30, 10, 20, 50, 40, 70, 80, 15, 90, 100]
         for k in keys:
             t[k] = k
-        filename = "test2.dot"
-        with open(filename, "w") as file:
-            file.write(repr(t))
+        # filename = "test2.dot"
+        # with open(filename, "w") as file:
+        #     file.write(repr(t))
         for k in keys:
             self.assertTrue(k in t)
 
@@ -48,12 +48,17 @@ class TestTwoThreeFourTree(TestCase):
         for k in keys:
             t[k] = k
         to_delete = keys[4:]
+        # filename = "test_delete_.dot"
+        # with open(filename, "w") as file:
+        #     file.write(repr(t))
+        # i = 0
         for k in to_delete:
             del t[k]
             keys.remove(k)
-            filename = "test2_" + str(k) + ".dot"
-            with open(filename, "w") as file:
-                file.write(repr(t))
+            # filename = "test_" + str(i) + "delete_" + str(k) + ".dot"
+            # with open(filename, "w") as file:
+            #     file.write(repr(t))
+            # i += 1
         for k in keys:
             self.assertTrue(k in t)
         for k in to_delete:
@@ -126,6 +131,47 @@ class TestTwoThreeFourTree(TestCase):
         with self.assertRaises(KeyError):
             x = t[50]
         self.assertTrue(t.is_empty())
+
+    def test_inorder_traverse(self):
+        t = AdtTwoThreeFourTree()
+        keys = [25, 45, 15, 75, 60, 30, 10, 20, 50, 40, 70, 20, 80, 15, 90, 100]
+        for k in keys:
+            t[k] = k
+        sorted = []
+        t.inorder_traverse_table(sorted.append)
+        self.assertEqual([10, 15, 15, 20, 20, 25, 30, 40, 45, 50, 60, 70, 75, 80, 90, 100], sorted)
+
+    def test_inorder(self):
+        t = AdtTwoThreeFourTree()
+        t[9] = "w"
+        t[4] = "g"
+        t[4] = "h"
+        t[4] = "i"
+        t[6] = "m"
+        t[8] = "t"
+        t[7] = "p"
+        t[2] = "a"
+        t[2] = "b"
+        t[6] = "n"
+        t[3] = "d"
+        t[9] = "x"
+        t[2] = "c"
+        t[7] = "q"
+        t[6] = "o"
+        t[7] = "r"
+        t[5] = "j"
+        t[3] = "e"
+        t[7] = "s"
+        t[3] = "f"
+        t[5] = "k"
+        t[8] = "u"
+        t[8] = "v"
+        t[5] = "l"
+        t[9] = "y"
+        t[9] = "z"
+        sorted = []
+        t.inorder_traverse_table(sorted.append)
+        self.assertEqual(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"], sorted)
 
 
 
