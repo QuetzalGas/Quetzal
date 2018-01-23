@@ -1,0 +1,35 @@
+class ADTQueue:
+\\The queue class.
+
+    *storage:Doubly Linked List
+    \\The storage of the queue.
+
++__init__()
+\\Initialises a new queue.
+\\PRE None
+\\POST A new queue with storage is initiated.
+
++is_empty(out empty:Boolean)
+\\Checks if the queue is empty.
+\\PRE None
+\\POST Empty will be true if queue is empty, false otherwise.
+
++enqueue(in item:Anything)
+\\Enqueues an item.
+\\PRE Item has to be of the same type as the rest of the items in the queue.
+\\POST The item will be added or error will be raised.
+
++dequeue(out node:Anything)
+\\Dequeues the first item in the queue.
+\\PRE None
+\\POST Node will contain the item or false if the dequeue failed.
+
++get_front(out node:Anything)
+\\Returns the front of the queue without dequeueing it.
+\\PRE Queue can't be empty.
+\\POST Node will be the first item of the queue.
+
++__repr__(out output:String)
+\\String with dot representation of the queue.
+\\PRE None
+\\POST String with all the info of the queue.
