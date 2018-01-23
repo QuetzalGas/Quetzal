@@ -225,7 +225,7 @@ class AdtHashMap:
 
         :param adres: The address that as calculated for that searchkey.
         :param key: The searchkey of the item that needs to be found.
-        :return: The node if the key matched an element from the list, None otherwise.
+        :return: The address if the key matched an element from the list, None otherwise.
         """
         count = 0
         while True:
@@ -247,8 +247,6 @@ class AdtHashMap:
 
         :param adres: Address that caused collision.
         :param node: The item to be inserted.
-        :return: Indicates whether the collision was solved. True if it was,
-        false if it couldn't solve the collision.
         """
         current_adres = adres
         # We put i on 2 because 0**2 is already checked before increment
@@ -274,7 +272,7 @@ class AdtHashMap:
 
         :param adres: The address that as calculated for that searchkey.
         :param key: The searchkey of the item that needs to be found.
-        :return: True if the node is found, false otherwise.
+        :return: The address of the found item or None.
         """
         current_address = adres
         i = 1
@@ -311,7 +309,7 @@ class AdtHashMap:
         """ Searches for an element in the hashmap.
 
         :param key: The searchkey of the element to find.
-        :return: True if the element is in the map, false otherwise.
+        :return: Node if item is found, None if not.
         """
         adres = self._calculate_address(key)
         double_list = self.lijst[adres]

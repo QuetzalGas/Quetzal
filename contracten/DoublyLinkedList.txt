@@ -1,0 +1,85 @@
+class Node:
+\\Node of the doubly linked list
+
+    *item
+    \\The data of the node.
+    *prev:Node
+    \\Previous node.
+    *next:Node
+    \\Next node.
+
++__init__(in item:Anything, in prev:Node, in next:Node)
+\\Creates new node.
+\\PRE Prev and next have to be nodes.
+\\POST A new node is created with item, previous and next node.
+
+
+class ADTDoublyLinkedList:
+\\A doubly linked list
+
+    *head:Node
+    \\The first node of the list.
+    *tail:Node
+    \\The last node of the list.
+    *length:Integer
+    \\Length of the list.
+
++__init__()
+\\Creates a new doubly linked list.
+\\PRE List can't exist.
+\\POST A new list is made.
+
++__del__()
+\\Destroys the current double linked list.
+\\PRE List has to exist.
+\\POST List will be destroyed. Head and tail will be None and length 0.
+
++is_empty(out empty:Boolean)
+\\Checks if a list is empty.
+\\PRE None
+\\POST Empty will be true if list is empty, false otherwise.
+
++__len__(out length:Integer)
+\\Returns the length of the list.
+\\PRE None
+\\POST Length will be the length of the list.
+
++__setitem__(in index:Integer, in new_item:Anything)
+\\Inserts a node into a given location.
+\\PRE Index has to be an integer not bigger than the length of the list and new_item has to be of the same type as the rest of the data in the list.
+\\POST Item will be in the list or error will be raised.
+
++_insert_beginning(in new_item:Anything)
+\\Inserts a node at the beginning of the list.
+\\PRE None(everything already checked).
+\\POST Item will be inserted into the first place.
+
++_insert_end(in new_item:Anything)
+\\Inserts a node at the end of the list.
+\\PRE None(everything already checked).
+\\POST Item will be inserted into the last place.
+
++__delitem__(in index:Integer)
+\\Deletes a node from the list.
+\\PRE Index has to be an integer in range of the length of the list.
+\\POST Item will be deleted or error will be raised.
+
++__getitem__(in index:Integer, out item:Anything)
+\\Get a node from the list and returns the data from the node.
+\\PRE Index has to be an integer in range of the length of the list.
+\\POST Item will be returned or error will be raised.
+
++__contains__(in item:Anything, out contain:Boolean)
+\\Checks if the list contains a node with a given item.
+\\PRE Item has to be of the same type as the rest of the items in the list.
+\\POST True if the item is in the list, false otherwise.
+
++__search_node(in index:Integer, out node:Node)
+\\Searches the location of the node on the given index.
+\\PRE index can't be bigger than length-1.
+\\POST The node will be returned.
+
++__repr__(out string:String)
+\\Creates the dot-representation of the list.
+\\PRE None
+\\POST String will contain all the info of the list in string format.
