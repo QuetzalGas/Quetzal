@@ -1,0 +1,126 @@
+class DataNode:
+
+    *search_key
+    \\The searchkey used to locate the data.
+    *data
+    \\The data saved in the hashmap.
+
++__init__(in search_key:String or Integer, in data:Anything)
+\\Initialises a new datanode.
+\\PRE None
+\\POST A new node exists.
+
++__del__()
+\\Removes node.
+\\PRE None
+\\POST Node is deleted.
+
+
+class Hashmap:
+
+    *lijst: List
+    \\Structure to contain all the data from the hashmap.
+    *length: Integer
+    \\The length of the hashmap.
+    *collision_type: Integer
+    \\The type that the hashmap uses to solve collisions. Linear or Quadratic Probing or Separate Chaining.
+
++__init__(in length:Integer, in collision_type:Integer)
+\\Initialises a new hashmap with a certain length and collision type.
+\\PRE length can't be negative and type has to be 0,1 or 2.
+\\POST A new hashmap is made with length and collision type.
+
++__del__()
+\\Deletes the hashmap.
+\\PRE None
+\\POST Hashmap is deleted. Length is 0 and list is made empty.
+
++_create_hashmap(in length:Integer, in collision_type:Integer)
+\\Create a new hashmap and checks for all the input.
+\\PRE None
+\\POST The list is filled with None or an empty double or circular linked list.
+
++is_empty(out empty:Boolean)
+\\Checks whether the map is empty.
+\\PRE None
+\\POST rue if list is empty, false otherwise.
+
++__len__(out length:Integer)
+\\Gets the length of the hashmap.
+\\PRE None
+\\POST Length of the hashmap is returned.
+
++__setitem__(in search_key:String or Integer, in data:Anything)
+\\Inserts a new element in the table.
+\\PRE Data and searchkey (string or integer) have to be of the same type as the rest of the elements in the hashmap if it's not empty.
+\\POST The new data is added if the map is not full.
+
++_calculate_address(in search_key:String or Integer,out address:Integer)
+\\Calculates the address of the item with a hash function for strings or integers.
+\\PRE Search_key has to be of the same type as the rest.
+\\POST The address for that item is returned.
+
++__getitem__(in search_key:Integer or String,out data:Anything)
+\\Returns an item from the hashmap.
+\\PRE Search_key has to be of the same type as the rest.
+\\POST The data from the item with that searchkey is returned or an error is raised if that is not possible.
+
++__delitem__(in search_key:Integer or String)
+\\Deletes item from hashmap.
+\\PRE Search_key has to be of the same type as the rest.
+\\POST The item is deleted if it was found otherwise an error will be raised.
+
++__contains__(in search_key:Integer or String,out found:Boolean)
+\\Finds data with a given searchkey in the map.
+\\PRE Search_key has to be of the same type as the rest.
+\\POST Returns true if the searchkey is in the map, false otherwise.
+
++_find(in search_key:Integer or String,out pos:Integer)
+\\Finds the position with a given searchkey.
+\\PRE None (everything checked before).
+\\POST Returns position of found item or None.
+
++_solve_collision(in address:Integer,in data:Anything)
+\\Solves a collision by choosing from one of the methods.
+\\PRE None (everything checked before).
+\\POST The item is inserted or error is raised.
+
++_linear_probing(in address:Integer,in data:Anything)
+\\Solve a collision with linear probing.
+\\PRE None (everything checked before).
+\\POST The item is inserted or error is raised.
+
++_linear_probing_search(in address:Integer,in data:Anything,out address:Integer)
+\\Searches with linear probing in the map for a given key.
+\\PRE None (everything checked before).
+\\POST The item is found and address is returned or error is raised.
+
++_quadratic_probing(in address:Integer,in data:Anything)
+\\Solve a collision with quadratic probing.
+\\PRE None (everything checked before).
+\\POST The item is inserted or error is raised.
+
++ _quadratic_probing_search(in address:Integer,in data:Anything,out address:Integer)
+\\Searches with quadratic probing in the map for a given key.
+\\PRE None (everything checked before).
+\\POST The item is found and address is returned or error is raised.
+
++_separate_chaining_delete(in search_key:Integer or String,out node:Node)
+\\Deletes a node in the table.
+\\PRE None (everything checked before).
+\\POST The item is inserted or error is raised.
+
++_seperate_chaining_search(in key:Integer or String,out node:Node)
+\\Searches for an element in the hashmap.
+\\PRE None (everything checked before).
+\\POST The item is found and address is returned or error is raised.
+
++__repr(out text:String)
+\\Generates a string for dot file and visual representation.
+\\PRE None.
+\\POST String representation is made with all the data in the hashmap.
+
++get_collision_type(out collision_type:Integer)
+\\Gets the collision type of the hashmap.
+\\PRE Hashmap needs to exist.
+\\POST Collision type is returned.
