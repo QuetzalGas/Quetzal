@@ -1,7 +1,6 @@
 from .datastructures import *
 from .product import *
 from .date import *
-from unittest import TestCase
 
 class Stock:
     def __init__(self, products, type):
@@ -18,8 +17,6 @@ class Stock:
             new_stock = type()
             new_stock[0] = Product(product, 0, 0, Date(0,0,0))
             self.stocks.append(new_stock)
-        # TODO: raise ValueError("") voor type
-        # TODO: datum van dummyproduct
 
     def add_item(self, item):
         """ Adds an item to the stock.
@@ -28,43 +25,44 @@ class Stock:
         nothing will be done.
 
         :param item: Item that needs to be placed in the stock.
+        :raise KeyError if stock for item doesn't exist
         :return: True if item was placed, False if not.
 
         PRE: Item is a product.
         POST: Item is placed in the right stock (according to its type), if this stock exists.
         """
-        for list in self.stocks:
-            if item.get_name() == list[0].get_name():
-                list[len(list)] = item
+        for stock_list in self.stocks:
+            if item.get_name() == stock_list[0].get_name():
+                stock_list[len(stock_list)] = item
                 return True
-        return False
+        raise KeyError
 
-    def is_empty(self, product_type):
+    def is_empty(self, product_name):
         """ Determines if a certain stock is empty.
 
-        :param product_type: stock that needs to be checked.
-        :return: True if stock of product_type is empty, False if not.
+        :param product_name: stock that needs to be checked.
+        :return: True if stock of product_name is empty, False if not.
 
-        PRE: product_type is a string with the name of a product.
+        PRE: product_name is a string with the name of a product.
         POST: Stock is not affected. Returns True if stock is empty, False if not.
         """
-        for list in self.stocks:
-            if product_type == list[0].get_name():
-                return not len(list) > 1
+        for stock_list in self.stocks:
+            if product_name == stock_list[0].get_name():
+                return not len(stock_list) > 1
         return True
 
-    def get_size(self, product_type):
+    def get_size(self, product_name):
         """ Determines the amount of products in a stock.
 
-        :param product_type: stock that needs to be counted.
-        :return: amount of products of type product_type in stock.
+        :param product_name: stock that needs to be counted.
+        :return: amount of products of type product_name in stock.
 
-        PRE: product_type is a string with the name of a product.
-        POST: Stock is not affected. Returns the amount of products of type product_type in stock.
+        PRE: product_name is a string with the name of a product.
+        POST: Stock is not affected. Returns the amount of products of type product_name in stock.
         """
-        for list in self.stocks:
-            if product_type == list[0].get_name():
-                return len(list)-1
+        for stock_list in self.stocks:
+            if product_name == stock_list[0].get_name():
+                return len(stock_list)-1
         return 0
 
     def clean_stock(self, date):
@@ -80,63 +78,77 @@ class Stock:
         POST: Stock does not contain any expired products anymore.
         """
         deleted = []
-        self._sort()
-        for list in self.stocks:
+        for stock_list in self.stocks:
+            self._sort(stock_list)
             to_delete = 0
-            for i in range(1, len(list)):
-                if list[i].get_expiration_date() < date:
+            for i in range(1, len(stock_list)):
+                if stock_list[i].get_expiration_date() < date:
                     to_delete += 1
                 else:
                     break
             for j in range(to_delete):
-                deleted.append(list[1])
-                del list[1]
+                deleted.append(stock_list[1])
+                del stock_list[1]
         return deleted
 
-    def pop_item(self, product_type, date):
+    def pop_item(self, product_name, date):
         """ Removes an item from the stock.
 
-        Removes the product (of type 'product_type') with the most urgent expiration date from te corresponding
+        Removes the product (of type 'product_name') with the most urgent expiration date from te corresponding
         stock-list. Products with expiration dates that have already passed will be ignored.
 
-        :param product_type: Type of product that is needed.
+        :param product_name: Type of product that is needed.
         :param date: Date used as reference to check which expiration dates have already passed.
         :return: product if found, None if not.
 
-        PRE: 'product_type' is a string corresponding to the item-type of a list in the stock.
-        POST: If 'product_type corresponds to a type of the lists in the stock and this particular list contains an
+        PRE: 'product_name' is a string corresponding to the item-type of a list in the stock.
+        POST: If 'product_name corresponds to a type of the lists in the stock and this particular list contains an
         item with an expiration date "higher or equal to" the given date, then the item with the most urgent expiration
         date is removed from that list and returned.
         """
-        for list in self.stocks:
-            if product_type == list[0].get_name():
-                return self._remove_by_date(list, date)
+        for stock_list in self.stocks:
+            if product_name == stock_list[0].get_name():
+                return self._remove_by_date(stock_list, date)
         return None
 
-    def _sort(self):
-        """ Sorts every stock-list by searchkey (expiration date).
+    def _sort(self, stock_list):
+        """ Sorts the given stock-list by searchkey (expiration date).
 
         PRE: None.
-        POST: Stocks are sorted.
+        POST: Stock-list is sorted.
         """
-        for list in self.stocks:
-            for sortFrom in range(1,len(list)):
-                smallest = list[sortFrom]
-                position = sortFrom
-                for i in range(sortFrom, len(list)):
-                    if list[i].get_searchkey() < smallest.get_searchkey():
-                        smallest = list[i]
-                        position = i
-                sortFromItem = list[sortFrom]
-                del list[position]
-                list[position] = sortFromItem
-                del list[sortFrom]
-                list[sortFrom] = smallest
+        for sortFrom in range(1,len(stock_list)):
+            smallest = stock_list[sortFrom]
+            position = sortFrom
+            for i in range(sortFrom, len(stock_list)):
+                if stock_list[i].get_searchkey() < smallest.get_searchkey():
+                    smallest = stock_list[i]
+                    position = i
+            sortFromItem = stock_list[sortFrom]
+            del stock_list[position]
+            stock_list[position] = sortFromItem
+            del stock_list[sortFrom]
+            stock_list[sortFrom] = smallest
 
-    def _remove_by_date(self, list, date):
+        # sorted = False
+        # if self.type == "cll":
+        #     for area in range(1, stockList.get_length()):
+        #         if not sorted:
+        #             sorted = True
+        #             for i in range(1, stockList.get_length() - area + 1):
+        #                 (place_i, bool) = stockList.retrieve(i)
+        #                 (place_after, bool) = stockList.retrieve(i + 1)
+        #
+        #                 if place_after.get_expiration_date() < place_i.get_expiration_date():
+        #                     sorted = False
+        #
+        #                     stockList.insert(i, place_after)
+        #                     stockList.delete(i + 2)
+
+    def _remove_by_date(self, stock_list, date):
         """ Removes the item with most urgent expiration date from the given stock-list.
 
-        :param list: Stock-list from which an item is needed.
+        :param stock_list: Stock-list from which an item is needed.
         :param date: Date used as reference to check which expiration dates have already passed.
         :return: product if found, None if not.
 
@@ -144,11 +156,11 @@ class Stock:
         POST: The item with most urgent expiration date is removed from the stock-list and this item with an expiration
         date "higher or equal" to 'date' is returned.
         """
-        self._sort()
-        for i in range(1, len(list)):
-            if list[i].get_expiration_date() >= date:
-                item_to_remove = list[i]
-                del list[i]
+        self._sort(stock_list)
+        for i in range(1, len(stock_list)):
+            if stock_list[i].get_expiration_date() >= date:
+                item_to_remove = stock_list[i]
+                del stock_list[i]
                 return item_to_remove
         return None
 
@@ -158,9 +170,9 @@ class Stock:
         :return: list of names of the product-types in stock
 
         PRE: None.
-        POST: A list with each different product-type is returned.
+        POST: A list with the name of each different product-type is returned.
         """
         products = []
-        for list in self.stocks:
-            products.append(list[0].get_name())
+        for stock_list in self.stocks:
+            products.append(stock_list[0].get_name())
         return products

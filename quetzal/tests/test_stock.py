@@ -39,8 +39,10 @@ class TestStock(TestCase):
         self.assertEqual(3, s.get_size("wit"))
         self.assertEqual(4, s.get_size("zwart"))
         self.assertEqual(1, s.get_size("bruin"))
-        self.assertFalse(s.add_item(Marshmallow(Date(2018, 1, 1))))
-        self.assertFalse(s.add_item(Chocolateshot(Date(2018, 1, 1), "melk")))
+        with self.assertRaises(KeyError):
+            s.add_item(Marshmallow(Date(2018, 1, 1)))
+        with self.assertRaises(KeyError):
+            s.add_item(Chocolateshot(Date(2018, 1, 1), "melk"))
         self.assertTrue(s.is_empty("marshmallow"))
         self.assertTrue(s.is_empty("melk"))
 
@@ -135,7 +137,8 @@ class TestStock(TestCase):
         self.assertEqual(Date(2018, 8, 1), s.stocks[0][6].get_expiration_date())
         self.assertEqual(Date(2017, 12, 1), s.stocks[0][7].get_expiration_date())
         self.assertEqual(Date(2017, 8, 1), s.stocks[0][8].get_expiration_date())
-        s._sort()
+        for stock_list in s.stocks:
+            s._sort(stock_list)
         self.assertEqual(8, s.get_size("honing"))
         self.assertEqual(Date(2017, 1, 1), s.stocks[0][1].get_expiration_date())
         self.assertEqual(Date(2017, 1, 1), s.stocks[0][2].get_expiration_date())
