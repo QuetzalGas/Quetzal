@@ -1,5 +1,10 @@
 class _Node:
     def __init__(self, item, next_):
+        """ Initialises a new node.
+
+        :param item: The data from the node.
+        :param next_: The next node.
+        """
         self.item = item
         self.next = next_
 
@@ -17,16 +22,16 @@ class AdtStack:
         self.top = None
 
     def is_empty(self):
-        """
-        Indicates whether a stack is empty.
+        """ Indicates whether a stack is empty.
+
         :return: Boolean: If the top of the linked list has a top or not.
         """
         return self.top is None
 
     def push(self, item):
-        """
-        Pushes a new item onto the stack.
-        :param newItem: The item that needs to be added to the stack
+        """ Pushes a new item onto the stack.
+
+        :param item: The item that needs to be added to the stack
         :raise TypeError if type of new item doesn't correspond with type of
         items already in stack
         """
@@ -36,8 +41,8 @@ class AdtStack:
         self.top = _Node(item, self.top)
 
     def pop(self):
-        """
-        Removes the last added element.
+        """ Removes the last added element.
+
         :return: Whether the removal succeeded
         """
         if self.top is None:
@@ -47,8 +52,8 @@ class AdtStack:
         return True
 
     def pop_and_return(self):
-        """
-        Removes the last added element and returns it.
+        """ Removes the last added element and returns it.
+
         :return: The last added element.
         :raise StopIteration if stack is empty.
         """
@@ -70,9 +75,9 @@ class AdtStack:
             return None
 
     def __repr__(self):
-        """ Creates the dot-representation of the stack
+        """ Creates the dot-representation of the stack.
 
-        :return: string with dot-representation
+        :return: string with dot-representation.
         """
         string = "digraph s {\ngraph [\nrankdir = \"LR\"\n];"
         if not self.is_empty():
