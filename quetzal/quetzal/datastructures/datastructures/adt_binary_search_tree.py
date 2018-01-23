@@ -159,12 +159,14 @@ class AdtBinarySearchTree:
     def _act_remove(self):
         """ Removes a node in a recursively, which is the reason for it being a seperate function from __delitem__().
         """
-        if self.parent:     # Making sure the node is deleted from it's parent's children.
-            if self._no_children() is True:
+        if self._no_children() is True:
+            if self.parent:  # Making sure the node is deleted from it's parent's children.
                 if self.parent.left == self:
                     self.parent.left = None
                 else:
                     self.parent.right = None
+            else:   # self is the root
+                self.contents = None
 
         # If there is only one child, transfer the contents and it's children to this (sub)tree.
         if (self.left is None) and self.right:
