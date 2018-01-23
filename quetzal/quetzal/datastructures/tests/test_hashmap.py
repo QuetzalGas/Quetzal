@@ -1,5 +1,6 @@
-from datastructures import *
+from quetzal import *
 from unittest import TestCase
+from random import shuffle
 
 
 class TestHashmap(TestCase):
@@ -198,3 +199,64 @@ class TestHashmap(TestCase):
     #     file = open("test1.dot", "w")
     #     file.write(text)
     #     file.close()
+
+    def test_mega_fuzz(self):
+        rounds = 20
+        unique_insertions = 500
+
+        print()
+        for k in range(1, rounds):
+            print('Fuzz round', k)
+
+            keys = [x for x in range(1, unique_insertions)]
+            shuffle(keys)
+
+            for i in range(0, 4):
+                # Duplicate the last N elements for insertion
+                duplicates = keys[-10:]
+                keys.extend(duplicates)
+                shuffle(keys)
+
+            # Explicitly creates duplicates of a higher multiplicity.
+            duplicates = keys[-3:]
+            for i in range(0, 3):
+                keys.extend(duplicates)
+            shuffle(keys)
+
+            tree = AdtHashMap()
+            # Insert all keys.
+            for i in keys:
+                tree[i] = i
+
+            # Check for validity.
+            #inorder_list_of_keys = [x[0] for x in rb]
+            #self.assertEqual(sorted(inorder_list_of_keys), inorder_list_of_keys)
+
+            # Check if everything can be found.
+            for i in keys:
+                self.assertTrue(i in tree)
+
+            copy_of_ = list(keys)
+            original = list(keys)
+            shuffle(keys)
+
+            removed = []
+
+            for i in keys:
+                del tree[i]
+                original.remove(i)
+                removed.append(i)
+
+                #inorder_list_of_keys = [x[0] for x in rb]
+                #self.assertEqual(sorted(inorder_list_of_keys), inorder_list_of_keys)
+
+                # If it's still in the original, then it also must be in our tree.
+                for j in original:
+                    self.assertTrue(j in tree)
+
+                for j in removed:
+                    # Duplicates can be found multiple times.
+                    if j in original:
+                        self.assertTrue(j in tree)
+                    else:
+                        self.assertFalse(j in tree)
